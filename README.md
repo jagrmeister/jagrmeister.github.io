@@ -1,1 +1,1 @@
-Upload index.html, .nojekyll, and the assets folder. This build adds 'Other Services' and a credentials grid with placeholder badges. Replace any badge PNG with official art at the same filename to update visually.
+Upload index.html, .nojekyll, and the assets folder. Hero uses Option A animation. Credentials use your provided official badges image (assets/credentials.png).

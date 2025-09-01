@@ -33,7 +33,6 @@
     .hero h1 span{color:var(--accent2)}
     .hero-art{aspect-ratio:1/1;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);background:#08162b;overflow:hidden;position:relative}
     .hero-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-    .label{position:absolute;padding:4px 8px;border-radius:999px;background:rgba(12,25,51,.75);border:1px solid rgba(255,255,255,.08);font-size:12px;color:#d9e6ff;backdrop-filter:blur(3px);pointer-events:none;white-space:nowrap;transform:translate(-50%,-50%);transition:opacity .4s ease}
     .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:28px}
     .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));border:1px solid var(--border);border-radius:var(--radius);padding:22px;backdrop-filter:blur(6px)}
     .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
@@ -46,11 +45,11 @@
     .other-services{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
     .other-services ul{list-style:none;padding:0;margin:0}
     .other-services li{color:var(--muted);margin:12px 0}
-    .cred-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;align-items:center;justify-items:center}
-    .cred-grid img{width:100px;height:100px;border-radius:16px;border:1px solid var(--border);background:#0c1c36;box-shadow:var(--shadow);object-fit:cover}
+    .cred-wrap{display:flex;align-items:center;justify-content:center}
+    .cred-wrap img{max-width:100%;width:min(1000px,100%);border-radius:18px;border:1px solid var(--border);box-shadow:var(--shadow);background:#0c1c36}
     footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted)}
-    @media (max-width:1024px){.grid{grid-template-columns:1fr}.about{grid-template-columns:1fr}.cases{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}.other-services{grid-template-columns:1fr 1fr}.cred-grid{grid-template-columns:repeat(4,1fr)}}
-    @media (max-width:720px){.cases{grid-template-columns:1fr}.hero{padding-top:72px}.other-services{grid-template-columns:1fr}.cred-grid{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:1024px){.grid{grid-template-columns:1fr}.about{grid-template-columns:1fr}.cases{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}.other-services{grid-template-columns:1fr 1fr}}
+    @media (max-width:720px){.cases{grid-template-columns:1fr}.hero{padding-top:72px}.other-services{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -74,7 +73,6 @@
       </div>
       <div class="hero-art" aria-hidden="true">
         <canvas class="hero-canvas"></canvas>
-        <div class="label">Animated hero disabled in this bundle</div>
       </div>
     </div>
   </section>
@@ -196,8 +194,8 @@
       <div class="avatar"><img src="assets/damian.jpg" alt="Damian, ABI Consulting"/></div>
       <div>
         <h2>About Damian — ABI Consulting, LLC</h2>
-        <p>CDamian is a cybersecurity leader with an MBA in IT Management and a BS in Cybersecurity and Information Assurance from Western Governors University, possessing over 15 years of experience in developing robust security programs that effectively bridge strategy and execution. He has spearheaded enterprise-wide initiatives in vulnerability management, governance, cloud security, application security, and risk management, successfully achieving ISO 27001 certification and SOC 2 compliance while integrating security into CI/CD pipelines to strengthen hybrid environments.</p>
-        <p>Damian specializes in driving measurable risk reduction through the implementation of frameworks such as NIST CSF 2.0, ISO 27001:2022, and SOC 2, while mentoring both high-performing and novice teams. Trusted by boards, regulators, and product leaders, he aligns security priorities with business outcomes to foster resilience and growth.</p>
+        <p>Cybersecurity leader with 15+ years of experience building security programs that bridge strategy and execution. I’ve led enterprise-wide initiatives spanning vulnerability management, governance, cloud, application security, and risk management, achieving ISO 27001 certification and SOC2, and embedding security into CI/CD pipelines to strengthen hybrid environments.</p>
+        <p>I focus on driving measurable risk reduction, implementing frameworks such as NIST CSF 2.0, ISO 27001:2022, and SOC 2, and mentoring both high-performing and novice teams. Trusted by boards, regulators, and product leaders, I align security priorities with business outcomes to enable resilience and growth.</p>
         <p><strong>Location:</strong> Tampa, FL &#183; <strong>Phone:</strong> <a href="tel:19195767863">(919) 576‑7863</a> &#183; <strong>Email:</strong> <a href="mailto:dmrvdm@gmail.com">dmrvdm@gmail.com</a></p>
       </div>
     </div>
@@ -206,25 +204,10 @@
   <section id="credentials">
     <div class="container">
       <h2>Credentials &amp; Certifications</h2>
-      <div class="cred-grid">
-        <img src="assets/geva.png" alt="GIAC GEVA"/>
-        <img src="assets/gced.png" alt="GIAC GCED"/>
-        <img src="assets/gcia.png" alt="GIAC GCIA"/>
-        <img src="assets/gwapt.png" alt="GIAC GWAPT"/>
-        <img src="assets/ccsp.png" alt="ISC2 CCSP"/>
-        <img src="assets/sscp.png" alt="ISC2 SSCP"/>
-        <img src="assets/cysa.png" alt="CompTIA CySA+"/>
-        <img src="assets/project_plus.png" alt="CompTIA Project+"/>
-        <img src="assets/pentest_plus.png" alt="CompTIA Pentest+"/>
-        <img src="assets/it_ops.png" alt="CompTIA IT Operations Specialist"/>
-        <img src="assets/network_plus.png" alt="CompTIA Network+"/>
-        <img src="assets/aplus.png" alt="CompTIA A+"/>
-        <img src="assets/insider_tpm.png" alt="CERT Insider Threat Program Manager"/>
-        <img src="assets/ec_ces.png" alt="EC-Council Certified Encryption Specialist"/>
-        <img src="assets/itil4.png" alt="ITIL 4 Foundations"/>
-        <img src="assets/lean_it.png" alt="Lean IT Foundations"/>
+      <div class="cred-wrap">
+        <img src="assets/credentials.png" alt="Certification badges"/>
       </div>
-      <p style="margin-top:10px;color:#7f90ad;font-size:0.9rem;">Logos shown are simplified placeholders for visual balance. Replace with official badges anytime.</p>
+      <p style="margin-top:10px;color:#7f90ad;font-size:0.9rem;text-align:center;">Official icons provided. If you’d like, I can slice these into individual tiles for hover-tooltips or filtering.</p>
     </div>
   </section>
 
@@ -241,5 +224,50 @@
       <div>Cybersecurity · GRC · IT Consulting</div>
     </div>
   </footer>
+
+  <!-- Option A Canvas animation -->
+  <script>
+  (function(){
+    const canvas = document.querySelector('.hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, cx, cy, t = 0;
+    const DPR = Math.min(2, window.devicePixelRatio || 1);
+    const NODES = 14;
+    const RINGS = [60, 120, 200, 260];
+    const nodes = [];
+    function resize(){
+      const rect = canvas.parentElement.getBoundingClientRect();
+      w = Math.floor(rect.width); h = Math.floor(rect.height);
+      canvas.width = w * DPR; canvas.height = h * DPR;
+      canvas.style.width = w+'px'; canvas.style.height = h+'px';
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      cx = w/2; cy = h/2;
+    }
+    window.addEventListener('resize', resize, {passive:true});
+    resize();
+    for(let i=0;i<NODES;i++){ nodes.push({
+      r: RINGS[Math.floor(Math.random()*RINGS.length)] + (Math.random()*12-6),
+      ang: Math.random()*Math.PI*2,
+      speed: (Math.random()*0.6+0.2) * (Math.random()<0.5?1:-1),
+    });}
+    function hue(t){ return 200 + Math.sin(t*0.002)*50 }
+    function draw(){
+      t++;
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w,h)*0.8);
+      grad.addColorStop(0, 'rgba(12,25,51,1)');
+      grad.addColorStop(1, 'rgba(8,18,36,1)');
+      ctx.fillStyle = grad; ctx.fillRect(0,0,w,h);
+      ctx.lineWidth = 2; ctx.globalAlpha = 0.6;
+      for(let i=0;i<RINGS.length;i++){ ctx.beginPath(); ctx.strokeStyle = `hsla(${hue(t)+i*8}, 90%, 60%, 0.45)`; ctx.arc(cx,cy,RINGS[i],0,Math.PI*2); ctx.stroke(); }
+      const pts = [];
+      for(const n of nodes){ n.ang += 0.003*n.speed; const x = cx + Math.cos(n.ang)*n.r, y = cy + Math.sin(n.ang)*n.r; pts.push([x,y]); }
+      ctx.globalAlpha = 0.9;
+      for(let i=0;i<pts.length;i++){ for(let j=i+1;j<pts.length;j++){ const dx=pts[i][0]-pts[j][0], dy=pts[i][1]-pts[j][1]; const dist=Math.hypot(dx,dy); if(dist<160){ ctx.strokeStyle = `hsla(${hue(t)}, 90%, 60%, ${0.18*(1-dist/160)})`; ctx.beginPath(); ctx.moveTo(pts[i][0], pts[i][1]); ctx.lineTo(pts[j][0], pts[j][1]); ctx.stroke(); } } }
+      for(const p of pts){ ctx.fillStyle = `hsla(${hue(t)}, 90%, 70%, 1)`; ctx.beginPath(); ctx.arc(p[0], p[1], 3, 0, Math.PI*2); ctx.fill(); }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+  </script>
 </body>
 </html>
