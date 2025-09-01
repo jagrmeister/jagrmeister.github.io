@@ -1,1 +1,1 @@
-Upload index.html, .nojekyll, and assets/ to your GitHub Pages repo root. This version includes animated Canvas hero (Option A).
+Upload index.html, .nojekyll, and assets/ to your repo root. This version includes the Framework Alignment Grid animation (Option B) with labeled nodes.
