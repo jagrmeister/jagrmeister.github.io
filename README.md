@@ -1,1 +1,1 @@
-Upload index.html, .nojekyll, and assets/damian.jpg to your repo root (keeping the assets folder) to update the site.
+Upload index.html, .nojekyll, and the assets folder to your GitHub Pages repo root. Email set to dmrvdm@gmail.com; frameworks updated; outcomes expanded; favicon included.
