@@ -1,1 +1,1 @@
-Upload index.html, .nojekyll, and the assets folder. Hero uses Option A animation. Credentials use your provided official badges image (assets/credentials.png).
+Upload index.html, .nojekyll, and assets/. Uses Option A hero. Credentials image has been background-removed into assets/credentials_transparent.png. You can replace it with sliced individual logos later.
