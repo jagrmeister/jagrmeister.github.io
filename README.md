@@ -1,1 +1,1 @@
-Upload index.html, .nojekyll, and the assets folder to your GitHub Pages repo root. Email set to dmrvdm@gmail.com; frameworks updated; outcomes expanded; favicon included.
+Upload index.html, .nojekyll, and assets/ to your GitHub Pages repo root. This version includes animated Canvas hero (Option A).

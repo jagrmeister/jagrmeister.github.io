@@ -13,6 +13,7 @@
       --accent:#2E8CFF;--accent2:#74B2FF;--border:rgba(255,255,255,.08);
       --radius:18px;--radius-sm:12px;--shadow:0 10px 30px rgba(0,0,0,.35);--maxw:1200px;
     }
+    *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
     a{color:var(--accent);text-decoration:none}
     a:hover{text-decoration:underline}
@@ -30,7 +31,8 @@
     .hero{padding:96px 0 80px}
     .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:32px;align-items:center}
     .hero h1 span{color:var(--accent2)}
-    .hero-art{aspect-ratio:1/1;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);background:#08162b;display:grid;place-items:center;overflow:hidden}
+    .hero-art{aspect-ratio:1/1;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);background:#08162b;overflow:hidden;position:relative}
+    .hero-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
     .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:28px}
     .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));border:1px solid var(--border);border-radius:var(--radius);padding:22px;backdrop-filter:blur(6px)}
     .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
@@ -68,35 +70,7 @@
         </div>
       </div>
       <div class="hero-art" aria-hidden="true">
-        <!-- Inline cyber graphic SVG -->
-        <svg viewBox="0 0 600 600" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
-          <defs>
-            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#2E8CFF" stop-opacity="0.65"/>
-              <stop offset="1" stop-color="#27C28A" stop-opacity="0.25"/>
-            </linearGradient>
-          </defs>
-          <rect width="600" height="600" fill="#0c1933"/>
-          <g stroke="url(#g1)" fill="none" stroke-width="2" opacity="0.6">
-            <circle cx="300" cy="300" r="60"/>
-            <circle cx="300" cy="300" r="120"/>
-            <circle cx="300" cy="300" r="200"/>
-            <circle cx="300" cy="300" r="260"/>
-          </g>
-          <g fill="#74B2FF">
-            <circle cx="300" cy="300" r="6"/>
-            <circle cx="420" cy="220" r="4"/>
-            <circle cx="180" cy="240" r="4"/>
-            <circle cx="230" cy="430" r="4"/>
-            <circle cx="420" cy="380" r="4"/>
-          </g>
-          <g stroke="url(#g1)" stroke-width="2">
-            <line x1="300" y1="300" x2="420" y2="220"/>
-            <line x1="300" y1="300" x2="180" y2="240"/>
-            <line x1="300" y1="300" x2="230" y2="430"/>
-            <line x1="300" y1="300" x2="420" y2="380"/>
-          </g>
-        </svg>
+        <canvas class="hero-canvas"></canvas>
       </div>
     </div>
   </section>
@@ -216,5 +190,55 @@
       <div>Cybersecurity · GRC · IT Consulting</div>
     </div>
   </footer>
+
+  <!-- Lightweight Canvas animation -->
+  <script>
+  (function(){
+    const canvas = document.querySelector('.hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, cx, cy, t = 0;
+    const DPR = Math.min(2, window.devicePixelRatio || 1);
+    const NODES = 14;            // number of moving dots
+    const RINGS = [60, 120, 200, 260]; // ring radii
+    const nodes = [];
+    function resize(){
+      const rect = canvas.parentElement.getBoundingClientRect();
+      w = Math.floor(rect.width); h = Math.floor(rect.height);
+      canvas.width = w * DPR; canvas.height = h * DPR;
+      canvas.style.width = w+'px'; canvas.style.height = h+'px';
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      cx = w/2; cy = h/2;
+    }
+    window.addEventListener('resize', resize, {passive:true});
+    resize();
+    // init nodes
+    for(let i=0;i<NODES;i++){ nodes.push({
+      r: RINGS[Math.floor(Math.random()*RINGS.length)] + (Math.random()*12-6),
+      ang: Math.random()*Math.PI*2,
+      speed: (Math.random()*0.6+0.2) * (Math.random()<0.5?1:-1),
+    });}
+    function hue(t){ return 200 + Math.sin(t*0.002)*50 } // blue→teal sweep
+    function draw(){
+      t++;
+      // background
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w,h)*0.8);
+      grad.addColorStop(0, 'rgba(12,25,51,1)');
+      grad.addColorStop(1, 'rgba(8,18,36,1)');
+      ctx.fillStyle = grad; ctx.fillRect(0,0,w,h);
+      // rings
+      ctx.lineWidth = 2; ctx.globalAlpha = 0.6;
+      for(let i=0;i<RINGS.length;i++){ ctx.beginPath(); ctx.strokeStyle = `hsla(${hue(t)+i*8}, 90%, 60%, 0.45)`; ctx.arc(cx,cy,RINGS[i],0,Math.PI*2); ctx.stroke(); }
+      // nodes + links
+      const pts = [];
+      for(const n of nodes){ n.ang += 0.003*n.speed; const x = cx + Math.cos(n.ang)*n.r, y = cy + Math.sin(n.ang)*n.r; pts.push([x,y]); }
+      ctx.globalAlpha = 0.9;
+      for(let i=0;i<pts.length;i++){ for(let j=i+1;j<pts.length;j++){ const dx=pts[i][0]-pts[j][0], dy=pts[i][1]-pts[j][1]; const dist=Math.hypot(dx,dy); if(dist<160){ ctx.strokeStyle = `hsla(${hue(t)}, 90%, 60%, ${0.18*(1-dist/160)})`; ctx.beginPath(); ctx.moveTo(pts[i][0], pts[i][1]); ctx.lineTo(pts[j][0], pts[j][1]); ctx.stroke(); } } }
+      // dots
+      for(const p of pts){ ctx.fillStyle = `hsla(${hue(t)}, 90%, 70%, 1)`; ctx.beginPath(); ctx.arc(p[0], p[1], 3, 0, Math.PI*2); ctx.fill(); }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+  </script>
 </body>
 </html>
