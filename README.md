@@ -1,1 +1,1 @@
-Upload index.html, .nojekyll, and assets/ to your repo root. This version includes the Framework Alignment Grid animation (Option B) with labeled nodes.
+Upload index.html, .nojekyll, and the assets folder. This build adds 'Other Services' and a credentials grid with placeholder badges. Replace any badge PNG with official art at the same filename to update visually.
