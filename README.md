@@ -1,1 +1,1 @@
-Full dark-theme site for ABI Consulting. Upload index.html to your GitHub Pages repo root.
+Upload index.html, .nojekyll, and assets/damian.jpg to your repo root (keeping the assets folder) to update the site.
