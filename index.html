@@ -52,14 +52,14 @@
 
     /* About */
     .about{display:grid;grid-template-columns:.8fr 1.2fr;gap:26px;align-items:center}
-    .avatar{width:160px;height:160px;border-radius:16px;background:#0c1c36;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+    .avatar{width:220px;height:220px;border-radius:20px;background:#0c1c36;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
     .avatar img{width:100%;height:100%;object-fit:cover;display:block}
 
     /* Credentials — 3 fixed rows */
     .cred-wrap{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));border:1px solid var(--border);border-radius:18px;padding:18px}
     .cred-row{display:flex;flex-wrap:nowrap;gap:18px;justify-content:center;align-items:center;margin:10px 0}
     .cred-row figure{margin:0;text-align:center}
-    .cred-row img{height:60px;max-width:100px;width:auto;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 1px 0 rgba(255,255,255,.04))}
+    .cred-row img{height:80px;max-width:120px;width:auto;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 1px 0 rgba(255,255,255,.04))}
     .cred-label{display:block;font-size:12px;color:#8ea2c7;margin-top:6px;text-align:center}
 
     /* RESULTS — 4 card grid */
@@ -96,12 +96,259 @@
       .other-services{grid-template-columns:1fr}
       #results .result-cards{grid-template-columns:1fr;}
       .hero{padding-top:72px}
-      .avatar{width:120px;height:120px}
-      .cred-row img{height:50px;max-width:80px}
     }
   </style>
 </head>
 <body>
-<!-- Content omitted for brevity -->
+  <!-- Nav -->
+  <header class="nav">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <div class="brand"><div class="logo">ABI</div><span>ABI Consulting, LLC</span></div>
+      <nav><a href="#services" style="margin-right:14px;color:#F5F7FB;opacity:.85">Services</a><a href="#about" style="margin-right:14px;color:#F5F7FB;opacity:.85">About</a><a href="#contact" style="color:#F5F7FB;opacity:.85">Contact</a></nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container grid">
+      <div>
+        <div style="color:#74B2FF;letter-spacing:.12em;text-transform:uppercase;font-weight:700;font-size:.78rem;margin-bottom:10px;">Cybersecurity · GRC · IT Consulting</div>
+        <h1>Fractional vCISO + on-demand consulting that turns <span>resource-strained teams</span> into audit-ready security.</h1>
+        <p class="sub">Strategy, metrics, and execution across vulnerability governance, compliance fast-tracks (NIST CSF 2.0, SOC 2, ISO 27001), and cloud/appsec hardening.</p>
+        <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a class="btn" href="mailto:dmrvdm@gmail.com">Contact Us</a>
+          <a class="btn outline" href="#services">Explore Services</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true"><canvas class="hero-canvas"></canvas></div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services">
+    <div class="container">
+      <div style="color:#74B2FF;letter-spacing:.12em;text-transform:uppercase;font-weight:700;font-size:.78rem;">What we do</div>
+      <h2>Services organized around outcomes</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Strategy</h3>
+          <p>Board-level clarity and a program that maps to business risk.</p>
+          <ul>
+            <li>vCISO &amp; Board Advisory</li>
+            <li>Risk Appetite &amp; KPIs</li>
+            <li>Security Architecture &amp; IT Strategy</li>
+            <li>Program Charters &amp; Roadmaps</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Assurance</h3>
+          <p>Fast-track audit readiness and continuous evidence.</p>
+          <ul>
+            <li>Compliance (NIST CSF 2.0, SOC 2, ISO 27001)</li>
+            <li>Policy &amp; Control Frameworks</li>
+            <li>Third-party testing coordination</li>
+            <li>GRC tooling &amp; workflow design</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Operations</h3>
+          <p>Reduce exploitable risk and streamline delivery.</p>
+          <ul>
+            <li>Risk-based Vulnerability Governance</li>
+            <li>Cloud &amp; AppSec Hardening (secure CI/CD, CIS Benchmarks)</li>
+            <li>Process &amp; Tool Rationalization</li>
+            <li>AI / Data-Protection (DLP, insider-risk)</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Control Interpretation</h3>
+          <p>Translate control intent into implementable requirements across finance/tech stacks.</p>
+          <ul>
+            <li>NIST 800-171 / 800-53 mapping</li>
+            <li>CIS Controls &amp; PCI DSS alignments</li>
+            <li>Risk-based exceptions &amp; compensating controls</li>
+            <li>Evidence templates &amp; traceability</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Other Services -->
+  <section id="other-services">
+    <div class="container">
+      <h2>Other Services</h2>
+      <div class="other-services">
+        <ul>
+          <li><strong>Architecture &amp; Design</strong></li>
+          <li>Threat modeling workshops</li>
+          <li>Secure SDLC &amp; code review</li>
+          <li>Security architecture reviews</li>
+        </ul>
+        <ul>
+          <li><strong>Operations &amp; Resilience</strong></li>
+          <li>Tabletop exercises &amp; readiness drills</li>
+          <li>Vulnerability &amp; patch orchestration</li>
+          <li>Incident playbooks &amp; escalation paths</li>
+        </ul>
+        <ul>
+          <li><strong>Cloud &amp; Assurance</strong></li>
+          <li>Cloud security consulting</li>
+          <li>Third-party/vendor risk governance</li>
+          <li>Penetration testing &amp; red-team coordination</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Standards -->
+  <section id="standards">
+    <div class="container">
+      <div style="color:#74B2FF;letter-spacing:.12em;text-transform:uppercase;font-weight:700;font-size:.78rem;">Proof</div>
+      <h2>Frameworks &amp; Standards we align to</h2>
+      <div class="badges">
+        <span class="badge">NIST CSF 2.0</span>
+        <span class="badge">NIST 800-171</span>
+        <span class="badge">NIST 800-53</span>
+        <span class="badge">CIS Controls v8</span>
+        <span class="badge">ISO 27001:2022</span>
+        <span class="badge">SOC 2</span>
+        <span class="badge">PCI DSS</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results (cards) -->
+  <section id="results">
+    <div class="container">
+      <div style="color:#74B2FF;letter-spacing:.12em;text-transform:uppercase;font-weight:700;font-size:.78rem;">RESULTS</div>
+      <h2>Representative outcomes</h2>
+      <div class="result-cards">
+        <article class="result-card">
+          <h3>ISO 27001 certification</h3>
+          <p>Led end-to-end ISMS rollout and evidence collection, achieving first-pass certification.</p>
+        </article>
+        <article class="result-card">
+          <h3>Vulnerability prioritization &amp; reduction</h3>
+          <p>Shifted to risk-based VM with exploitability + asset criticality, accelerating SLA compliance.</p>
+        </article>
+        <article class="result-card">
+          <h3>Control interpretation &amp; alignment</h3>
+          <p>Mapped requirements (NIST/ISO/CIS/PCI) into implementable tech controls and audit-ready artifacts.</p>
+        </article>
+        <article class="result-card">
+          <h3>Policy review &amp; legal collaboration</h3>
+          <p>Partnered with legal to update security policies, clarify data ownership, and streamline exception handling.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="container about">
+      <div class="avatar"><img src="assets/damian.jpg" alt="Damian, ABI Consulting" /></div>
+      <div>
+        <h2>About Damian — ABI Consulting, LLC</h2>
+        <p>Damian is a cybersecurity leader with an MBA in IT Management and a BS in Cybersecurity and Information Assurance from Western Governors University, possessing over 15 years of experience in developing robust security programs that effectively bridge strategy and execution. He has spearheaded enterprise-wide initiatives in vulnerability management, governance, cloud security, application security, and risk management, successfully achieving ISO 27001 certification and SOC 2 compliance while integrating security into CI/CD pipelines to strengthen hybrid environments.</p>
+        <p>He specializes in driving measurable risk reduction through the implementation of frameworks such as NIST CSF 2.0, ISO 27001:2022, and SOC 2, while mentoring both high-performing and novice teams. Trusted by boards, regulators, and product leaders, he aligns security priorities with business outcomes to foster resilience and growth.</p>
+        <p><strong>Location:</strong> Tampa, FL &#183; <strong>Phone:</strong> <a href="tel:19195767863">(919) 576-7863</a> &#183; <strong>Email:</strong> <a href="mailto:dmrvdm@gmail.com">dmrvdm@gmail.com</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Credentials -->
+  <section id="credentials">
+    <div class="container">
+      <h2>Credentials &amp; Certifications</h2>
+      <div class="cred-wrap">
+        <!-- Row 1: GIAC + ISC² -->
+        <div class="cred-row" aria-label="GIAC and ISC2">
+          <figure title="GIAC Certified Intrusion Analyst (GCIA)"><img src="assets/GCIA.png" alt="GCIA"><figcaption class="cred-label">GCIA</figcaption></figure>
+          <figure title="GIAC Web Application Penetration Tester (GWAPT)"><img src="assets/GWAPT.png" alt="GWAPT"><figcaption class="cred-label">GWAPT</figcaption></figure>
+          <figure title="GIAC Certified Enterprise Defender (GCED)"><img src="assets/GCED.png" alt="GCED"><figcaption class="cred-label">GCED</figcaption></figure>
+          <figure title="GIAC Enterprise Vulnerability Assessor (GEVA)"><img src="assets/GEVA.png" alt="GEVA"><figcaption class="cred-label">GEVA</figcaption></figure>
+          <figure title="(ISC)² Certified Cloud Security Professional (CCSP)"><img src="assets/CCSP.png" alt="CCSP"><figcaption class="cred-label">CCSP</figcaption></figure>
+          <figure title="(ISC)² Systems Security Certified Practitioner (SSCP)"><img src="assets/SSCP.webp" alt="SSCP"><figcaption class="cred-label">SSCP</figcaption></figure>
+        </div>
+        <!-- Row 2: CompTIA -->
+        <div class="cred-row" aria-label="CompTIA">
+          <figure title="CompTIA A+"><img src="assets/Aplus.webp" alt="A+"><figcaption class="cred-label">A+</figcaption></figure>
+          <figure title="CompTIA Project+"><img src="assets/Proj_plus.png" alt="Project+"><figcaption class="cred-label">Project+</figcaption></figure>
+          <figure title="CompTIA Network+"><img src="assets/networkplus-logo.png" alt="Network+"><figcaption class="cred-label">Network+</figcaption></figure>
+          <figure title="CompTIA PenTest+"><img src="assets/PenTest+-png.png" alt="PenTest+"><figcaption class="cred-label">PenTest+</figcaption></figure>
+          <figure title="CompTIA CySA+"><img src="assets/CySA.png" alt="CySA+"><figcaption class="cred-label">CySA+</figcaption></figure>
+        </div>
+        <!-- Row 3: Other -->
+        <div class="cred-row" aria-label="Other">
+          <figure title="EC-Council Certified Encryption Specialist (ECES)"><img src="assets/ECES.avif" alt="ECES"><figcaption class="cred-label">ECES</figcaption></figure>
+          <figure title="ITIL 4 Foundation"><img src="assets/ITIL.png" alt="ITIL 4"><figcaption class="cred-label">ITIL 4</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <h2>Contact</h2>
+      <p>Email <a href="mailto:dmrvdm@gmail.com">dmrvdm@gmail.com</a> or call <a href="tel:19195767863">(919) 576-7863</a>.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <div>© 2025 ABI Consulting, LLC • Tampa, FL</div>
+      <div>Cybersecurity · GRC · IT Consulting</div>
+    </div>
+  </footer>
+
+  <!-- Option A Canvas animation -->
+  <script>
+  (function(){
+    const canvas = document.querySelector('.hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, cx, cy, t = 0;
+    const DPR = Math.min(2, window.devicePixelRatio || 1);
+    const NODES = 14;
+    const RINGS = [60, 120, 200, 260];
+    const nodes = [];
+    function resize(){
+      const rect = canvas.parentElement.getBoundingClientRect();
+      w = Math.floor(rect.width); h = Math.floor(rect.height);
+      canvas.width = w * DPR; canvas.height = h * DPR;
+      canvas.style.width = w+'px'; canvas.style.height = h+'px';
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      cx = w/2; cy = h/2;
+    }
+    window.addEventListener('resize', resize, {passive:true});
+    resize();
+    for(let i=0;i<NODES;i++){ nodes.push({
+      r: RINGS[Math.floor(Math.random()*RINGS.length)] + (Math.random()*12-6),
+      ang: Math.random()*Math.PI*2,
+      speed: (Math.random()*0.6+0.2) * (Math.random()<0.5?1:-1),
+    });}
+    function hue(t){ return 200 + Math.sin(t*0.002)*50 }
+    function draw(){
+      t++;
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w,h)*0.8);
+      grad.addColorStop(0, 'rgba(12,25,51,1)');
+      grad.addColorStop(1, 'rgba(8,18,36,1)');
+      ctx.fillStyle = grad; ctx.fillRect(0,0,w,h);
+      ctx.lineWidth = 2; ctx.globalAlpha = 0.6;
+      for(let i=0;i<RINGS.length;i++){ ctx.beginPath(); ctx.strokeStyle = `hsla(${hue(t)+i*8}, 90%, 60%, 0.45)`; ctx.arc(cx,cy,RINGS[i],0,Math.PI*2); ctx.stroke(); }
+      const pts = [];
+      for(const n of nodes){ n.ang += 0.003*n.speed; const x = cx + Math.cos(n.ang)*n.r, y = cy + Math.sin(n.ang)*n.r; pts.push([x,y]); }
+      ctx.globalAlpha = 0.9;
+      for(let i=0;i<pts.length;i++){ for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i][0]-pts[j][0], dy=pts[i][1]-pts[j][1]; const dist=Math.hypot(dx,dy);
+        if(dist<160){ ctx.strokeStyle = `hsla(${hue(t)}, 90%, 60%, ${0.18*(1-dist/160)})`; ctx.beginPath(); ctx.moveTo(pts[i][0], pts[i][1]); ctx.lineTo(pts[j][0], pts[j][1]); ctx.stroke(); }
+      }}
+      for(const p of pts){ ctx.fillStyle = `hsla(${hue(t)}, 90%, 70%, 1)`; ctx.beginPath(); ctx.arc(p[0], p[1], 3, 0, Math.PI*2); ctx.fill(); }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+  </script>
 </body>
 </html>
