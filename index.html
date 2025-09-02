@@ -89,6 +89,27 @@
     #resources .tile p{margin:0 0 8px}
     #resources .cta{color:var(--accent2);font-weight:700}
 
+    /* Trusted Partners Carousel */
+.partners-carousel{
+  position:relative; overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:18px; background:rgba(255,255,255,.02);
+  padding:16px 48px; box-shadow:0 8px 24px rgba(0,0,0,.25);
+}
+.partners-viewport{overflow:hidden}
+.partners-track{display:flex;gap:32px;will-change:transform}
+.partner{flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:8px 18px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.02)}
+.partner img{height:36px;opacity:.95;filter:drop-shadow(0 1px 0 rgba(255,255,255,.06))}
+
+.partners-btn{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:36px;height:36px;border-radius:999px;
+  background:rgba(8,18,36,.6);border:1px solid var(--border);
+  color:#fff;cursor:pointer;z-index:2;
+}
+.partners-btn.prev{left:8px}.partners-btn.next{right:8px}
+
+
     footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted)}
 
     /* Responsive */
@@ -120,6 +141,7 @@
         <a href="#services">Services</a>
         <a href="#about">About</a>
         <a href="#resources">Resources</a>
+        <a href="#partners">Trusted Partners</a>
         <a href="/blog">Blog</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -270,6 +292,43 @@
       </div>
     </div>
   </section>
+<!-- Trusted Partners -->
+<section id="partners">
+  <div class="container">
+    <div class="eyebrow" style="color:#74B2FF;letter-spacing:.12em;text-transform:uppercase;font-weight:700;font-size:.78rem;">
+      TRUSTED PARTNERS
+    </div>
+    <h2>Companies we collaborate with</h2>
+    <p class="sub" style="color:var(--muted)">Rotating partner logos will appear here once approved. Use the arrows to manually scroll.</p>
+
+    <div class="partners-carousel" data-speed="30">
+      <!-- Controls -->
+      <button class="partners-btn prev" aria-label="Previous logos">&#10094;</button>
+      <button class="partners-btn next" aria-label="Next logos">&#10095;</button>
+
+      <!-- Viewport -->
+      <div class="partners-viewport">
+        <div class="partners-track">
+          <!-- Replace with real logos -->
+          <div class="partner"><img src="assets/partners/partner1.png" alt="Partner 1"></div>
+          <div class="partner"><img src="assets/partners/partner2.png" alt="Partner 2"></div>
+          <div class="partner"><img src="assets/partners/partner3.png" alt="Partner 3"></div>
+          <div class="partner"><img src="assets/partners/partner4.png" alt="Partner 4"></div>
+          <div class="partner"><img src="assets/partners/partner5.png" alt="Partner 5"></div>
+          <div class="partner"><img src="assets/partners/partner6.png" alt="Partner 6"></div>
+
+          <!-- Duplicate for seamless loop -->
+          <div class="partner"><img src="assets/partners/partner1.png" alt=""></div>
+          <div class="partner"><img src="assets/partners/partner2.png" alt=""></div>
+          <div class="partner"><img src="assets/partners/partner3.png" alt=""></div>
+          <div class="partner"><img src="assets/partners/partner4.png" alt=""></div>
+          <div class="partner"><img src="assets/partners/partner5.png" alt=""></div>
+          <div class="partner"><img src="assets/partners/partner6.png" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
   <!-- About -->
   <section id="about">
@@ -377,5 +436,47 @@
     draw();
   })();
   </script>
+  <script>
+(function(){
+  const wrap=document.querySelector('.partners-carousel');
+  if(!wrap) return;
+  const track=wrap.querySelector('.partners-track');
+  const prev=wrap.querySelector('.partners-btn.prev');
+  const next=wrap.querySelector('.partners-btn.next');
+  const speed=Number(wrap.dataset.speed||30);
+  let width=0,x=0,last=0,paused=false;
+
+  function measure(){
+    width=0;
+    const kids=Array.from(track.children);
+    for(let i=0;i<kids.length/2;i++){width+=kids[i].offsetWidth+32;}
+  }
+  function tick(ts){
+    if(!last) last=ts;
+    const dt=(ts-last)/1000; last=ts;
+    if(!paused){
+      x-=width/speed*dt;
+      if(Math.abs(x)>=width){x+=width;}
+      track.style.transform=`translate3d(${x}px,0,0)`;
+    }
+    requestAnimationFrame(tick);
+  }
+  function step(dir){
+    const first=track.children[0];
+    if(!first)return;
+    const stepW=first.offsetWidth+32;
+    x+=dir*stepW;
+    if(x>0)x-=width;if(Math.abs(x)>=width)x+=width;
+    track.style.transform=`translate3d(${x}px,0,0)`;
+  }
+  wrap.addEventListener('mouseenter',()=>paused=true);
+  wrap.addEventListener('mouseleave',()=>paused=false);
+  prev.addEventListener('click',()=>step(1));
+  next.addEventListener('click',()=>step(-1));
+  measure(); requestAnimationFrame(tick);
+  window.addEventListener('resize',measure);
+})();
+</script>
+
 </body>
 </html>
