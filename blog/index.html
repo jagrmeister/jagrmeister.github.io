@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog – ABI Consulting</title>
+  <meta name="theme-color" content="#0B1E39" />
+  <link rel="icon" href="assets/favicon.ico" />
+  <style>
+    :root{
+      --bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;--accent:#2E8CFF;--accent2:#74B2FF;
+      --border:rgba(255,255,255,.08);--radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);--maxw:1200px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
+    header{padding:24px 0;border-bottom:1px solid var(--border)}
+    footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);margin-top:40px}
+    h1{font-size:clamp(28px,3vw,40px);margin:16px 0}
+    h2{font-size:clamp(22px,2.4vw,28px);margin:12px 0}
+    p.lead{color:var(--muted);margin:0 0 14px}
+
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800}
+    .brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#123e74,#1a2f58);display:grid;place-items:center;color:#fff;font-weight:900}
+    .nav a{margin-right:14px;color:#F5F7FB;opacity:.85}
+    .nav a:last-child{margin-right:0}
+
+    /* Layout */
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:22px;margin-top:18px}
+    .sidebar{position:sticky;top:12px;align-self:start;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid var(--border);border-radius:18px;padding:16px}
+    .sidebar h3{margin:0 0 10px;font-size:18px}
+    .side-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+    .side-list a{display:block;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.02)}
+    .side-list a:hover{border-color:rgba(116,178,255,.45)}
+
+    /* Blog posts */
+    .posts{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .post{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid var(--border);border-radius:18px;padding:18px}
+    .post h3{margin:0 0 6px}
+    .post .meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+
+    /* Responsive */
+    @media (max-width:1000px){
+      .layout{grid-template-columns:1fr}
+    }
+    @media (max-width:640px){
+      .posts{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><div class="logo">ABI</div><span>ABI Consulting, LLC</span></div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="index.html#services">Services</a>
+        <a href="index.html#resources">Resources</a>
+        <a href="blog.html">Blog</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>ABI Blog</h1>
+    <p class="lead">Articles, insights, and commentary from Damian Romano, alongside LinkedIn publications.</p>
+
+    <div class="layout">
+      <!-- Sidebar: LinkedIn Articles -->
+      <aside class="sidebar">
+        <h3>LinkedIn Articles</h3>
+        <ul class="side-list">
+          <!-- Replace with your actual LinkedIn article URLs -->
+          <li><a href="https://www.linkedin.com/pulse/why-organizational-alignment-matters-information-damian-jcvje" target="_blank">Why Organiational Alignment Matters in Information Security</a></li>
+          <li><a href="https://www.linkedin.com/pulse/5-vulnerability-management-struggles-every-ciso-knows-damian-vlele" target="_blank">The 5 Vulnerability Management Struggles Every CISO Knows — And Why They Matter at the Executive Level</a></li>
+          <li><a href="https://www.linkedin.com/pulse/threat-modeling-building-security-dna-your-program-damian-gzdoe" target="_blank">Threat Modeling: Building Security into the DNA of Your Program</a></li>
+          <li><a href="https://www.linkedin.com/pulse/5-ways-you-should-using-ai-your-cybersecurity-program-damian-eqmne" target="_blank">5 Ways You Should Be Using AI in Your Cybersecurity Program</a></li>
+          <li><a href="https://www.linkedin.com/pulse/copy-demystifying-risk-appetite-practical-guide-damian-qukoe" target="_blank">Demystifying Risk Appetite: A Practical Guide for Organizations</a></li>
+          <li><a href="https://www.linkedin.com/pulse/board-level-cybersecurity-metrics-turning-data-damian-rpqie" target="_blank">Board-Level Cybersecurity Metrics: Turning Data Into Decisions</a></li>
+          <li><a href="https://www.linkedin.com/pulse/cybersecurity-design-where-mandates-meet-mindset-damian-efo6e" target="_blank">Cybersecurity by Design: Where Mandates Meet Mindset</a></li>
+          <li><a href="https://www.linkedin.com/pulse/why-cybersecuritys-talent-shortage-isnt-what-you-damian-qgzge" target="_blank">Why Cybersecurity’s “Talent Shortage” Isn’t What You Think</a></li>
+          <li><a href="https://www.linkedin.com/pulse/top-5-things-you-dont-learn-cybersecurity-academia-damian-rvvce" target="_blank">The Top 5 Things You Don’t Learn About Cybersecurity in Academia</a></li>
+        </ul>
+      </aside>
+
+      <!-- Blog posts -->
+      <section>
+        <div class="posts">
+          <article class="post">
+            <h3>Why Risk Beats Checklists</h3>
+            <div class="meta">by Damian • Draft</div>
+            <p>Most programs fail not because they lack tools, but because they don’t frame decisions in risk. Here’s a lightweight rubric you can apply tomorrow.</p>
+          </article>
+          <article class="post">
+            <h3>VM Triage in 20 Minutes</h3>
+            <div class="meta">by Damian • Draft</div>
+            <p>A simple prioritization loop using asset criticality, EPSS, KEV, and change windows—designed for teams with more work than time.</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <div>© 2025 ABI Consulting, LLC • Tampa, FL</div>
+      <div>Cybersecurity · GRC · IT Consulting</div>
+    </div>
+  </footer>
+</body>
+</html>
