@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Risk Appetite Calculator – ABI Consulting</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <meta name="theme-color" content="#0B1E39" />
+  <style>
+    :root{
+      --bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;--accent:#2E8CFF;--accent2:#74B2FF;
+      --border:rgba(255,255,255,.08);--radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);--maxw:1200px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    header{padding:24px 0;border-bottom:1px solid var(--border)}
+    .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800}
+    .brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#123e74,#1a2f58);display:grid;place-items:center;color:#fff;font-weight:900}
+    .nav a{margin-right:14px;color:#F5F7FB;opacity:.85}
+    .nav a:last-child{margin-right:0}
+    h1{font-size:clamp(28px,3vw,40px);margin:16px 0}
+    p.lead{color:var(--muted);margin:0 0 14px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:0 8px 24px rgba(0,0,0,.25);margin:16px 0}
+    fieldset{border:none;margin:0 0 20px;padding:0}
+    legend{font-weight:700;margin-bottom:8px}
+    .option{display:flex;gap:8px;align-items:center;margin:6px 0}
+    input[type="radio"]{transform:scale(1.05)}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    button,.btn{cursor:pointer;display:inline-block;padding:12px 18px;border-radius:999px;background:var(--accent);color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow)}
+    .btn.secondary{background:transparent;border:1px solid var(--accent2);color:var(--text)}
+    .result{border:1px solid var(--border);border-radius:18px;padding:18px;background:rgba(116,178,255,.05);margin:16px 0}
+    .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;margin-left:6px}
+    .scorebar{height:12px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:8px}
+    .scorebar > div{height:100%;background:linear-gradient(90deg,#2E8CFF,#74B2FF)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .inline-kpis{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0}
+    .kpi{border:1px solid var(--border);border-radius:10px;padding:6px 10px;background:rgba(255,255,255,.03);font-size:13px;color:#dbe6ff}
+    .muted{color:var(--muted)}
+    .progress-row{display:flex;align-items:center;gap:10px;color:#cfe0ff;font-size:13px}
+    progress{width:180px;height:10px;border-radius:999px;background:rgba(255,255,255,.08)}
+    progress::-webkit-progress-bar{background:rgba(255,255,255,.08);border-radius:999px}
+    progress::-webkit-progress-value{background:linear-gradient(90deg,#2E8CFF,#74B2FF);border-radius:999px}
+    .print-note{font-size:12px;color:#9eb2d6;margin-top:8px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><div class="logo">ABI</div><span>ABI Consulting, LLC</span></div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="frameworks.html">Frameworks</a>
+        <a href="blog.html">Blog</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Risk Appetite Calculator</h1>
+    <p class="lead">Answer 10 short questions. We’ll score your organization’s default posture as <strong>Low</strong>, <strong>Medium</strong>, or <strong>High</strong> risk appetite and give tailored recommendations.</p>
+
+    <div class="progress-row">
+      <span>Completion</span>
+      <progress id="progress" value="0" max="10"></progress>
+      <span id="progressText" aria-live="polite">0/10</span>
+    </div>
+
+    <form id="form" class="card">
+      <div class="grid">
+        <fieldset>
+          <legend>1) Current business priority</legend>
+          <div class="option"><input type="radio" name="q1" value="2" required> Aggressive growth</div>
+          <div class="option"><input type="radio" name="q1" value="1"> Growth with managed risk</div>
+          <div class="option"><input type="radio" name="q1" value="0"> Balanced growth & compliance</div>
+          <div class="option"><input type="radio" name="q1" value="-1"> Compliance milestones first</div>
+          <div class="option"><input type="radio" name="q1" value="-2"> Preserve stability / reduce exposure</div>
+        </fieldset>
+
+        <fieldset>
+          <legend>2) Tolerance for downtime / service degradation</legend>
+          <div class="option"><input type="radio" name="q2" value="2" required> Tolerant — speed over uptime</div>
+          <div class="option"><input type="radio" name="q2" value="1"> Some downtime acceptable</div>
+          <div class="option"><input type="radio" name="q2" value="0"> Limited downtime acceptable</div>
+          <div class="option"><input type="radio" name="q2" value="-1"> Downtime discouraged</div>
+          <div class="option"><input type="radio" name="q2" value="-2"> Downtime unacceptable</div>
+        </fieldset>
+
+        <fieldset>
+          <legend>3) Regulatory exposure</legend>
+          <div class="option"><input type="radio" name="q3" value="-2" required> High (HIPAA, SOX, defense, etc.)</div>
+          <div class="option"><input type="radio" name="q3" value="-1"> Significant obligations</div>
+          <div class="option"><input type="radio" name="q3" value="0"> Moderate</div>
+          <div class="option"><input type="radio" name="q3" value="1"> Limited</div>
+          <div class="option"><input type="radio" name="q3" value="2"> Minimal</div>
+        </fieldset>
+
+        <fieldset>
+          <legend>4) Data sensitivity</legend>
+          <div class="option"><input type="radio" name="q4" value="-2" required> Highly sensitive (PHI/PCI/CUI)</div>
+          <div class="option"><input type="radio" name="q4" value="-1"> Mostly confidential</div>
+          <div class="option"><input type="radio" name="q4" value="0"> Mixed</div>
+          <div class="option"><input type="radio" name="q4" value="1"> Mostly internal</div>
+          <div class="option"><input type="radio" name="q4" value="2"> Mostly public</div>
+        </fieldset>
+
+        <fieldset>
+          <legend>5) Security budget flexibility</legend>
+          <div class="option"><input type="radio" name="q5" value="2" required> Highly flexible — can invest quickly</div>
+          <div class="option"><input type="radio" name="q5" value="1"> Some flexibility</div>
+          <div class="option"><input type="radio" name="q5" value="0"> Stable / planned cycles</div>
+          <div class="option"><input type="radio" name="q5" value="-1"> Tight budget</div>
+          <div class="option"><input type="radio" name="q5" value="-2"> Severe constraints</div>
+        </fieldset>
+
+        <fieldset>
+          <legend>6) Culture of experimentation</legend>
+          <div class="option"><input type="radio" name="q6" value="2" required> Move fast, pilot often</div>
+          <div class="option"><input type="radio" name="q6" value="1"> Pilot with light guardrails</div>
+          <div class="option"><input type="radio" name="q6" value="0"> Pilot with defined approvals</div>
+          <div class="option"><input type="radio" name="q6" value="-1"> Cautious pilots</div>
+          <div class="option"><input type="radio" name="q6" value="-2"> Avoid pilots without full review</div>
+        </fieldset>
+
+        <fieldset>
+          <legend>7) Third‑party reliance</legend>
+          <div class="option"><input type="radio" name="q7" value="-2" required> Heavy reliance on critical vendors</div>
+          <div class="option"><input type="radio" name="q7" value="-1"> Many vendors with key data</div>
+          <div class="option"><input type="radio" name="q7" value="0"> Moderate reliance</div>
+          <div class="option"><input type="radio" name="q7" value="1"> Limited reliance</div>
+          <div class="option"><input type="radio" name="q7" value="2"> Minimal reliance</div>
+        </fieldset>
+
+        <fieldset>
+          <legend>8) Recent incident history (12 months)</legend>
+          <div class="option"><input type="radio" name="q8" value="-2" required> Serious incident / regulator/customer impact</div>
+          <div class="option"><input type="radio" name="q8" value="-1"> Multiple medium incidents</div>
+          <div class="option"><input type="radio" name="q8" value="0"> Some minor incidents</div>
+          <div class="option"><input type="radio" name="q8" value="1"> Few / well‑contained</div>
+          <div class="option"><input type="radio" name="q8" value="2"> None</div>
+        </fieldset>
+
+        <fieldset>
+          <legend>9) Customer/SLA expectations</legend>
+          <div class="option"><input type="radio" name="q9" value="-2" required> Very strict SLAs / audit clauses</div>
+          <div class="option"><input type="radio" name="q9" value="-1"> Strict SLAs</div>
+          <div class="option"><input type="radio" name="q9" value="0"> Moderate SLAs</div>
+          <div class="option"><input type="radio" name="q9" value="1"> Light expectations</div>
+          <div class="option"><input type="radio" name="q9" value="2"> Minimal expectations</div>
+        </fieldset>
+
+        <fieldset>
+          <legend>10) Change velocity (releases / major changes)</legend>
+          <div class="option"><input type="radio" name="q10" value="2" required> Very fast (daily/weekly)</div>
+          <div class="option"><input type="radio" name="q10" value="1"> Fast (bi‑weekly)</div>
+          <div class="option"><input type="radio" name="q10" value="0"> Moderate (monthly)</div>
+          <div class="option"><input type="radio" name="q10" value="-1"> Slow (quarterly)</div>
+          <div class="option"><input type="radio" name="q10" value="-2"> Very slow (rare changes)</div>
+        </fieldset>
+      </div>
+
+      <div class="actions">
+        <button type="submit">Calculate</button>
+        <button type="reset" class="btn secondary">Reset</button>
+        <button type="button" id="printBtn" class="btn secondary">Print</button>
+      </div>
+    </form>
+
+    <div id="result" class="result" style="display:none"></div>
+    <p class="print-note">Note: This tool is directional. Use results to start a stakeholder conversation and convert into explicit tolerances (AIC triad, privacy, legal, and continuity).</p>
+  </main>
+
+  <script>
+    const form = document.getElementById('form');
+    const out = document.getElementById('result');
+    const progress = document.getElementById('progress');
+    const progressText = document.getElementById('progressText');
+    const printBtn = document.getElementById('printBtn');
+
+    // Live completion meter
+    form.addEventListener('input', () => {
+      let answered = 0;
+      for (let i=1;i<=10;i++){
+        if (form.querySelector(`input[name="q${i}"]:checked`)) answered++;
+      }
+      progress.value = answered;
+      progressText.textContent = answered + '/10';
+    });
+
+    function appetiteFrom(score){
+      // Range: -20..+20
+      if (score <= -7) return ['Low','#5bd68a','Conservative posture: prioritize compliance, resilience, and low residual risk.'];
+      if (score >= 7)  return ['High','#ffb454','Aggressive posture: enable rapid change, accept higher residual risk with guardrails.'];
+      return ['Medium','#74B2FF','Balanced posture: pursue outcomes with explicit guardrails and trade‑offs.'];
+    }
+
+    function domainSlices(answers){
+      // Group dimensions for a tiny breakdown
+      return {
+        business: +answers.q1 + +answers.q10,            // growth + change velocity
+        resilience: +answers.q2 + +answers.q6,           // downtime + experimentation
+        obligations: +answers.q3 + +answers.q9,          // regulation + customer SLAs
+        data: +answers.q4 + +answers.q7 + +answers.q8,   // data sensitivity + 3rd party + incident history
+        finance: +answers.q5                               // budget flexibility
+      };
+    }
+
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const data = new FormData(form);
+      const answers = {};
+      let answeredAll = true, score = 0;
+      for (let i=1;i<=10;i++){
+        const v = data.get('q'+i);
+        if (v === null){ answeredAll = false; break; }
+        answers['q'+i] = Number(v);
+        score += Number(v);
+      }
+      if (!answeredAll){
+        alert('Please answer all 10 questions.');
+        return;
+      }
+      const [label, color, desc] = appetiteFrom(score);
+      const slices = domainSlices(answers);
+
+      // Build small KPI chips
+      const chips = Object.entries(slices).map(([k,v]) => {
+        const name = ({business:'Business', resilience:'Resilience', obligations:'Obligations', data:'Data', finance:'Finance'})[k];
+        return `<span class="kpi">${name}: ${v > 0 ? '+'+v : v}</span>`;
+      }).join('');
+
+      const pct = Math.round((score + 20) / 40 * 100); // normalize to 0..100
+
+      out.style.display='block';
+      out.innerHTML = `
+        <h2>Result: ${label} <span class="pill" style="border-color:${color};color:${color}">${score} pts</span></h2>
+        <p>${desc}</p>
+        <div class="scorebar" aria-hidden="true"><div style="width:${pct}%"></div></div>
+        <div class="inline-kpis">${chips}</div>
+
+        <h3>Recommendations</h3>
+        <ul class="muted">
+          ${label==='Low' ? `
+            <li>Codify <strong>risk tolerances</strong> (availability/RTO-RPO, encryption, access) and align budgets accordingly.</li>
+            <li>Strengthen <strong>third‑party oversight</strong> and incident drills; maintain conservative change windows.</li>
+            <li>Prioritize <strong>compliance roadmaps</strong> (e.g., NIST CSF 2.0, ISO 27001, SOC 2).</li>
+          ` : label==='High' ? `
+            <li>Implement <strong>guardrails</strong>: pre‑approved patterns, paved roads, and rollback plans.</li>
+            <li>Adopt <strong>risk‑based exceptions</strong> with time limits and explicit owners.</li>
+            <li>Invest in <strong>telemetry & chaos testing</strong> to keep residual risk visible and managed.</li>
+          ` : `
+            <li>Define <strong>risk thresholds</strong> per domain (A/I/C, privacy, vendor).</li>
+            <li>Use <strong>tiered change controls</strong> (faster for low‑risk, stricter for high‑risk changes).</li>
+            <li>Track <strong>board‑level KPIs</strong> (risk reduction, SLA adherence, incident learnings).</li>
+          `}
+        </ul>
+      `;
+
+      out.scrollIntoView({behavior:'smooth'});
+    });
+
+    printBtn.addEventListener('click', () => window.print());
+  </script>
+</body>
+</html>
