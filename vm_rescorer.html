@@ -151,27 +151,27 @@
     if(sev==='Medium') return '30 days'; return '90 days';
   }
 
-  // Lite (multiplicative)
+// Lite (multiplicative + SLA output)
 document.getElementById('liteCalc').addEventListener('click', () => {
   const base  = parseFloat(document.getElementById('l_cve').value);
-  const asset = parseFloat(document.getElementById('l_asset').value); // 1.25 / 1.00 / 0.80
-  const biz   = parseFloat(document.getElementById('l_biz').value);   // 1.25 / 1.00 / 0.80
+  const asset = parseFloat(document.getElementById('l_asset').value);
+  const biz   = parseFloat(document.getElementById('l_biz').value);
 
-  // Multiplicative model: CVE base × Asset × Business
   let score = base * asset * biz;
   score = Math.max(0, Math.min(10, score));
 
-  const sev = band(score);
+  const sev = band(score);   // reuses your band() function
   const out = document.getElementById('liteOut');
   out.style.display = 'block';
   out.innerHTML = `
     <h3>Rescored severity: <span class="badge sev-${sev}">${sev}</span>
       <span class="pill">${score.toFixed(1)}/10</span></h3>
     <div class="scorebar"><div style="width:${(score/10)*100}%"></div></div>
-    <p class="muted"><strong>Model:</strong> CVE × Asset × Business<br>
-    <strong>Inputs:</strong> CVE ${base}, Asset ×${asset}, Business ×${biz}</p>
+    <p class="muted"><strong>Model:</strong> CVE × Asset × Business</p>
+    <p><strong>Suggested remediation SLA:</strong> ${sla(sev,false,false)}</p>
   `;
 });
+
 
   document.getElementById('liteReset').addEventListener('click', ()=>{ document.getElementById('liteOut').style.display='none'; });
 
