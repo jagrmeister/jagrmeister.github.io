@@ -222,5 +222,31 @@ document.getElementById('liteCalc').addEventListener('click', () => {
   });
   document.getElementById('proReset').addEventListener('click',()=>{document.getElementById('proOut').style.display='none';});
 </script>
+<!-- Terms acceptance modal -->
+<div id="disclaimerModal" style="position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:9999;">
+  <div style="background:#0B1E39;color:#F5F7FB;max-width:600px;padding:24px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.5)">
+    <h2 style="margin-top:0">Before You Proceed</h2>
+    <p>
+      By continuing to use the <strong>Vulnerability Criticality Re-Scorer</strong>, you acknowledge that this tool is provided  
+      solely as an aid and that <strong>ABI Consulting, LLC</strong> bears no responsibility or liability for any decisions,  
+      damages, or outcomes resulting from its use.
+    </p>
+    <button id="acceptDisclaimer" style="margin-top:12px;padding:10px 16px;border:none;border-radius:8px;background:#2E8CFF;color:#fff;font-weight:bold;cursor:pointer;">
+      I Accept
+    </button>
+  </div>
+</div>
+
+<script>
+  document.getElementById("acceptDisclaimer").addEventListener("click", function(){
+    document.getElementById("disclaimerModal").style.display = "none";
+    localStorage.setItem("vmRescorerAccepted","true");
+  });
+  // If already accepted, don’t show again
+  if(localStorage.getItem("vmRescorerAccepted")==="true"){
+    document.getElementById("disclaimerModal").style.display="none";
+  }
+</script>
+
 </body>
 </html>
