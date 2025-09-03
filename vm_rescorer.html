@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vulnerability Criticality Re‑Scorer – ABI Consulting</title>
+  <meta name="theme-color" content="#0B1E39" />
+  <style>
+    :root{
+      --bg:#0B1E39; --panel:#0e2446; --panel2:#0b1d37;
+      --text:#F5F7FB; --muted:#A3B3CC;
+      --accent:#2E8CFF; --accent2:#74B2FF; --ok:#5bd68a; --warn:#ffb454; --crit:#ff7a7a;
+      --border:rgba(255,255,255,.08); --shadow:0 16px 40px rgba(0,0,0,.35);
+      --radius:18px; --maxw:1200px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(1200px 600px at 10% -10%, rgba(116,178,255,.12), transparent),
+                    radial-gradient(900px 500px at 90% 10%, rgba(46,140,255,.12), transparent),
+                    var(--bg);
+         color:var(--text);
+         font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    a{color:var(--accent)}
+    header{padding:24px 0;border-bottom:1px solid var(--border)}
+    .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800}
+    .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#123e74,#1a2f58);display:grid;place-items:center}
+    h1{font-size:clamp(28px,3.2vw,40px);margin:12px 0 4px}
+    p.lead{color:var(--muted);margin:0 0 18px}
+    .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+    @media (max-width:980px){ .cols{grid-template-columns:1fr} }
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+          border:1px solid var(--border); border-radius:var(--radius); padding:18px;
+          box-shadow:var(--shadow)}
+    .card h2{margin:6px 0 10px}
+    fieldset{border:none;margin:0;padding:0}
+    label{display:block;margin:10px 0 6px}
+    select,input[type="number"]{width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--text)}
+    .check{display:flex;gap:8px;align-items:center;margin:6px 0}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    button{cursor:pointer;padding:12px 18px;border-radius:999px;background:var(--accent);color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.08)}
+    .secondary{background:transparent;border:1px solid var(--accent2);color:#fff}
+    .result{border:1px solid var(--border);border-radius:var(--radius);padding:16px;background:rgba(116,178,255,.06);margin-top:12px}
+    .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;margin-left:6px}
+    .badge{display:inline-block;padding:4px 10px;border-radius:999px;margin-left:8px;font-size:13px}
+    .sev-Critical{background:rgba(255,122,122,.15);border:1px solid rgba(255,122,122,.45)}
+    .sev-High{background:rgba(255,180,84,.15);border:1px solid rgba(255,180,84,.45)}
+    .sev-Medium{background:rgba(116,178,255,.15);border:1px solid rgba(116,178,255,.45)}
+    .sev-Low{background:rgba(91,214,138,.15);border:1px solid rgba(91,214,138,.45)}
+    .scorebar{height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:6px}
+    .scorebar>div{height:100%;background:linear-gradient(90deg,#2E8CFF,#74B2FF)}
+    .muted{color:var(--muted)}
+    .limit{display:flex;align-items:center;gap:8px;padding:10px;border:1px dashed var(--border);
+           border-radius:12px;background:rgba(255,255,255,.03);margin:10px 0}
+    .limit strong{color:#dfe9ff}
+    .disabled{opacity:.55;pointer-events:none}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <div class="brand"><div class="logo">ABI</div><span>ABI Consulting, LLC</span></div>
+    <nav><a href="index.html">Home</a> · <a href="frameworks.html">Frameworks</a> · <a href="blog.html">Blog</a></nav>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Vulnerability Criticality Re‑Scorer</h1>
+  <p class="lead">Left: <strong>Lite</strong> (categorical). Right: <strong>Pro</strong> (CVSS + signals + business context). The Pro model now uses a <em>multiplicative</em> approach so low impact/context can reduce scores.</p>
+
+  <section class="cols">
+    <!-- Lite -->
+<div class="card">
+  <h2>Lite</h2>
+  <fieldset>
+    <label>CVE severity</label>
+    <select id="l_cve">
+      <option value="10">Critical</option>
+      <option value="7.5">High</option>
+      <option value="5">Medium</option>
+      <option value="2.5">Low</option>
+    </select>
+
+    <label>Asset criticality</label>
+    <!-- multipliers: High boosts, Low reduces -->
+    <select id="l_asset">
+      <option value="1.25">High</option>
+      <option value="1.00">Medium</option>
+      <option value="0.80">Low</option>
+    </select>
+
+    <label>Business impact</label>
+    <select id="l_biz">
+      <option value="1.25">High</option>
+      <option value="1.00">Medium</option>
+      <option value="0.80">Low</option>
+    </select>
+  </fieldset>
+
+  <div class="actions">
+    <button id="liteCalc">Re-score</button>
+    <button class="secondary" id="liteReset">Reset</button>
+  </div>
+  <div id="liteOut" class="result" style="display:none"></div>
+</div>
+
+
+    <!-- Pro -->
+    <div class="card" id="proCard">
+      <h2>Pro</h2>
+      <div class="limit">Pro mode uses remaining: <strong id="usesLeft">5</strong></div>
+      <fieldset>
+        <label>CVSS base score (0–10)</label>
+        <input type="number" id="p_cvss" min="0" max="10" step="0.1" value="7.5">
+        <label>EPSS probability (%)</label>
+        <input type="number" id="p_epss" min="0" max="100" step="0.1" value="0">
+
+        <div class="check"><input type="checkbox" id="p_kev"> <span>On CISA KEV</span></div>
+        <div class="check"><input type="checkbox" id="p_exploited"> <span>Known exploited</span></div>
+        <div class="check"><input type="checkbox" id="p_exploitcode"> <span>Public exploit code</span></div>
+
+        <label>Attack surface</label>
+        <select id="p_surface"><option value="1.00">External / internet‑facing</option><option value="0.90">Internal</option><option value="0.80">Privileged / admin‑only</option></select>
+
+        <label>Ubiquity (# affected assets)</label>
+        <select id="p_scope"><option value="0.5">Many (10+)</option><option value="0.2">Few (2–10)</option><option value="0">One</option></select>
+
+        <label>Asset criticality</label>
+        <select id="p_asset"><option value="1.15">High</option><option value="1.00">Medium</option><option value="0.85">Low</option></select>
+
+        <label>Business impact</label>
+        <select id="p_biz"><option value="1.15">High</option><option value="1.00">Medium</option><option value="0.85">Low</option></select>
+
+        <label>Data sensitivity</label>
+        <select id="p_data"><option value="1.15">Restricted</option><option value="1.08">Confidential</option><option value="1.02">Internal</option><option value="1.00">Public</option></select>
+
+        <label>Compensating controls</label>
+        <select id="p_controls"><option value="1.00">None</option><option value="0.90">Partial</option><option value="0.80">Strong</option></select>
+      </fieldset>
+      <div class="actions"><button id="proCalc">Re‑score</button><button class="secondary" id="proReset">Reset</button></div>
+      <div id="proOut" class="result" style="display:none"></div>
+      <p class="muted" style="margin-top:8px">Want unlimited access? Contact <a href="mailto:dmrvdm@gmail.com">ABI Consulting</a>.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+  function band(score){ if(score>=9) return 'Critical'; if(score>=7.5) return 'High'; if(score>=5) return 'Medium'; return 'Low'; }
+  function sla(sev, external, activeSignals){
+    if(sev==='Critical') return (external||activeSignals) ? '24–72h (external/active signal), else 7 days' : '7 days';
+    if(sev==='High') return (external||activeSignals) ? '7 days (external/active signal), else 14–21 days' : '14–21 days';
+    if(sev==='Medium') return '30 days'; return '90 days';
+  }
+
+  // Lite (multiplicative)
+document.getElementById('liteCalc').addEventListener('click', () => {
+  const base  = parseFloat(document.getElementById('l_cve').value);
+  const asset = parseFloat(document.getElementById('l_asset').value); // 1.25 / 1.00 / 0.80
+  const biz   = parseFloat(document.getElementById('l_biz').value);   // 1.25 / 1.00 / 0.80
+
+  // Multiplicative model: CVE base × Asset × Business
+  let score = base * asset * biz;
+  score = Math.max(0, Math.min(10, score));
+
+  const sev = band(score);
+  const out = document.getElementById('liteOut');
+  out.style.display = 'block';
+  out.innerHTML = `
+    <h3>Rescored severity: <span class="badge sev-${sev}">${sev}</span>
+      <span class="pill">${score.toFixed(1)}/10</span></h3>
+    <div class="scorebar"><div style="width:${(score/10)*100}%"></div></div>
+    <p class="muted"><strong>Model:</strong> CVE × Asset × Business<br>
+    <strong>Inputs:</strong> CVE ${base}, Asset ×${asset}, Business ×${biz}</p>
+  `;
+});
+
+  document.getElementById('liteReset').addEventListener('click', ()=>{ document.getElementById('liteOut').style.display='none'; });
+
+  // IP-aware use limits (hash IP + localStorage)
+  const LIMIT=5; let KEY='abi_vm_pro_uses_generic';
+  function h(s){let x=5381;for(let i=0;i<s.length;i++)x=((x<<5)+x)+s.charCodeAt(i);return (x>>>0).toString(16);}
+  fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(({ip})=>{KEY='abi_vm_pro_uses_'+h(ip);u();}).catch(()=>u());
+  function g(){return Number(localStorage.getItem(KEY)||'0');}
+  function sset(v){localStorage.setItem(KEY,String(v));}
+  function u(){const left=Math.max(LIMIT-g(),0);const b=document.getElementById('proCalc');document.getElementById('usesLeft').textContent=left;b.disabled=left<=0;b.classList.toggle('disabled',left<=0);}
+
+  // Pro calc (multiplicative model)
+  document.getElementById('proCalc').addEventListener('click',()=>{
+    if(g()>=LIMIT){u();return;}
+    const cvss=+document.getElementById('p_cvss').value;
+    const epss=+document.getElementById('p_epss').value;
+    const kev=document.getElementById('p_kev').checked;
+    const exploited=document.getElementById('p_exploited').checked;
+    const exploitcode=document.getElementById('p_exploitcode').checked;
+    const surface=+document.getElementById('p_surface').value;
+    const scopeAdd=+document.getElementById('p_scope').value;
+    const asset=+document.getElementById('p_asset').value;
+    const biz=+document.getElementById('p_biz').value;
+    const data=+document.getElementById('p_data').value;
+    const controls=+document.getElementById('p_controls').value;
+
+    // Multipliers
+    let mult = surface * asset * biz * data * controls;
+    // Additive signals
+    let add = scopeAdd;
+    if(epss>=50) add += 1; else if(epss>=20) add += 0.5;
+    if(kev) add += 1.2;
+    if(exploited) add += 1.2;
+    if(exploitcode) add += 0.4;
+
+    let score = cvss * mult + add;
+    score = Math.max(0, Math.min(10, score));
+
+    const sev=band(score);
+    const out=document.getElementById('proOut'); out.style.display='block';
+    const active = kev||exploited;
+    out.innerHTML = `<h3>Rescored severity: <span class="badge sev-${sev}">${sev}</span> <span class="pill">${score.toFixed(1)}/10</span></h3>
+                     <div class="scorebar"><div style="width:${(score/10)*100}%"></div></div>
+                     <p class="muted"><strong>Model:</strong> score = CVSS × (exposure × asset × business × data × controls) + (ubiquity + signals).</p>
+                     <p><strong>Suggested remediation SLA:</strong> ${sla(sev, surface>=0.95, active)}</p>`;
+
+    sset(g()+1); u();
+  });
+  document.getElementById('proReset').addEventListener('click',()=>{document.getElementById('proOut').style.display='none';});
+</script>
+</body>
+</html>
