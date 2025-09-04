@@ -53,6 +53,52 @@
            border-radius:12px;background:rgba(255,255,255,.03);margin:10px 0}
     .limit strong{color:#dfe9ff}
     .disabled{opacity:.55;pointer-events:none}
+    /* --- Top nav (unify with index.html) --- */
+header.nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg);
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+header.nav .container {
+  width: min(100%, var(--maxw));
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+header.nav .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+}
+header.nav .logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg,#123e74,#1a2f58);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+}
+/* Nav links */
+header.nav nav a,
+header.nav nav a:visited {
+  color: #dfe9ff;
+  text-decoration: none;
+  margin-left: 22px;
+}
+header.nav nav a:hover {
+  color: var(--accent2);
+  text-decoration: underline;
+}
+
   </style>
 </head>
 <body>
