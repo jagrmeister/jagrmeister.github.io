@@ -8,32 +8,50 @@
   <meta name="theme-color" content="#0B1E39" />
   <link rel="icon" href="/assets/favicon.ico" />
   <style>
-    :root{--bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;--accent:#2E8CFF;--accent2:#74B2FF;--border:rgba(255,255,255,.08);--maxw:800px}
+    /* ===== Global theme (matches main site) ===== */
+    :root{
+      --bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;--accent:#2E8CFF;--accent2:#74B2FF;
+      --border:rgba(255,255,255,.08);--radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);
+      --maxw:1200px; /* page max width */
+    }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
     .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
-    header,footer{border-bottom:1px solid var(--border);padding:18px 0}
-    footer{border-top:1px solid var(--border);border-bottom:0;margin-top:40px}
-    h1{font-size:clamp(28px,3vw,40px);margin:18px 0 6px}
-    h3{margin-top:18px}
-    .meta{color:var(--muted);font-size:13px;margin-bottom:16px}
-    article p{margin:0 0 12px;color:#dfe7fb}
-    article ul{margin:10px 0 16px 18px}
-    .back{display:inline-block;margin:18px 0 0}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+
+    /* ===== Header / Nav (stretched/unified) ===== */
+    header.nav{padding:18px 0;border-bottom:1px solid var(--border)}
     .brand{display:flex;align-items:center;gap:12px;font-weight:800}
-    .brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#123e74,#1a2f58);display:grid;place-items:center;color:#fff;font-weight:900}
-    .nav a{margin-right:14px;color:#F5F7FB;opacity:.85}
-    .nav a:last-child{margin-right:0}
-    .social-link{margin-left:22px;display:inline-flex;align-items:center;color:#dfe9ff}
-    .social-link:hover{color:var(--accent2)}
+    .brand .logo{
+      width:40px;height:40px;border-radius:10px;
+      background:linear-gradient(135deg,#123e74,#1a2f58);
+      display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      color:#fff;font-weight:900
+    }
+    header.nav nav a{margin-right:14px;color:#F5F7FB;opacity:.85}
+    header.nav nav a:last-child{margin-right:0}
+    header.nav nav .social-link{margin-left:22px;display:inline-flex;align-items:center;color:#dfe9ff}
+    header.nav nav .social-link:hover{color:var(--accent2)}
+
+    /* ===== Article page layout ===== */
+    main.article{padding:48px 0}
+    .article h1{font-size:clamp(36px,6vw,56px);line-height:1.15;margin:0 0 8px}
+    .article .meta{color:var(--muted);font-size:14px;margin-bottom:18px}
+    .article-body{width:min(100%,800px)} /* readable line length */
+    .article-body p{margin:0 0 12px;color:#dfe7fb}
+    .article-body h3{margin:18px 0 8px}
+    .article-body ul{margin:10px 0 16px 18px}
+    .back{display:inline-block;margin:18px 0 0}
+
+    /* Footer */
+    footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted)}
   </style>
 </head>
 <body>
-  <!-- Header / unified nav -->
-  <header>
-    <div class="container nav">
+  <!-- Unified Header -->
+  <header class="nav">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
       <div class="brand"><div class="logo">ABI</div><span>ABI Consulting, LLC</span></div>
       <nav>
         <a href="/">Home</a>
@@ -43,7 +61,7 @@
         <a href="/#partners">Trusted Partners</a>
         <a href="/blog">Blog</a>
         <a href="/#contact">Contact</a>
-        <a class="social-link" aria-label="LinkedIn" href="https://www.linkedin.com/company/abi-consulting-llc" target="_blank" rel="noopener">
+        <a aria-label="LinkedIn" class="social-link" href="https://www.linkedin.com/company/abi-consulting-llc" target="_blank" rel="noopener">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
             <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 
              .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 
@@ -60,11 +78,11 @@
   </header>
 
   <!-- Article -->
-  <main class="container">
-    <h1>Introducing ABI Consulting’s Cyber Hygiene Assessment Packages</h1>
-    <div class="meta">September 9, 2025 • by Damian Romano</div>
+  <main class="container article">
+    <div class="article-body">
+      <h1>Introducing ABI Consulting’s Cyber Hygiene Assessment Packages</h1>
+      <div class="meta">September 9, 2025 • by Damian Romano</div>
 
-    <article>
       <p>For many small and mid-sized businesses (SMBs), cybersecurity feels like a moving target. The market is crowded with enterprise-level offerings, vague “contact us for pricing” models, and consulting engagements that can feel out of reach. What’s often missing is a clear, affordable path for SMBs to evaluate where they stand — without the overhead of a full audit or a six-figure security program.</p>
 
       <p>That’s where ABI Consulting’s <strong>Cyber Hygiene Assessment packages</strong> come in.</p>
@@ -96,11 +114,14 @@
       <p>Cybersecurity shouldn’t be out of reach for SMBs. With ABI Consulting’s Cyber Hygiene Assessment packages, you get clarity, comfort, and an actionable plan — without hidden fees or unnecessary complexity. And if you need continued support, we’re here to step in as your trusted advisor.</p>
 
       <p class="back"><a href="/blog">← Back to Blog</a></p>
-    </article>
+    </div>
   </main>
 
   <footer>
-    <div class="container">© 2025 ABI Consulting, LLC • Tampa, FL</div>
+    <div class="container" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <div>© 2025 ABI Consulting, LLC • Tampa, FL</div>
+      <div>Cybersecurity · GRC · Security Assurance</div>
+    </div>
   </footer>
 </body>
 </html>
