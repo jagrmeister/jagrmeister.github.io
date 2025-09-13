@@ -23,12 +23,7 @@
     /* ===== Header / Nav (stretched/unified) ===== */
     header.nav{padding:18px 0;border-bottom:1px solid var(--border)}
     .brand{display:flex;align-items:center;gap:12px;font-weight:800}
-    .brand .logo{
-      width:40px;height:40px;border-radius:10px;
-      background:linear-gradient(135deg,#123e74,#1a2f58);
-      display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      color:#fff;font-weight:900
-    }
+    .brand .logo{width:40px;height:40px;object-fit:contain;display:block;background:transparent;box-shadow:none;}
     header.nav nav a{margin-right:14px;color:#F5F7FB;opacity:.85}
     header.nav nav a:last-child{margin-right:0}
     header.nav nav .social-link{margin-left:22px;display:inline-flex;align-items:center;color:#dfe9ff}
@@ -52,7 +47,7 @@
   <!-- Unified Header -->
   <header class="nav">
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-      <div class="brand"><div class="logo">ABI</div><span>Consulting, LLC</span></div>
+      <div class="brand"><img class="logo" src="assets/ABI_logo_transparent.png" alt="ABI Consulting logo" /><span>Consulting, LLC</span></div>
       <nav>
         <a href="/">Home</a>
         <a href="/#about">About</a>
