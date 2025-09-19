@@ -1,25 +1,26 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Security Maturity Self‑Assessment & ROI Calculator | ABI Consulting, LLC</title>
-  <meta name="description" content="Quick, free SMB security maturity self‑assessment and cybersecurity ROI calculator. Get your score and a tailored action plan — emailed instantly." />
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Security Maturity Self‑Assessment &amp; ROI Calculator | ABI Consulting, LLC</title>
+<meta content="Quick, free SMB security maturity self‑assessment and cybersecurity ROI calculator. Get your score and a tailored action plan — emailed instantly." name="description"/>
+<style>
     :root {
       --nav: #0b1f33;          /* deep navy to match site */
-      --bg: #0f172a;           /* slate-900 */
-      --panel: #111827;        /* gray-900 */
-      --muted: #94a3b8;        /* slate-400 */
-      --text: #e5e7eb;         /* gray-200 */
-      --accent: #06b6d4;       /* cyan-500 */
-      --accent-2: #22c55e;     /* green-500 */
+      --bg: #ffffff;           /* slate-900 */
+      --panel: #ffffff;        /* gray-900 */
+      --muted: #475569;        /* slate-400 */
+      --text: #0b1f33;         /* gray-200 */
+      --accent: #2563eb;       /* cyan-500 */
+      --accent-2: #16a34a;     /* green-500 */
       --warn: #f59e0b;         /* amber-500 */
       --danger: #ef4444;       /* red-500 */
-      --card: #0b1220;         /* deep panel */
-      --border: #1f2937;       /* gray-800 */
+      --card: #ffffff;         /* deep panel */
+      --border: #e2e8f0;       /* gray-800 */
     }
-    html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    html, body { margin:0; padding:0; background: var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
 
     /* ======= Site Header (matches screenshot) ======= */
     .site-header { background: var(--nav); border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -39,29 +40,29 @@
     .grid { display:grid; grid-template-columns: 1fr; gap: 18px; }
     @media (min-width: 980px){ .grid { grid-template-columns: 1fr 1fr; } }
 
-    .card { background: linear-gradient(180deg, var(--panel), var(--card)); border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+    .card { background: #ffffff; border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
     .card h2 { margin-top:4px; margin-bottom:8px; font-size: clamp(1.1rem, 2vw, 1.4rem); }
     .card p.desc { color: var(--muted); margin-top:0; }
 
-    fieldset { border:1px solid var(--border); border-radius:12px; padding:16px; margin:14px 0; }
+    fieldset { background:#ffffff; border:1px solid var(--border); border-radius:12px; padding:16px; margin:14px 0; }
     legend { color: var(--muted); padding: 0 6px; font-size:.95rem; }
     .q { margin: 8px 0 6px; font-weight: 600; }
     .options { display:flex; flex-wrap:wrap; gap:10px; margin: 6px 0 0; }
-    .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:#0b1020; border:1px solid var(--border); border-radius:999px; cursor:pointer; }
+    .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:#ffffff; color:var(--text); border:1px solid var(--border); border-radius:999px; cursor:pointer; }
     .pill input { accent-color: var(--accent); }
 
     label.inline { display:block; margin:10px 0 6px; color: var(--muted); }
-    input[type="text"], input[type="number"], input[type="email"], select { width:100%; background:#0b1020; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; outline:none; }
+    input[type="text"], input[type="number"], input[type="email"], select { width:100%; background:#ffffff; color:var(--text); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; outline:none; }
 
     .muted { color: var(--muted); }
     .hint { font-size:.85rem; color: var(--muted); margin-top:4px; }
 
     .cta { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:flex-start; margin-top:14px; }
-    button.primary { background: linear-gradient(90deg, var(--accent), #3b82f6); color:#001018; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; }
+    button.primary { background: linear-gradient(90deg, #2563eb, #1d4ed8); color:#001018; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; }
     button.secondary { background:transparent; border:1px solid var(--border); border-radius:12px; padding:12px 16px; color:var(--text); cursor:pointer; }
     button:disabled { opacity:.6; cursor:not-allowed; }
 
-    .result { border:1px dashed var(--border); border-radius:12px; padding:14px; margin-top:12px; display:none; }
+    .result { border:1px solid var(--border); background:#ffffff; border-radius:12px; padding:14px; margin-top:12px; display:none; }
     .badge { display:inline-block; padding:4px 10px; border-radius:999px; background:#081420; border:1px solid var(--border); font-size:.85rem;}
     .success { color: var(--accent-2); }
     .warn { color: var(--warn); }
@@ -71,178 +72,129 @@
     .small { font-size:.85rem; }
     .flex { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 
-    .note { background:#0b1627; border-left:4px solid var(--accent); padding:12px 14px; border-radius:8px; color:var(--muted); }
-  
-/* === Overrides to match index.html background for header + questions === */
-fieldset {
-  background: linear-gradient(180deg, var(--panel), var(--card));
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  margin: 14px 0;
-}
-
-legend {
-  background: var(--nav);
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-weight: 600;
-}
-
-header {
-  background: linear-gradient(180deg, var(--panel), var(--card));
-  border-bottom: 1px solid var(--border);
-  padding: 18px;
-  border-radius: 12px;
-}
-
-</style>
+    .note { background:#ffffff; border-left:4px solid var(--accent); background:#ffffff; padding:12px 14px; border-radius:8px; color:var(--muted); }
+  </style>
 </head>
 <body>
-  <!-- ===== Header from your site ===== -->
-  <div class="site-header">
-    <div class="bar">
-      <div class="brand">
-        <img src="/assets/ABI_logo_transparent.png" alt="ABI Consulting logo" />
-        <span class="name">Consulting, LLC</span>
-      </div>
-      <nav class="nav" aria-label="Primary">
-        <ul>
-          <li><a href="/index.html">Home</a></li>
-          <li><a href="/services.html">Services</a></li>
-          <li><a href="/cyber_hygiene.html">Cyber Hygiene</a></li>
-          <li><a href="/about.html">About</a></li>
-          <li><a href="/resources.html">Resources</a></li>
-          <li><a href="/trusted_partners.html">Trusted Partners</a></li>
-          <li><a href="/blog.html">Blog</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-        </ul>
-      </nav>
+<!-- ===== Header from your site ===== -->
+<div class="site-header">
+<div class="bar">
+<div class="brand">
+<img alt="ABI Consulting logo" src="/assets/ABI_logo_transparent.png"/>
+<span class="name">ABI Consulting, LLC</span>
+</div>
+<nav aria-label="Primary" class="nav">
+<ul>
+<li><a href="/index.html">Home</a></li>
+<li><a href="/services.html">Services</a></li>
+<li><a href="/cyber_hygiene.html">Cyber Hygiene</a></li>
+<li><a href="/about.html">About</a></li>
+<li><a href="/resources.html">Resources</a></li>
+<li><a href="/trusted_partners.html">Trusted Partners</a></li>
+<li><a href="/blog.html">Blog</a></li>
+<li><a href="/contact.html">Contact</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="wrap">
+<header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding: 14px 0 20px; border-bottom:1px solid var(--border); margin-bottom:18px;">
+<div>
+<h1>Security Maturity Self‑Assessment &amp; ROI Calculator</h1>
+<p class="lead">Free, 5‑minute checkup for SMBs. Get a tailored action plan — and we’ll email your results.</p>
+</div>
+</header>
+<div class="note small" style="margin-bottom:14px;">
+<strong>Privacy:</strong> We use your email only to send your assessment. No spam. We’ll never sell your data.
     </div>
-  </div>
-
-  <div class="wrap">
-    <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding: 14px 0 20px; border-bottom:1px solid var(--border); margin-bottom:18px;">
-      <div>
-        <h1>Security Maturity Self‑Assessment & ROI Calculator</h1>
-        <p class="lead">Free, 5‑minute checkup for SMBs. Get a tailored action plan — and we’ll email your results.</p>
+<div class="grid">
+<!-- Maturity Quiz -->
+<section class="card" id="quiz-card">
+<h2>Security Maturity Self‑Assessment</h2>
+<p class="desc">Answer the 10 questions below. Choose the option that best describes your current practice.</p>
+<form id="maturity-form">
+<div id="questions"></div>
+<fieldset>
+<legend>Your Business Contact</legend>
+<label class="inline" for="company">Company Name</label>
+<input id="company" name="company" placeholder="Acme, Inc." required="" type="text"/>
+<label class="inline" for="name">Your Name</label>
+<input id="name" name="name" placeholder="Jane Doe" required="" type="text"/>
+<label class="inline" for="email">Business Email</label>
+<input id="email" name="email" placeholder="jane@acme.com" required="" type="email"/>
+<div class="hint">Personal domains (gmail, yahoo, outlook, icloud, etc.) are not accepted.</div>
+<!-- Honeypot to deter bots -->
+<label class="inline" for="website" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">Website</label>
+<input autocomplete="off" id="website" name="website" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" tabindex="-1" type="text"/>
+</fieldset>
+<div class="cta">
+<button class="primary" id="calc-quiz" type="button">Calculate Maturity &amp; Email Me</button>
+<button class="secondary" id="reset-quiz" type="button">Reset</button>
+</div>
+<div class="result" id="quiz-result"></div>
+</form>
+</section>
+<!-- ROI Calculator -->
+<section class="card" id="roi-card">
+<h2>Cybersecurity ROI Calculator</h2>
+<p class="desc">Estimate the potential financial impact of an incident vs. investing in baseline controls.</p>
+<form id="roi-form">
+<label class="inline" for="revenue">Annual Revenue (USD)</label>
+<input id="revenue" min="0" placeholder="5000000" required="" step="1000" type="number"/>
+<label class="inline" for="employees">Number of Employees</label>
+<input id="employees" min="1" placeholder="75" required="" step="1" type="number"/>
+<label class="inline" for="industry">Industry / Data Sensitivity</label>
+<select id="industry" required="">
+<option value="">Select…</option>
+<option value="retail">Retail / Low Sensitivity</option>
+<option value="professional">Professional Services / Moderate</option>
+<option value="saas">SaaS / Mixed</option>
+<option value="finance">Finance / High</option>
+<option value="health">Healthcare / High</option>
+</select>
+<label class="inline" for="downtime">Estimated Downtime (days) if breached</label>
+<input id="downtime" min="0" placeholder="3" required="" step="0.5" type="number"/>
+<label class="inline" for="currentSpend">Current Security Spend (% of revenue)</label>
+<input id="currentSpend" max="20" min="0" placeholder="1.0" required="" step="0.1" type="number"/>
+<fieldset>
+<legend>Baseline Controls (recommended)</legend>
+<div class="flex">
+<label class="pill"><input checked="" class="ctrl" type="checkbox" value="mfa"/> MFA</label>
+<label class="pill"><input checked="" class="ctrl" type="checkbox" value="edr"/> Endpoint Detection</label>
+<label class="pill"><input checked="" class="ctrl" type="checkbox" value="training"/> Security Awareness</label>
+<label class="pill"><input class="ctrl" type="checkbox" value="ir"/> Incident Response Plan</label>
+<label class="pill"><input class="ctrl" type="checkbox" value="vendor"/> Vendor Risk</label>
+</div>
+</fieldset>
+<div class="cta">
+<button class="primary" id="calc-roi" type="button">Calculate ROI</button>
+<button class="secondary" id="reset-roi" type="button">Reset</button>
+</div>
+<div class="result" id="roi-result"></div>
+</form>
+</section>
+</div>
+<section class="card" style="margin-top:18px;">
+<h2>What your result means</h2>
+<p class="desc">We map your score to a maturity tier and recommend next steps. When you’re ready, we can help you move up a tier with a pragmatic, budget‑aware plan.</p>
+<ul>
+<li><span class="badge">Basic / Reactive</span> — Ad hoc practices; immediate wins: MFA, backups, patch cadence, password manager.</li>
+<li><span class="badge">Developing</span> — Policies exist; formalize processes, add monitoring, train staff, vendor risk basics.</li>
+<li><span class="badge">Advanced</span> — Strong controls; close gaps with tabletop IR, config baselines, KPI dashboards.</li>
+<li><span class="badge">Optimized</span> — Continuous improvement; automation, metrics to leadership, third‑party assurances.</li>
+</ul>
+<div class="note" style="margin-top:10px;">
+<strong>Call to Action:</strong> Ready for a formal roadmap or help implementing controls? Email <a href="mailto:damian@abiconsulting.llc">damian@abiconsulting.llc</a> or book a 30‑min consult. We’ll confirm next steps within two business days.
       </div>
-    </header>
-
-    <div class="note small" style="margin-bottom:14px;">
-      <strong>Privacy:</strong> We use your email only to send your assessment. No spam. We’ll never sell your data.
-    </div>
-
-    <div class="grid">
-      <!-- Maturity Quiz -->
-      <section class="card" id="quiz-card">
-        <h2>Security Maturity Self‑Assessment</h2>
-        <p class="desc">Answer the 10 questions below. Choose the option that best describes your current practice.</p>
-
-        <form id="maturity-form">
-          <div id="questions"></div>
-
-          <fieldset>
-            <legend>Your Business Contact</legend>
-            <label class="inline" for="company">Company Name</label>
-            <input id="company" name="company" type="text" placeholder="Acme, Inc." required />
-
-            <label class="inline" for="name">Your Name</label>
-            <input id="name" name="name" type="text" placeholder="Jane Doe" required />
-
-            <label class="inline" for="email">Business Email</label>
-            <input id="email" name="email" type="email" placeholder="jane@acme.com" required />
-            <div class="hint">Personal domains (gmail, yahoo, outlook, icloud, etc.) are not accepted.</div>
-
-            <!-- Honeypot to deter bots -->
-            <label class="inline" for="website" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">Website</label>
-            <input id="website" name="website" type="text" autocomplete="off" tabindex="-1" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" />
-          </fieldset>
-
-          <div class="cta">
-            <button type="button" class="primary" id="calc-quiz">Calculate Maturity & Email Me</button>
-            <button type="button" class="secondary" id="reset-quiz">Reset</button>
-          </div>
-
-          <div id="quiz-result" class="result"></div>
-        </form>
-      </section>
-
-      <!-- ROI Calculator -->
-      <section class="card" id="roi-card">
-        <h2>Cybersecurity ROI Calculator</h2>
-        <p class="desc">Estimate the potential financial impact of an incident vs. investing in baseline controls.</p>
-
-        <form id="roi-form">
-          <label class="inline" for="revenue">Annual Revenue (USD)</label>
-          <input id="revenue" type="number" min="0" step="1000" placeholder="5000000" required />
-
-          <label class="inline" for="employees">Number of Employees</label>
-          <input id="employees" type="number" min="1" step="1" placeholder="75" required />
-
-          <label class="inline" for="industry">Industry / Data Sensitivity</label>
-          <select id="industry" required>
-            <option value="">Select…</option>
-            <option value="retail">Retail / Low Sensitivity</option>
-            <option value="professional">Professional Services / Moderate</option>
-            <option value="saas">SaaS / Mixed</option>
-            <option value="finance">Finance / High</option>
-            <option value="health">Healthcare / High</option>
-          </select>
-
-          <label class="inline" for="downtime">Estimated Downtime (days) if breached</label>
-          <input id="downtime" type="number" min="0" step="0.5" placeholder="3" required />
-
-          <label class="inline" for="currentSpend">Current Security Spend (% of revenue)</label>
-          <input id="currentSpend" type="number" min="0" max="20" step="0.1" placeholder="1.0" required />
-
-          <fieldset>
-            <legend>Baseline Controls (recommended)</legend>
-            <div class="flex">
-              <label class="pill"><input type="checkbox" class="ctrl" value="mfa" checked /> MFA</label>
-              <label class="pill"><input type="checkbox" class="ctrl" value="edr" checked /> Endpoint Detection</label>
-              <label class="pill"><input type="checkbox" class="ctrl" value="training" checked /> Security Awareness</label>
-              <label class="pill"><input type="checkbox" class="ctrl" value="ir" /> Incident Response Plan</label>
-              <label class="pill"><input type="checkbox" class="ctrl" value="vendor" /> Vendor Risk</label>
-            </div>
-          </fieldset>
-
-          <div class="cta">
-            <button type="button" class="primary" id="calc-roi">Calculate ROI</button>
-            <button type="button" class="secondary" id="reset-roi">Reset</button>
-          </div>
-
-          <div id="roi-result" class="result"></div>
-        </form>
-      </section>
-    </div>
-
-    <section class="card" style="margin-top:18px;">
-      <h2>What your result means</h2>
-      <p class="desc">We map your score to a maturity tier and recommend next steps. When you’re ready, we can help you move up a tier with a pragmatic, budget‑aware plan.</p>
-      <ul>
-        <li><span class="badge">Basic / Reactive</span> — Ad hoc practices; immediate wins: MFA, backups, patch cadence, password manager.</li>
-        <li><span class="badge">Developing</span> — Policies exist; formalize processes, add monitoring, train staff, vendor risk basics.</li>
-        <li><span class="badge">Advanced</span> — Strong controls; close gaps with tabletop IR, config baselines, KPI dashboards.</li>
-        <li><span class="badge">Optimized</span> — Continuous improvement; automation, metrics to leadership, third‑party assurances.</li>
-      </ul>
-
-      <div class="note" style="margin-top:10px;">
-        <strong>Call to Action:</strong> Ready for a formal roadmap or help implementing controls? Email <a href="mailto:damian@abiconsulting.llc">damian@abiconsulting.llc</a> or book a 30‑min consult. We’ll confirm next steps within two business days.
-      </div>
-    </section>
-
-    <footer>
-      <div>© <span id="year"></span> ABI Consulting, LLC. All rights reserved.</div>
-      <div class="small">This tool is illustrative and not financial advice. For a tailored assessment, contact us.</div>
-    </footer>
-  </div>
-
-  <!-- Optional EmailJS SDK (client-side email) -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script> -->
-
-  <script>
+</section>
+<footer>
+<div>© <span id="year"></span> ABI Consulting, LLC. All rights reserved.</div>
+<div class="small">This tool is illustrative and not financial advice. For a tailored assessment, contact us.</div>
+</footer>
+</div>
+<!-- Optional EmailJS SDK (client-side email) -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script> -->
+<script>
     // ===== Utility =====
     const YEAR = new Date().getFullYear();
     document.getElementById('year').textContent = YEAR;
