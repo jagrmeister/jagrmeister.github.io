@@ -527,25 +527,34 @@ const QUESTIONS = [
         defense: "Defense / GovCon (CUI/ITAR/DFARS)"
       };
 
+      
+      const recommendations_html = `<ul style="margin:6px 0 0 18px; padding:0;">${tierInfo.reco.map(r => `<li>${r}</li>`).join('')}</ul>`;
+
       const summary = {
-        // recipient address for the template's {{email}} or {{to_email}}
+        // routing (template "To" can be {{email}} or your fixed inbox)
         email,
-        // to_email: email, // use this instead if your template's TO uses {{to_email}}
+        owner_bcc: OWNER_BCC,
 
-        owner_bcc: OWNER_BCC, // add {{owner_bcc}} in the template's BCC field
+        // identity
+        company,
+        name,
 
-        company, name,
-        score: total,
+        // maturity
+        score: String(total),
         tier: tierInfo.tier,
-        recommendations: tierInfo.reco.join('\n - '),
 
+        // html bullets
+        recommendations_html: recommendations_html,
+
+        // ROI snapshot (strings, or 'N/A' if not used)
         roi_estimatedLoss: roi.ok ? roi.estimatedLoss.toLocaleString() : 'N/A',
-        roi_investment: roi.ok ? roi.totalInvest.toLocaleString() : 'N/A',
-        avoided_loss: roi.ok ? roi.avoided.toLocaleString() : 'N/A',
-        roi_ratio: roi.ok ? `${roi.roi.toFixed(2)}x` : 'N/A',
-        reductionPct: roi.ok ? String(roi.reductionPct) : '35',
-        industry: roi.ok ? (industryMap[roi.ind] || 'N/A') : 'N/A',
+        roi_investment:    roi.ok ? roi.totalInvest.toLocaleString()   : 'N/A',
+        avoided_loss:      roi.ok ? roi.avoided.toLocaleString()       : 'N/A',
+        roi_ratio:         roi.ok ? `${roi.roi.toFixed(2)}x`           : 'N/A',
+        reductionPct:      roi.ok ? String(roi.reductionPct)           : 'N/A',
+        industry:          roi.ok ? (industryMap[roi.ind] || 'N/A')    : 'N/A'
       };
+
 
       const emailResp = await sendEmail(summary);
 
