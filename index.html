@@ -189,7 +189,30 @@
     @media (max-width:720px){#partners .partners-grid{grid-template-columns:1fr}}
     header.nav nav .social-link{margin-left:22px;display:inline-flex;align-items:center;color:#dfe9ff;text-decoration:none}
     header.nav nav .social-link:hover{color:var(--accent2)}
-  </style>
+  
+/* === Contact Modal (matches site theme) === */
+.modal-backdrop{position:fixed; inset:0; background:rgba(2,6,23,.6); backdrop-filter: blur(4px); display:none; z-index:9998;}
+.modal{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:9999; display:none;}
+.modal-card{backdrop-filter:none !important; opacity:1 !important;width:clamp(320px, 92vw, 680px); background:#0b1f33; border:1px solid rgba(255,255,255,.12); border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.35); color:#F5F7FB;}
+.modal-head{display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid rgba(255,255,255,.08);}
+.modal-title{font-size:1.2rem; font-weight:700;}
+.modal-close{background:transparent; border:1px solid rgba(255,255,255,.18); color:#F5F7FB; border-radius:10px; padding:6px 10px; cursor:pointer;}
+.modal-body{padding:18px 20px;}
+.modal-row{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
+@media (max-width:720px){ .modal-row{ grid-template-columns: 1fr; } }
+.modal label{display:block; color:#A3B3CC; margin:10px 0 6px;}
+.modal input, .modal select, .modal textarea{ width:100%; background:#08162b; color:#F5F7FB; border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:10px 12px; outline:none;}
+.modal textarea{min-height:110px; resize:vertical;}
+.modal .actions{display:flex; gap:12px; justify-content:flex-end; padding:0 20px 20px;}
+.btn-primary{background:linear-gradient(90deg, #2E8CFF, #74B2FF); color:#001018; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer;}
+.btn-secondary{background:transparent; border:1px solid rgba(255,255,255,.18); color:#F5F7FB; border-radius:12px; padding:12px 16px; cursor:pointer;}
+.toast{position:fixed; bottom:22px; right:22px; background:#0B1E39; color:#F5F7FB; border:1px solid rgba(255,255,255,.12); padding:10px 14px; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.35); display:none; z-index:10000;}
+
+/* Opaque contact modal overrides */
+.modal-card{ background:#0b1f33 !important; }
+.modal input, .modal select, .modal textarea{ background:#0d2541 !important; border:1px solid rgba(255,255,255,.18) !important; color:#F5F7FB !important; }
+.modal-head{ background:transparent; }
+</style>
 </head>
 <body>
 <!-- Your existing body content stays as-is -->
@@ -287,25 +310,34 @@
 <div class="container">
 <div style="color:#74B2FF;letter-spacing:.12em;text-transform:uppercase;font-weight:700;font-size:.78rem;">PROOF</div>
 <h2>Explore our resources</h2>
-<div class="grid"><a class="tile" href="smb_maturity.html"><h3 style="display:flex;align-items:center;gap:8px;">SMB Security Maturity<span style="font-size:.72rem;padding:.2rem .5rem;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(116,178,255,.12);letter-spacing:.06em;">NEW</span></h3><p>5-minute self-assessment aligned to NIST CSF tiers plus a budget-aware ROI calculator. Get a maturity tier and action plan — emailed instantly.</p><span class="cta">Start now →</span></a><a class="tile" href="risk_appetite.html">
-<h3>Risk Appetite Calculator</h3>
-<p>Answer 10 quick questions to assess if your organization’s risk appetite leans Low, Medium, or High — complete with tailored recommendations.</p>
-<span class="cta">Start assessment →</span>
-</a><a class="tile" href="vm_rescorer.html">
-<h3 style="display:flex;align-items:center;gap:8px;">
-    Vulnerability Re-Scorer
-    
-</h3>
-<p>Reprioritize findings with CVSS × business context (asset criticality, impact, data, controls) plus EPSS/KEV signals. Lite + Pro views.</p>
-<span class="cta">Open tool →</span>
-</a><a class="tile" href="frameworks.html">
+<div class="grid">
+<!-- Frameworks -->
+<a class="tile" href="frameworks.html">
 <h3>Frameworks</h3>
 <p>Matrix of NIST CSF 2.0, SP 800-171, SP 800-53, AI RMF, Zero Trust, SSDF, C-SCRM, OT/ICS and more—what they are, who needs them, and official links.</p>
 <span class="cta">Open page →</span>
-</a><div aria-disabled="true" class="tile disabled">
+</a>
+<!-- Risk Appetite Calculator (NEW) -->
+<a class="tile" href="risk_appetite.html">
+<h3>Risk Appetite Calculator</h3>
+<p>Answer 10 quick questions to assess if your organization’s risk appetite leans Low, Medium, or High — complete with tailored recommendations.</p>
+<span class="cta">Start assessment →</span>
+</a>
+<!-- Vulnerability Re-Scorer (NEW) -->
+<a class="tile" href="vm_rescorer.html">
+<h3 style="display:flex;align-items:center;gap:8px;">
+    Vulnerability Re-Scorer
+    <span style="font-size:.72rem;padding:.2rem .5rem;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(116,178,255,.12);letter-spacing:.06em;">NEW</span>
+</h3>
+<p>Reprioritize findings with CVSS × business context (asset criticality, impact, data, controls) plus EPSS/KEV signals. Lite + Pro views.</p>
+<span class="cta">Open tool →</span>
+</a>
+<!-- eBook (coming soon) -->
+<div aria-disabled="true" class="tile disabled">
 <h3>eBook</h3>
 <p>Coming soon!</p>
-</div></div>
+</div>
+</div>
 </div>
 </section>
 <!-- Trusted Partners (static grid) -->
@@ -449,5 +481,160 @@ var sc_security="16067087";
 <noscript><div class="statcounter"><a href="https://statcounter.com/" target="_blank" title="Web Analytics Made Easy -
 Statcounter"><img alt="Web Analytics Made Easy - Statcounter" class="statcounter" referrerpolicy="no-referrer-when-downgrade" src="https://c.statcounter.com/13164293/0/16067087/1/"/></a></div></noscript>
 <!-- End of Statcounter Code -->
-</body>
+<div aria-hidden="true" class="modal-backdrop" id="contactBackdrop"></div>
+<div aria-labelledby="contactTitle" aria-modal="true" class="modal" id="contactModal" role="dialog">
+<div class="modal-card">
+<div class="modal-head">
+<div class="modal-title" id="contactTitle">Contact ABI Consulting</div>
+<button class="modal-close" id="contactClose" type="button">Close</button>
+</div>
+<div class="modal-body">
+<form id="contactForm" novalidate="">
+<div class="modal-row">
+<div>
+<label for="c_name">Your Name</label>
+<input id="c_name" name="name" placeholder="Jane Doe" required="" type="text"/>
+</div>
+<div>
+<label for="c_company">Company</label>
+<input id="c_company" name="company" placeholder="Acme, Inc." required="" type="text"/>
+</div>
+</div>
+<div class="modal-row">
+<div>
+<label for="c_email">Business Email</label>
+<input id="c_email" name="email" placeholder="jane@acme.com" required="" type="email"/>
+</div>
+<div>
+<label for="c_phone">Phone (optional)</label>
+<input id="c_phone" name="phone" placeholder="(555) 555-5555" type="text"/>
+</div>
+</div>
+<div class="modal-row">
+<div>
+<label for="c_interest">Interest</label>
+<select id="c_interest" name="interest" required="">
+<option value="">Select…</option>
+<option>Cyber Hygiene Assessment</option>
+<option>Two Step Security Fitness</option>
+<option>Grey Street Resilience</option>
+<option>Seek Up Enterprise</option>
+<option>SMB Maturity / ROI Follow-up</option>
+<option>Other</option>
+</select>
+</div>
+<div>
+<label for="c_hear">How did you hear about us?</label>
+<input id="c_hear" name="hear" placeholder="Referral, search, LinkedIn…" type="text"/>
+</div>
+</div>
+<label for="c_msg">How can we help?</label>
+<textarea id="c_msg" name="message" placeholder="Tell us about your goals or challenges…" required=""></textarea>
+<!-- Honeypot -->
+<input autocomplete="off" id="c_website" name="website" style="position:absolute; left:-10000px; width:1px; height:1px;" tabindex="-1" type="text"/>
+<div style="margin-top:8px; font-size:.9rem; color:#A3B3CC;">
+          We’ll reply within two business days. We use your email only to respond.
+        </div>
+</form>
+</div>
+<div class="actions">
+<button class="btn-secondary" id="contactCancel" type="button">Cancel</button>
+<button class="btn-primary" id="contactSend" type="button">Send</button>
+</div>
+</div>
+</div>
+<div class="toast" id="contactToast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script><script>
+(function(){
+  // EmailJS config (reuse your keys)
+  const EMAIL_ENABLED = true;
+  const EMAILJS_PUBLIC_KEY = 'kYNef_lW7qO0tup-6';
+  const SERVICE_ID = 'service_dc76qvv';
+  const TEMPLATE_ID = 'template_p34fnkk'; // create a 'Contact' template in EmailJS
+  const OWNER_BCC = 'damian@abiconsulting.llc';
+
+  // Free/personal email domains blacklist
+  const FREE_DOMAINS = new Set(['gmail.com','yahoo.com','outlook.com','hotmail.com','live.com','msn.com','icloud.com','me.com','aol.com','proton.me','protonmail.com','gmx.com','mail.com','yandex.com','pm.me','zoho.com','hey.com','fastmail.com','duck.com']);
+  function isBusinessEmail(email){
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    if(!re.test(email)) return false;
+    const domain = email.split('@')[1].toLowerCase();
+    if(FREE_DOMAINS.has(domain)) return false;
+    for(const d of FREE_DOMAINS){ if(domain.endsWith('.'+d)) return false; }
+    return true;
+  }
+  function toast(msg){
+    const t = document.getElementById('contactToast');
+    t.textContent = msg; t.style.display = 'block';
+    setTimeout(()=>{ t.style.display = 'none'; }, 4500);
+  }
+  function emailConfigured(){
+    return EMAIL_ENABLED && EMAILJS_PUBLIC_KEY && !EMAILJS_PUBLIC_KEY.startsWith('YOUR_') && SERVICE_ID && !SERVICE_ID.startsWith('YOUR_') && TEMPLATE_ID && !TEMPLATE_ID.startsWith('YOUR_');
+  }
+
+  // Modal controls
+  const modal = document.getElementById('contactModal');
+  const back = document.getElementById('contactBackdrop');
+  const openBtn = Array.from(document.querySelectorAll('a,button')).find(el => /contact us/i.test(el.textContent || ''));
+  const closeBtns = [document.getElementById('contactClose'), document.getElementById('contactCancel')];
+
+  function openModal(e){
+    if(e) e.preventDefault();
+    modal.style.display = 'flex';
+    back.style.display = 'block';
+    document.getElementById('c_name').focus();
+  }
+  function closeModal(){
+    modal.style.display = 'none';
+    back.style.display = 'none';
+    document.getElementById('contactForm').reset();
+  }
+  closeBtns.forEach(b=> b && b.addEventListener('click', closeModal));
+  back.addEventListener('click', closeModal);
+  if(openBtn){ openBtn.addEventListener('click', openModal); }
+
+  // Email send
+  document.getElementById('contactSend').addEventListener('click', async () => {
+    const form = document.getElementById('contactForm');
+    const name = document.getElementById('c_name').value.trim();
+    const company = document.getElementById('c_company').value.trim();
+    const email = document.getElementById('c_email').value.trim();
+    const phone = document.getElementById('c_phone').value.trim();
+    const interest = document.getElementById('c_interest').value;
+    const hear = document.getElementById('c_hear').value.trim();
+    const message = document.getElementById('c_msg').value.trim();
+    const hp = document.getElementById('c_website').value;
+
+    if(hp) return; // honeypot
+    if(!name || !company || !email || !interest || !message){
+      toast('Please complete all required fields.');
+      return;
+    }
+    if(!isBusinessEmail(email)){
+      toast('Please use a business email (e.g., jane@yourcompany.com).');
+      return;
+    }
+
+    const payload = {
+      email, owner_bcc: OWNER_BCC,
+      name, company, phone, interest, hear, message,
+      page: window.location.href
+    };
+
+    try{
+      if(!emailConfigured()){
+        toast('Email service not configured. Please contact damian@abiconsulting.llc');
+        return;
+      }
+      emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, payload);
+      toast('Thanks — your message was sent.');
+      closeModal();
+    }catch(err){
+      console.error(err);
+      toast('Sorry, failed to send. Please email damian@abiconsulting.llc directly.');
+    }
+  });
+})();    
+</script></body>
 </html>
