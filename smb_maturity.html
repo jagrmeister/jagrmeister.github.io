@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Security Maturity Self‑Assessment & ROI Calculator | ABI Consulting, LLC</title>
+  <meta name="description" content="Quick, free SMB security maturity self‑assessment and cybersecurity ROI calculator. Get your score and a tailored action plan — emailed instantly." />
+  <style>
+    :root {
+      --nav: #0b1f33;          /* deep navy to match site */
+      --bg: #0f172a;           /* slate-900 */
+      --panel: #111827;        /* gray-900 */
+      --muted: #94a3b8;        /* slate-400 */
+      --text: #e5e7eb;         /* gray-200 */
+      --accent: #06b6d4;       /* cyan-500 */
+      --accent-2: #22c55e;     /* green-500 */
+      --warn: #f59e0b;         /* amber-500 */
+      --danger: #ef4444;       /* red-500 */
+      --card: #0b1220;         /* deep panel */
+      --border: #1f2937;       /* gray-800 */
+    }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+
+    /* ======= Site Header (matches screenshot) ======= */
+    .site-header { background: var(--nav); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .site-header .bar { max-width: 1240px; margin: 0 auto; padding: 14px 18px; display:flex; align-items:center; justify-content:space-between; }
+    .brand { display:flex; align-items:center; gap:10px; color:#fff; font-weight:700; letter-spacing:.2px; }
+    .brand img { height:22px; width:auto; display:block; }
+    .brand .name { font-size:15px; opacity:.95; }
+    .nav ul { list-style:none; display:flex; gap:28px; padding:0; margin:0; }
+    .nav a { color:#dbe7f5; text-decoration:none; font-size:15px; }
+    .nav a:hover { text-decoration:underline; }
+
+    /* ======= Page Layout ======= */
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 16px 80px; }
+    h1 { font-size: clamp(1.6rem, 2.6vw, 2.2rem); margin: 18px 0 6px; }
+    p.lead { color: var(--muted); margin:0; }
+
+    .grid { display:grid; grid-template-columns: 1fr; gap: 18px; }
+    @media (min-width: 980px){ .grid { grid-template-columns: 1fr 1fr; } }
+
+    .card { background: linear-gradient(180deg, var(--panel), var(--card)); border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+    .card h2 { margin-top:4px; margin-bottom:8px; font-size: clamp(1.1rem, 2vw, 1.4rem); }
+    .card p.desc { color: var(--muted); margin-top:0; }
+
+    fieldset { border:1px solid var(--border); border-radius:12px; padding:16px; margin:14px 0; }
+    legend { color: var(--muted); padding: 0 6px; font-size:.95rem; }
+    .q { margin: 8px 0 6px; font-weight: 600; }
+    .options { display:flex; flex-wrap:wrap; gap:10px; margin: 6px 0 0; }
+    .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:#0b1020; border:1px solid var(--border); border-radius:999px; cursor:pointer; }
+    .pill input { accent-color: var(--accent); }
+
+    label.inline { display:block; margin:10px 0 6px; color: var(--muted); }
+    input[type="text"], input[type="number"], input[type="email"], select { width:100%; background:#0b1020; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; outline:none; }
+
+    .muted { color: var(--muted); }
+    .hint { font-size:.85rem; color: var(--muted); margin-top:4px; }
+
+    .cta { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:flex-start; margin-top:14px; }
+    button.primary { background: linear-gradient(90deg, var(--accent), #3b82f6); color:#001018; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; }
+    button.secondary { background:transparent; border:1px solid var(--border); border-radius:12px; padding:12px 16px; color:var(--text); cursor:pointer; }
+    button:disabled { opacity:.6; cursor:not-allowed; }
+
+    .result { border:1px dashed var(--border); border-radius:12px; padding:14px; margin-top:12px; display:none; }
+    .badge { display:inline-block; padding:4px 10px; border-radius:999px; background:#081420; border:1px solid var(--border); font-size:.85rem;}
+    .success { color: var(--accent-2); }
+    .warn { color: var(--warn); }
+    .danger { color: var(--danger); }
+
+    footer { margin-top: 40px; border-top:1px solid var(--border); padding-top:18px; color:var(--muted); font-size:.9rem; }
+    .small { font-size:.85rem; }
+    .flex { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+
+    .note { background:#0b1627; border-left:4px solid var(--accent); padding:12px 14px; border-radius:8px; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <!-- ===== Header from your site ===== -->
+  <div class="site-header">
+    <div class="bar">
+      <div class="brand">
+        <img src="/assets/ABI_logo_transparent.png" alt="ABI Consulting logo" />
+        <span class="name">ABI Consulting, LLC</span>
+      </div>
+      <nav class="nav" aria-label="Primary">
+        <ul>
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/services.html">Services</a></li>
+          <li><a href="/cyber_hygiene.html">Cyber Hygiene</a></li>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/resources.html">Resources</a></li>
+          <li><a href="/trusted_partners.html">Trusted Partners</a></li>
+          <li><a href="/blog.html">Blog</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding: 14px 0 20px; border-bottom:1px solid var(--border); margin-bottom:18px;">
+      <div>
+        <h1>Security Maturity Self‑Assessment & ROI Calculator</h1>
+        <p class="lead">Free, 5‑minute checkup for SMBs. Get a tailored action plan — and we’ll email your results.</p>
+      </div>
+    </header>
+
+    <div class="note small" style="margin-bottom:14px;">
+      <strong>Privacy:</strong> We use your email only to send your assessment. No spam. We’ll never sell your data.
+    </div>
+
+    <div class="grid">
+      <!-- Maturity Quiz -->
+      <section class="card" id="quiz-card">
+        <h2>Security Maturity Self‑Assessment</h2>
+        <p class="desc">Answer the 10 questions below. Choose the option that best describes your current practice.</p>
+
+        <form id="maturity-form">
+          <div id="questions"></div>
+
+          <fieldset>
+            <legend>Your Business Contact</legend>
+            <label class="inline" for="company">Company Name</label>
+            <input id="company" name="company" type="text" placeholder="Acme, Inc." required />
+
+            <label class="inline" for="name">Your Name</label>
+            <input id="name" name="name" type="text" placeholder="Jane Doe" required />
+
+            <label class="inline" for="email">Business Email</label>
+            <input id="email" name="email" type="email" placeholder="jane@acme.com" required />
+            <div class="hint">Personal domains (gmail, yahoo, outlook, icloud, etc.) are not accepted.</div>
+
+            <!-- Honeypot to deter bots -->
+            <label class="inline" for="website" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">Website</label>
+            <input id="website" name="website" type="text" autocomplete="off" tabindex="-1" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" />
+          </fieldset>
+
+          <div class="cta">
+            <button type="button" class="primary" id="calc-quiz">Calculate Maturity & Email Me</button>
+            <button type="button" class="secondary" id="reset-quiz">Reset</button>
+          </div>
+
+          <div id="quiz-result" class="result"></div>
+        </form>
+      </section>
+
+      <!-- ROI Calculator -->
+      <section class="card" id="roi-card">
+        <h2>Cybersecurity ROI Calculator</h2>
+        <p class="desc">Estimate the potential financial impact of an incident vs. investing in baseline controls.</p>
+
+        <form id="roi-form">
+          <label class="inline" for="revenue">Annual Revenue (USD)</label>
+          <input id="revenue" type="number" min="0" step="1000" placeholder="5000000" required />
+
+          <label class="inline" for="employees">Number of Employees</label>
+          <input id="employees" type="number" min="1" step="1" placeholder="75" required />
+
+          <label class="inline" for="industry">Industry / Data Sensitivity</label>
+          <select id="industry" required>
+            <option value="">Select…</option>
+            <option value="retail">Retail / Low Sensitivity</option>
+            <option value="professional">Professional Services / Moderate</option>
+            <option value="saas">SaaS / Mixed</option>
+            <option value="finance">Finance / High</option>
+            <option value="health">Healthcare / High</option>
+          </select>
+
+          <label class="inline" for="downtime">Estimated Downtime (days) if breached</label>
+          <input id="downtime" type="number" min="0" step="0.5" placeholder="3" required />
+
+          <label class="inline" for="currentSpend">Current Security Spend (% of revenue)</label>
+          <input id="currentSpend" type="number" min="0" max="20" step="0.1" placeholder="1.0" required />
+
+          <fieldset>
+            <legend>Baseline Controls (recommended)</legend>
+            <div class="flex">
+              <label class="pill"><input type="checkbox" class="ctrl" value="mfa" checked /> MFA</label>
+              <label class="pill"><input type="checkbox" class="ctrl" value="edr" checked /> Endpoint Detection</label>
+              <label class="pill"><input type="checkbox" class="ctrl" value="training" checked /> Security Awareness</label>
+              <label class="pill"><input type="checkbox" class="ctrl" value="ir" /> Incident Response Plan</label>
+              <label class="pill"><input type="checkbox" class="ctrl" value="vendor" /> Vendor Risk</label>
+            </div>
+          </fieldset>
+
+          <div class="cta">
+            <button type="button" class="primary" id="calc-roi">Calculate ROI</button>
+            <button type="button" class="secondary" id="reset-roi">Reset</button>
+          </div>
+
+          <div id="roi-result" class="result"></div>
+        </form>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:18px;">
+      <h2>What your result means</h2>
+      <p class="desc">We map your score to a maturity tier and recommend next steps. When you’re ready, we can help you move up a tier with a pragmatic, budget‑aware plan.</p>
+      <ul>
+        <li><span class="badge">Basic / Reactive</span> — Ad hoc practices; immediate wins: MFA, backups, patch cadence, password manager.</li>
+        <li><span class="badge">Developing</span> — Policies exist; formalize processes, add monitoring, train staff, vendor risk basics.</li>
+        <li><span class="badge">Advanced</span> — Strong controls; close gaps with tabletop IR, config baselines, KPI dashboards.</li>
+        <li><span class="badge">Optimized</span> — Continuous improvement; automation, metrics to leadership, third‑party assurances.</li>
+      </ul>
+
+      <div class="note" style="margin-top:10px;">
+        <strong>Call to Action:</strong> Ready for a formal roadmap or help implementing controls? Email <a href="mailto:damian@abiconsulting.llc">damian@abiconsulting.llc</a> or book a 30‑min consult. We’ll confirm next steps within two business days.
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="year"></span> ABI Consulting, LLC. All rights reserved.</div>
+      <div class="small">This tool is illustrative and not financial advice. For a tailored assessment, contact us.</div>
+    </footer>
+  </div>
+
+  <!-- Optional EmailJS SDK (client-side email) -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script> -->
+
+  <script>
+    // ===== Utility =====
+    const YEAR = new Date().getFullYear();
+    document.getElementById('year').textContent = YEAR;
+
+    // Common personal/free email domains blacklist (expand as needed)
+    const FREE_DOMAINS = new Set([
+      'gmail.com','yahoo.com','outlook.com','hotmail.com','live.com','msn.com','icloud.com','me.com','aol.com','proton.me','protonmail.com','gmx.com','gmx.de','mail.com','yandex.com','pm.me','zoho.com','hey.com','fastmail.com','duck.com'
+    ]);
+
+    function isBusinessEmail(email){
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+      if(!re.test(email)) return false;
+      const domain = email.split('@')[1].toLowerCase();
+      if(FREE_DOMAINS.has(domain)) return false;
+      for (const d of FREE_DOMAINS){ if(domain.endsWith('.'+d)) return false; }
+      return true;
+    }
+
+    // ====== Maturity Quiz ======
+    const QUESTIONS = [
+      { t:'Policies & Documentation', o:['None / ad hoc','Basic for some areas','Mostly documented, not updated','Fully documented & reviewed'] },
+      { t:'Risk Management / Threat Modeling', o:['Rarely','Only when required','At least yearly','Continuous & integrated'] },
+      { t:'Identity & Access (MFA/Least Privilege)', o:['No MFA; shared accounts','External MFA; weak internal','Good MFA; some reviews','Strong IAM; periodic reviews'] },
+      { t:'Endpoint / Network Protection', o:['Minimal; reactive patching','Basic; patch delays','Good + some segmentation','Proactive + monitoring'] },
+      { t:'Incident Response & Monitoring', o:['No plan/monitoring','Plan exists; rarely tested','Plan tested; some monitoring','Tested IR; lessons learned'] },
+      { t:'Vendor / Third‑Party Risk', o:['No oversight','Ad hoc due diligence','Standard assessments','Ongoing oversight & SLAs'] },
+      { t:'Training / Culture', o:['None/minimal','Basic occasionally','Regular; measured','Integrated; phishing tests'] },
+      { t:'Patch & Config Hygiene', o:['Rare/reactive','Some regular; misconfigs','Most patched; baselines','Automated; continuous audit'] },
+      { t:'Backup & Business Continuity', o:['No/Informal backups','Backups; weak BCP','Tested backups; BCP exists','Tested BCP/DR; BIA done'] },
+      { t:'Regulatory / Compliance', o:['Ad hoc','Some controls','Most controls; some gaps','Compliant/on track; audits'] },
+    ];
+
+    function renderQuestions(){
+      const container = document.getElementById('questions');
+      container.innerHTML = '';
+      QUESTIONS.forEach((q, idx) => {
+        const fs = document.createElement('fieldset');
+        const legend = document.createElement('legend'); legend.textContent = `Q${idx+1}`; fs.appendChild(legend);
+        const qt = document.createElement('div'); qt.className = 'q'; qt.textContent = q.t; fs.appendChild(qt);
+        const opts = document.createElement('div'); opts.className = 'options';
+        q.o.forEach((opt, j) => {
+          const id = `q${idx}_${j}`;
+          const label = document.createElement('label'); label.className = 'pill';
+          const input = document.createElement('input'); input.type = 'radio'; input.name = `q${idx}`; input.value = (j+1); input.id = id; input.required = true;
+          const span = document.createElement('span'); span.textContent = opt;
+          label.appendChild(input); label.appendChild(span); opts.appendChild(label);
+        });
+        fs.appendChild(opts); container.appendChild(fs);
+      });
+    }
+    renderQuestions();
+
+    function scoreQuiz(){
+      let total = 0; let answered = 0;
+      for(let i=0;i<QUESTIONS.length;i++){
+        const chosen = document.querySelector(`input[name="q${i}"]:checked`);
+        if(chosen){ total += parseInt(chosen.value, 10); answered++; }
+      }
+      return { total, answered };
+    }
+
+    function mapTier(score){
+      if(score <= 18) return { tier:'Basic / Reactive', color:'danger', reco:[
+        'Enable MFA company‑wide and enforce a password manager.',
+        'Establish a monthly patch cadence and secure configurations.',
+        'Set up reliable backups and test restores.'
+      ]};
+      if(score <= 26) return { tier:'Developing', color:'warn', reco:[
+        'Formalize policies and assign control owners.',
+        'Add basic monitoring and a tested incident response plan.',
+        'Launch quarterly security awareness and phishing tests.'
+      ]};
+      if(score <= 34) return { tier:'Advanced', color:'success', reco:[
+        'Close gaps with tabletop IR exercises and KPIs.',
+        'Harden configurations and implement vendor risk reviews.',
+        'Automate patching and improve visibility with dashboards.'
+      ]};
+      return { tier:'Optimized', color:'success', reco:[
+        'Pursue continuous improvement and automation.',
+        'Expand third‑party assurances (e.g., SOC 2, ISO 27001).',
+        'Align metrics to business outcomes and risk appetite.'
+      ]};
+    }
+
+    // ===== ROI Logic (simple illustrative model) =====
+    function calcROI(){
+      const rev = parseFloat(document.getElementById('revenue').value || '0');
+      const emp = parseInt(document.getElementById('employees').value || '0', 10);
+      const ind = document.getElementById('industry').value;
+      const down = parseFloat(document.getElementById('downtime').value || '0');
+      const spendPct = parseFloat(document.getElementById('currentSpend').value || '0');
+
+      if(!(rev>0 && emp>0 && ind && down>=0 && spendPct>=0)){
+        return { ok:false, msg:'Please complete all ROI fields.' };
+      }
+
+      // Revenue per day (approx): assume 260 business days
+      const revPerDay = rev / 260;
+
+      // Sensitivity multiplier by industry
+      const mult = {
+        retail: 1.1,
+        professional: 1.25,
+        saas: 1.35,
+        finance: 1.7,
+        health: 1.8,
+      }[ind] || 1.2;
+
+      // Baseline breach cost model (very simplified):
+      const downtimeCost = revPerDay * down;
+      const remediationCost = emp * 150 * 16; // 16 hours @ $150 blended
+      const overhead = rev * (0.002 * mult);  // 0.2% of revenue scaled by sensitivity
+      const estimatedLoss = Math.round(downtimeCost + remediationCost + overhead);
+
+      // Investment estimate based on selected controls (rough SMB annualized costs)
+      const selected = Array.from(document.querySelectorAll('#roi-form .ctrl:checked')).map(x=>x.value);
+      const ctrlCosts = {
+        mfa: 2500,
+        edr: Math.max(2500, emp * 6 * 12), // $6/user/mo
+        training: Math.max(1500, emp * 2 * 12), // $2/user/mo
+        ir: 4000,       // plan + tabletop
+        vendor: 3000,   // basic VRM effort/tools
+      };
+      let invest = 0; selected.forEach(k=> invest += (ctrlCosts[k]||0));
+
+      const currentSpend = rev * (spendPct/100); // not used directly in ROI, but could be displayed
+      const totalInvest = invest;
+
+      const avoided = Math.max(0, estimatedLoss - (estimatedLoss * 0.35)); // assume baseline controls avoid ~35% impact
+      const roi = totalInvest>0 ? (avoided - totalInvest) / totalInvest : 0;
+
+      return { ok:true, rev, emp, ind, down, spendPct, estimatedLoss, totalInvest: Math.round(totalInvest), avoided: Math.round(avoided), roi };
+    }
+
+    // ===== Email Sending (EmailJS optional) =====
+    const EMAIL_ENABLED = false; // set to true when configured
+    const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+    const SERVICE_ID = 'YOUR_SERVICE_ID';
+    const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+
+    async function sendEmail(data){
+      if(!EMAIL_ENABLED){
+        return { ok:false, msg:'Email service not configured. Showing results on page instead.' };
+      }
+      try{
+        // emailjs.init(EMAILJS_PUBLIC_KEY);
+        // await emailjs.send(SERVICE_ID, TEMPLATE_ID, data);
+        return { ok:true };
+      }catch(err){
+        return { ok:false, msg: 'Email failed to send. '+ (err?.message||'') };
+      }
+    }
+
+    // ===== Wire up Quiz =====
+    document.getElementById('calc-quiz').addEventListener('click', async () => {
+      if(document.getElementById('website').value){ return; }
+
+      const { total, answered } = scoreQuiz();
+      if(answered < 10){
+        show('quiz-result', `<div class="danger">Please answer all questions (${answered}/10)</div>`);
+        return;
+      }
+
+      const company = document.getElementById('company').value.trim();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      if(!company || !name || !email){
+        show('quiz-result', `<div class="danger">Please complete your contact details.</div>`);
+        return;
+      }
+      if(!isBusinessEmail(email)){
+        show('quiz-result', `<div class="danger">Please enter a <strong>business</strong> email (e.g., jane@yourcompany.com).</div>`);
+        return;
+      }
+
+      const tierInfo = mapTier(total);
+      const roi = calcROI(); // include ROI snapshot if available
+
+      const summary = {
+        company, name, email,
+        score: total,
+        tier: tierInfo.tier,
+        recommendations: tierInfo.reco.join('\n - '),
+        roi_estimatedLoss: roi.ok ? `$${roi.estimatedLoss.toLocaleString()}` : 'N/A',
+        roi_investment: roi.ok ? `$${roi.totalInvest.toLocaleString()}` : 'N/A',
+        roi_ratio: roi.ok ? `${roi.roi.toFixed(2)}x` : 'N/A'
+      };
+
+      const emailResp = await sendEmail(summary);
+
+      let html = `<div class="badge ${tierInfo.color}">Your Score: ${total} → ${tierInfo.tier}</div>`;
+      html += `<div style="margin-top:8px;">Recommended next steps:<ul>` + tierInfo.reco.map(r=>`<li>${r}</li>`).join('') + `</ul></div>`;
+      if(roi.ok){
+        html += `<div style="margin-top:6px;" class="muted small">ROI snapshot: Est. loss <strong>$${roi.estimatedLoss.toLocaleString()}</strong>, Baseline invest <strong>$${roi.totalInvest.toLocaleString()}</strong>, ROI <strong>${roi.roi.toFixed(2)}x</strong></div>`;
+      }
+      html += `<div class="note" style="margin-top:10px;">`+
+              `<strong>Call to Action:</strong> Want a formal roadmap to move from <em>${tierInfo.tier}</em> up a tier? `+
+              `Email <a href="mailto:damian@abiconsulting.llc">damian@abiconsulting.llc</a> to schedule a 30‑minute consult.</div>`;
+
+      if(emailResp.ok){
+        html = `<div class="success">Your results were emailed to <strong>${email}</strong>.</div>` + html;
+      } else {
+        html = `<div class="warn">${emailResp.msg}</div>` + html;
+      }
+      show('quiz-result', html);
+    });
+
+    document.getElementById('reset-quiz').addEventListener('click', () => {
+      document.getElementById('maturity-form').reset();
+      renderQuestions();
+      hide('quiz-result');
+    });
+
+    // ===== Wire up ROI =====
+    document.getElementById('calc-roi').addEventListener('click', () => {
+      const res = calcROI();
+      if(!res.ok){
+        show('roi-result', `<div class="danger">${res.msg}</div>`);
+        return;
+      }
+      const html = `
+        <div class=\"badge\">ROI Snapshot</div>
+        <div class=\"small\" style=\"margin-top:8px;\">
+          Estimated Loss w/ Incident: <strong>$${res.estimatedLoss.toLocaleString()}</strong><br/>
+          Baseline Controls Investment: <strong>$${res.totalInvest.toLocaleString()}</strong><br/>
+          Avoided Loss (illustrative): <strong>$${res.avoided.toLocaleString()}</strong><br/>
+          ROI: <strong>${res.roi.toFixed(2)}x</strong>
+        </div>
+      `;
+      show('roi-result', html);
+    });
+
+    document.getElementById('reset-roi').addEventListener('click', () => {
+      document.getElementById('roi-form').reset();
+      hide('roi-result');
+    });
+
+    // ===== Helpers =====
+    function show(id, html){ const el = document.getElementById(id); el.innerHTML = html; el.style.display = 'block'; }
+    function hide(id){ const el = document.getElementById(id); el.style.display = 'none'; el.innerHTML = ''; }
+  </script>
+</body>
+</html>
