@@ -8,17 +8,17 @@
 <meta content="Quick, free SMB security maturity self‑assessment and cybersecurity ROI calculator. Get your score and a tailored action plan — emailed instantly." name="description"/>
 <style>
     :root {
-      --nav:#0B1E39;          /* deep navy to match site */
-      --bg:#0B1E39;           /* slate-900 */
+      --nav: #0b1f33;          /* deep navy to match site */
+      --bg: #0f172a;           /* slate-900 */
       --panel: #111827;        /* gray-900 */
-      --muted:#A3B3CC;        /* slate-400 */
-      --text:#F5F7FB;         /* gray-200 */
-      --accent:#2E8CFF;       /* cyan-500 */
-      --accent-2:#74B2FF;     /* green-500 */
+      --muted: #94a3b8;        /* slate-400 */
+      --text: #e5e7eb;         /* gray-200 */
+      --accent: #06b6d4;       /* cyan-500 */
+      --accent-2: #22c55e;     /* green-500 */
       --warn: #f59e0b;         /* amber-500 */
       --danger: #ef4444;       /* red-500 */
       --card: #0b1220;         /* deep panel */
-      --border:rgba(255,255,255,.08);--radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);       /* gray-800 */
+      --border: #1f2937;       /* gray-800 */
     }
     html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
 
@@ -40,19 +40,23 @@
     .grid { display:grid; grid-template-columns: 1fr; gap: 18px; }
     @media (min-width: 980px){ .grid { grid-template-columns: 1fr 1fr; } }
 
-    .card { background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.06)); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow: var(--shadow); backdrop-filter: blur(6px); }
+    .card { background: linear-gradient(180deg, var(--panel), var(--card)); border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
     .card h2 { margin-top:4px; margin-bottom:8px; font-size: clamp(1.1rem, 2vw, 1.4rem); }
     .card p.desc { color: var(--muted); margin-top:0; }
 
-    fieldset { background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.05)); border:1px solid var(--border); border-radius:14px; padding:16px; margin:14px 0; }
-    legend { color: var(--muted); padding: 0 6px; font-size:.95rem; }
+    fieldset { border:1px solid var(--border); border-radius:12px; padding:16px; margin:14px 0; }
+    legend { padding: 0 6px; font-size:.95rem; }
+    .q-legend { font-weight:700; color: var(--accent); } /* Question N styling */
     .q { margin: 8px 0 6px; font-weight: 600; }
     .options { display:flex; flex-wrap:wrap; gap:10px; margin: 6px 0 0; }
-    .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:#08162b; border:1px solid var(--border); border-radius:999px; cursor:pointer; }
+    .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:#0b1020; border:1px solid var(--border); border-radius:999px; cursor:pointer; }
     .pill input { accent-color: var(--accent); }
 
     label.inline { display:block; margin:10px 0 6px; color: var(--muted); }
-    input[type="text"], input[type="number"], input[type="email"], select { width:100%; background:#08162b; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; outline:none; }
+    input[type="text"], input[type="number"], input[type="email"], select { width:100%; background:#0b1020; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; outline:none; }
+
+    input[type="range"] { width:100%; }
+    .range-row { display:flex; align-items:center; justify-content:space-between; gap:12px; color: var(--muted); }
 
     .muted { color: var(--muted); }
     .hint { font-size:.85rem; color: var(--muted); margin-top:4px; }
@@ -62,7 +66,7 @@
     button.secondary { background:transparent; border:1px solid var(--border); border-radius:12px; padding:12px 16px; color:var(--text); cursor:pointer; }
     button:disabled { opacity:.6; cursor:not-allowed; }
 
-    .result { border:1px solid var(--border); border-radius:14px; padding:14px; margin-top:12px; display:none; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.05)); }
+    .result { border:1px dashed var(--border); border-radius:12px; padding:14px; margin-top:12px; display:none; }
     .badge { display:inline-block; padding:4px 10px; border-radius:999px; background:#081420; border:1px solid var(--border); font-size:.85rem;}
     .success { color: var(--accent-2); }
     .warn { color: var(--warn); }
@@ -72,15 +76,63 @@
     .small { font-size:.85rem; }
     .flex { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 
-    .note { background:#08162b; border-left:4px solid var(--accent); padding:12px 14px; border-radius:8px; color:var(--muted); }
-  </style>
+    .note { background:#0b1627; border-left:4px solid var(--accent); padding:12px 14px; border-radius:8px; color:var(--muted); }
+  
+/* === Inline help tooltips for each question === */
+.help-wrap{ display:inline-flex; align-items:center; gap:8px; }
+.help-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:20px; height:20px; border-radius:999px; border:1px solid var(--border);
+  background:rgba(255,255,255,.06); color:var(--text); font-size:12px; line-height:1;
+  cursor:pointer;
+}
+.help-btn:hover, .help-btn:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(6,182,212,.25); }
+.tip{ position:relative; display:inline-block; }
+.tip-panel{position:absolute;z-index:1000;min-width:240px;max-width:360px;background:#0b1f33; color:#fff; border:1px solid rgba(255,255,255,.18);border-radius:10px; padding:10px 12px; box-shadow:0 8px 22px rgba(0,0,0,.45);top:28px; left:0; display:none; opacity:1;}
+.tip-panel.visible{ display:block; }
+.tip-panel .title{ font-weight:700; color:#74B2FF; margin-bottom:4px; font-size:.95rem; }
+.tip-panel .body{ color:#E6EDF6; font-size:.92rem; }
+@media (max-width: 520px){
+  .tip-panel{position:absolute;z-index:1000;min-width:240px;max-width:360px;background:#0b1f33; color:#fff; border:1px solid rgba(255,255,255,.18);border-radius:10px; padding:10px 12px; box-shadow:0 8px 22px rgba(0,0,0,.45);top:28px; left:0; display:none; opacity:1;}
+}
+
+.tooltip {
+  position: absolute;
+  background: #0b1f33;   /* solid dark navy */
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  max-width: 260px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+  z-index: 1000;
+}
+
+
+.tooltip {
+  position: absolute;
+  background: #0b1f33 !important;  /* solid navy */
+  color: #fff !important;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  max-width: 260px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+  z-index: 1000;
+  backdrop-filter: none !important;
+  opacity: 1 !important;
+}
+
+</style>
 </head>
 <body>
 <!-- ===== Header from your site ===== -->
 <div class="site-header">
 <div class="bar">
 <div class="brand">
-<img alt="ABI Consulting logo" src="/assets/ABI_logo_transparent.png"/>
+<img alt="Consulting logo" src="/assets/ABI_logo_transparent.png"/>
 <span class="name">Consulting, LLC</span>
 </div>
 <nav aria-label="Primary" class="nav">
@@ -151,6 +203,7 @@
 <option value="saas">SaaS / Mixed</option>
 <option value="finance">Finance / High</option>
 <option value="health">Healthcare / High</option>
+<option value="defense">Defense / GovCon (CUI/ITAR/DFARS)</option>
 </select>
 <label class="inline" for="downtime">Estimated Downtime (days) if breached</label>
 <input id="downtime" min="0" placeholder="3" required="" step="0.5" type="number"/>
@@ -165,6 +218,15 @@
 <label class="pill"><input class="ctrl" type="checkbox" value="ir"/> Incident Response Plan</label>
 <label class="pill"><input class="ctrl" type="checkbox" value="vendor"/> Vendor Risk</label>
 </div>
+</fieldset>
+<fieldset>
+<legend>Risk Reduction Assumption</legend>
+<div class="range-row">
+<label class="inline" for="reduction" style="margin:0;">Assumed impact reduction from controls</label>
+<span id="reductionLabel">35%</span>
+</div>
+<input id="reduction" max="60" min="10" step="1" type="range" value="35"/>
+<div class="hint">Move the slider to see how changing control effectiveness (e.g., 20–60%) affects ROI.</div>
 </fieldset>
 <div class="cta">
 <button class="primary" id="calc-roi" type="button">Calculate ROI</button>
@@ -192,8 +254,8 @@
 <div class="small">This tool is illustrative and not financial advice. For a tailored assessment, contact us.</div>
 </footer>
 </div>
-<!-- Optional EmailJS SDK (client-side email) -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script> -->
+<!-- EmailJS SDK (client-side email) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
     // ===== Utility =====
     const YEAR = new Date().getFullYear();
@@ -214,26 +276,60 @@
     }
 
     // ====== Maturity Quiz ======
-    const QUESTIONS = [
-      { t:'Policies & Documentation', o:['None / ad hoc','Basic for some areas','Mostly documented, not updated','Fully documented & reviewed'] },
-      { t:'Risk Management / Threat Modeling', o:['Rarely','Only when required','At least yearly','Continuous & integrated'] },
-      { t:'Identity & Access (MFA/Least Privilege)', o:['No MFA; shared accounts','External MFA; weak internal','Good MFA; some reviews','Strong IAM; periodic reviews'] },
-      { t:'Endpoint / Network Protection', o:['Minimal; reactive patching','Basic; patch delays','Good + some segmentation','Proactive + monitoring'] },
-      { t:'Incident Response & Monitoring', o:['No plan/monitoring','Plan exists; rarely tested','Plan tested; some monitoring','Tested IR; lessons learned'] },
-      { t:'Vendor / Third‑Party Risk', o:['No oversight','Ad hoc due diligence','Standard assessments','Ongoing oversight & SLAs'] },
-      { t:'Training / Culture', o:['None/minimal','Basic occasionally','Regular; measured','Integrated; phishing tests'] },
-      { t:'Patch & Config Hygiene', o:['Rare/reactive','Some regular; misconfigs','Most patched; baselines','Automated; continuous audit'] },
-      { t:'Backup & Business Continuity', o:['No/Informal backups','Backups; weak BCP','Tested backups; BCP exists','Tested BCP/DR; BIA done'] },
-      { t:'Regulatory / Compliance', o:['Ad hoc','Some controls','Most controls; some gaps','Compliant/on track; audits'] },
-    ];
+    
+const QUESTIONS = [
+  { t:'Policies & Documentation', 
+    h:'Written policies and procedures that state who does what and how. Reviewed at least annually so people know the current way of working.',
+    o:['None / ad hoc','Basic for some areas','Mostly documented, not updated','Fully documented & reviewed'] },
+  { t:'Risk Management / Threat Modeling', 
+    h:'A repeatable way to list your important assets, likely threats, and business impact so you can prioritize fixes.',
+    o:['Rarely','Only when required','At least yearly','Continuous & integrated'] },
+  { t:'Identity & Access (MFA/Least Privilege)', 
+    h:'Strong login and access practices: MFA for all, no shared accounts, and only the access people need to do their job.',
+    o:['No MFA; shared accounts','External MFA; weak internal','Good MFA; some reviews','Strong IAM; periodic reviews'] },
+  { t:'Endpoint / Network Protection', 
+    h:'Keeping laptops/servers up‑to‑date, protected by EDR/AV, and the network segmented so one breach doesn’t spread.',
+    o:['Minimal; reactive patching','Basic; patch delays','Good + some segmentation','Proactive + monitoring'] },
+  { t:'Incident Response & Monitoring', 
+    h:'A written incident plan, someone on point, monitoring in place, and practice drills so people know who does what.',
+    o:['No plan/monitoring','Plan exists; rarely tested','Plan tested; some monitoring','Tested IR; lessons learned'] },
+  { t:'Vendor / Third‑Party Risk', 
+    h:'Checking security of the vendors who hold your data or connect to you (e.g., contracts, questionnaires, and remediation).',
+    o:['No oversight','Ad hoc due diligence','Standard assessments','Ongoing oversight & SLAs'] },
+  { t:'Training / Culture', 
+    h:'Regular awareness training and phishing tests so people know how to spot and report issues.',
+    o:['None/minimal','Basic occasionally','Regular; measured','Integrated; phishing tests'] },
+  { t:'Patch & Config Hygiene', 
+    h:'A schedule to patch software and standard “secure by default” settings so new systems aren’t left open.',
+    o:['Rare/reactive','Some regular; misconfigs','Most patched; baselines','Automated; continuous audit'] },
+  { t:'Backup & Business Continuity', 
+    h:'Reliable, tested backups and a plan for keeping the business running if systems are down.',
+    o:['No/Informal backups','Backups; weak BCP','Tested backups; BCP exists','Tested BCP/DR; BIA done'] },
+  { t:'Regulatory / Compliance', 
+    h:'Meeting required frameworks or regulations (e.g., NIST CSF/800‑171, HIPAA, PCI, ITAR/DFARS) with evidence.',
+    o:['Ad hoc','Some controls','Most controls; some gaps','Compliant/on track; audits'] },
+];
+
 
     function renderQuestions(){
       const container = document.getElementById('questions');
       container.innerHTML = '';
       QUESTIONS.forEach((q, idx) => {
         const fs = document.createElement('fieldset');
-        const legend = document.createElement('legend'); legend.textContent = `Q${idx+1}`; fs.appendChild(legend);
-        const qt = document.createElement('div'); qt.className = 'q'; qt.textContent = q.t; fs.appendChild(qt);
+        const legend = document.createElement('legend');
+        legend.textContent = `Question ${idx+1}`;
+        legend.className = 'q-legend';
+        fs.appendChild(legend);
+
+        const head = document.createElement('div'); head.className = 'help-wrap';
+        const qt = document.createElement('div'); qt.className = 'q'; qt.textContent = q.t;
+        const help = document.createElement('button'); help.type='button'; help.className='help-btn tip'; help.setAttribute('aria-label', 'Help');
+        help.textContent = '?';
+        const panel = document.createElement('div'); panel.className='tip-panel'; panel.innerHTML = `<div class="title">${q.t}</div><div class="body">${q.h}</div>`;
+        help.appendChild(panel);
+        head.appendChild(qt); head.appendChild(help);
+        fs.appendChild(head);
+
         const opts = document.createElement('div'); opts.className = 'options';
         q.o.forEach((opt, j) => {
           const id = `q${idx}_${j}`;
@@ -243,6 +339,24 @@
           label.appendChild(input); label.appendChild(span); opts.appendChild(label);
         });
         fs.appendChild(opts); container.appendChild(fs);
+      });
+
+      // Tooltip behavior
+      document.querySelectorAll('.help-btn').forEach(btn => {
+        const panel = btn.querySelector('.tip-panel');
+        const show = () => panel.classList.add('visible');
+        const hide = () => panel.classList.remove('visible');
+        btn.addEventListener('mouseenter', show);
+        btn.addEventListener('mouseleave', hide);
+        btn.addEventListener('focus', show);
+        btn.addEventListener('blur', hide);
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          panel.classList.toggle('visible');
+        });
+      });
+      document.addEventListener('click', () => {
+        document.querySelectorAll('.tip-panel.visible').forEach(p=>p.classList.remove('visible'));
       });
     }
     renderQuestions();
@@ -279,72 +393,82 @@
       ]};
     }
 
-    // ===== ROI Logic (simple illustrative model) =====
+    // ===== ROI Logic (with Defense industry + slider) =====
+    const reductionInput = document.getElementById('reduction');
+    const reductionLabel = document.getElementById('reductionLabel');
+    reductionInput.addEventListener('input', () => {
+      reductionLabel.textContent = `${reductionInput.value}%`;
+    });
+
     function calcROI(){
       const rev = parseFloat(document.getElementById('revenue').value || '0');
       const emp = parseInt(document.getElementById('employees').value || '0', 10);
       const ind = document.getElementById('industry').value;
       const down = parseFloat(document.getElementById('downtime').value || '0');
       const spendPct = parseFloat(document.getElementById('currentSpend').value || '0');
+      const reductionPct = parseFloat(reductionInput.value || '35');
 
       if(!(rev>0 && emp>0 && ind && down>=0 && spendPct>=0)){
         return { ok:false, msg:'Please complete all ROI fields.' };
       }
 
-      // Revenue per day (approx): assume 260 business days
-      const revPerDay = rev / 260;
+      const revPerDay = rev / 260; // approx business days
 
-      // Sensitivity multiplier by industry
       const mult = {
         retail: 1.1,
         professional: 1.25,
         saas: 1.35,
         finance: 1.7,
         health: 1.8,
+        defense: 2.2,
       }[ind] || 1.2;
 
-      // Baseline breach cost model (very simplified):
+      // Baseline breach cost model (illustrative)
       const downtimeCost = revPerDay * down;
       const remediationCost = emp * 150 * 16; // 16 hours @ $150 blended
       const overhead = rev * (0.002 * mult);  // 0.2% of revenue scaled by sensitivity
       const estimatedLoss = Math.round(downtimeCost + remediationCost + overhead);
 
-      // Investment estimate based on selected controls (rough SMB annualized costs)
       const selected = Array.from(document.querySelectorAll('#roi-form .ctrl:checked')).map(x=>x.value);
       const ctrlCosts = {
         mfa: 2500,
         edr: Math.max(2500, emp * 6 * 12), // $6/user/mo
         training: Math.max(1500, emp * 2 * 12), // $2/user/mo
-        ir: 4000,       // plan + tabletop
-        vendor: 3000,   // basic VRM effort/tools
+        ir: 4000,
+        vendor: 3000,
       };
       let invest = 0; selected.forEach(k=> invest += (ctrlCosts[k]||0));
 
-      const currentSpend = rev * (spendPct/100); // not used directly in ROI, but could be displayed
       const totalInvest = invest;
-
-      const avoided = Math.max(0, estimatedLoss - (estimatedLoss * 0.35)); // assume baseline controls avoid ~35% impact
+      const avoided = Math.round(estimatedLoss * (reductionPct/100));
       const roi = totalInvest>0 ? (avoided - totalInvest) / totalInvest : 0;
 
-      return { ok:true, rev, emp, ind, down, spendPct, estimatedLoss, totalInvest: Math.round(totalInvest), avoided: Math.round(avoided), roi };
+      return { ok:true, rev, emp, ind, down, spendPct, reductionPct, estimatedLoss, totalInvest: Math.round(totalInvest), avoided: Math.round(avoided), roi };
     }
 
-    // ===== Email Sending (EmailJS optional) =====
-    const EMAIL_ENABLED = false; // set to true when configured
+    // ===== Email Sending (EmailJS) =====
+    const EMAIL_ENABLED = true; // Option A enabled
     const EMAILJS_PUBLIC_KEY = 'kYNef_lW7qO0tup-6';
     const SERVICE_ID = 'service_dc76qvv';
     const TEMPLATE_ID = 'template_mvy0jqc';
 
+    const OWNER_BCC = 'damian@abiconsulting.llc'; // Include this variable in the template BCC field as {{owner_bcc}}
+
+    function emailConfigured(){
+      const ok = EMAIL_ENABLED && EMAILJS_PUBLIC_KEY && !EMAILJS_PUBLIC_KEY.startsWith('YOUR_') && SERVICE_ID && !SERVICE_ID.startsWith('YOUR_') && TEMPLATE_ID && !TEMPLATE_ID.startsWith('YOUR_');
+      return ok;
+    }
+
     async function sendEmail(data){
-      if(!EMAIL_ENABLED){
+      if(!emailConfigured()){
         return { ok:false, msg:'Email service not configured. Showing results on page instead.' };
       }
       try{
-        // emailjs.init(EMAILJS_PUBLIC_KEY);
-        // await emailjs.send(SERVICE_ID, TEMPLATE_ID, data);
+        emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+        await emailjs.send(SERVICE_ID, TEMPLATE_ID, data);
         return { ok:true };
       }catch(err){
-        return { ok:false, msg: 'Email failed to send. '+ (err?.message||'') };
+        return { ok:false, msg: 'Email failed to send. '+ (err?.text || err?.message || '') };
       }
     }
 
@@ -373,14 +497,33 @@
       const tierInfo = mapTier(total);
       const roi = calcROI(); // include ROI snapshot if available
 
+      const industryMap = {
+        retail: "Retail / Low Sensitivity",
+        professional: "Professional Services / Moderate",
+        saas: "SaaS / Mixed",
+        finance: "Finance / High",
+        health: "Healthcare / High",
+        defense: "Defense / GovCon (CUI/ITAR/DFARS)"
+      };
+
       const summary = {
-        company, name, email,
+        // recipient address for the template's {{email}} or {{to_email}}
+        email,
+        // to_email: email, // use this instead if your template's TO uses {{to_email}}
+
+        owner_bcc: OWNER_BCC, // add {{owner_bcc}} in the template's BCC field
+
+        company, name,
         score: total,
         tier: tierInfo.tier,
         recommendations: tierInfo.reco.join('\n - '),
-        roi_estimatedLoss: roi.ok ? `$${roi.estimatedLoss.toLocaleString()}` : 'N/A',
-        roi_investment: roi.ok ? `$${roi.totalInvest.toLocaleString()}` : 'N/A',
-        roi_ratio: roi.ok ? `${roi.roi.toFixed(2)}x` : 'N/A'
+
+        roi_estimatedLoss: roi.ok ? roi.estimatedLoss.toLocaleString() : 'N/A',
+        roi_investment: roi.ok ? roi.totalInvest.toLocaleString() : 'N/A',
+        avoided_loss: roi.ok ? roi.avoided.toLocaleString() : 'N/A',
+        roi_ratio: roi.ok ? `${roi.roi.toFixed(2)}x` : 'N/A',
+        reductionPct: roi.ok ? String(roi.reductionPct) : '35',
+        industry: roi.ok ? (industryMap[roi.ind] || 'N/A') : 'N/A',
       };
 
       const emailResp = await sendEmail(summary);
@@ -388,7 +531,7 @@
       let html = `<div class="badge ${tierInfo.color}">Your Score: ${total} → ${tierInfo.tier}</div>`;
       html += `<div style="margin-top:8px;">Recommended next steps:<ul>` + tierInfo.reco.map(r=>`<li>${r}</li>`).join('') + `</ul></div>`;
       if(roi.ok){
-        html += `<div style="margin-top:6px;" class="muted small">ROI snapshot: Est. loss <strong>$${roi.estimatedLoss.toLocaleString()}</strong>, Baseline invest <strong>$${roi.totalInvest.toLocaleString()}</strong>, ROI <strong>${roi.roi.toFixed(2)}x</strong></div>`;
+        html += `<div style="margin-top:6px;" class="muted small">ROI snapshot: Est. loss <strong>$${roi.estimatedLoss.toLocaleString()}</strong>, Baseline invest <strong>$${roi.totalInvest.toLocaleString()}</strong>, Avoided loss (at ${roi.reductionPct}%): <strong>$${roi.avoided.toLocaleString()}</strong>, ROI <strong>${roi.roi.toFixed(2)}x</strong></div>`;
       }
       html += `<div class="note" style="margin-top:10px;">`+
               `<strong>Call to Action:</strong> Want a formal roadmap to move from <em>${tierInfo.tier}</em> up a tier? `+
@@ -420,8 +563,17 @@
         <div class=\"small\" style=\"margin-top:8px;\">
           Estimated Loss w/ Incident: <strong>$${res.estimatedLoss.toLocaleString()}</strong><br/>
           Baseline Controls Investment: <strong>$${res.totalInvest.toLocaleString()}</strong><br/>
-          Avoided Loss (illustrative): <strong>$${res.avoided.toLocaleString()}</strong><br/>
+          Avoided Loss (at ${res.reductionPct}%): <strong>$${res.avoided.toLocaleString()}</strong><br/>
           ROI: <strong>${res.roi.toFixed(2)}x</strong>
+        </div>
+        <div class=\"small muted\" style=\"margin-top:8px;\">
+          <strong>What these numbers mean:</strong>
+          <ul style=\"margin:6px 0 0 18px;\">
+            <li><em>Estimated Loss</em> = downtime cost (revenue/day × downtime) + remediation labor + industry‑scaled overhead.</li>
+            <li><em>Baseline Investment</em> = annualized costs for selected controls (MFA, EDR, training, IR plan, vendor risk).</li>
+            <li><em>Avoided Loss</em> = the portion of loss those controls are expected to reduce (slider above sets the percentage).</li>
+            <li><em>ROI</em> = (Avoided Loss − Investment) ÷ Investment.</li>
+          </ul>
         </div>
       `;
       show('roi-result', html);
@@ -429,6 +581,7 @@
 
     document.getElementById('reset-roi').addEventListener('click', () => {
       document.getElementById('roi-form').reset();
+      reductionInput.value = 35; reductionLabel.textContent = '35%';
       hide('roi-result');
     });
 
