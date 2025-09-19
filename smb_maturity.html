@@ -375,12 +375,15 @@
 
     // ===== Email Sending (EmailJS) =====
     const EMAIL_ENABLED = true; // Option A enabled
-    const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
-    const SERVICE_ID = 'YOUR_SERVICE_ID';
-    const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+    const EMAILJS_PUBLIC_KEY = 'kYNef_lW7qO0tup-6';
+    const SERVICE_ID = 'service_dc76qvv';
+    const TEMPLATE_ID = 'template_mvy0jqc';
+
+    const OWNER_BCC = 'damian@abiconsulting.llc'; // Include this variable in the template BCC field as {{owner_bcc}}
 
     function emailConfigured(){
-      return EMAIL_ENABLED && EMAILJS_PUBLIC_KEY && !EMAILJS_PUBLIC_KEY.startsWith('YOUR_') && SERVICE_ID && !SERVICE_ID.startsWith('YOUR_') && TEMPLATE_ID && !TEMPLATE_ID.startsWith('YOUR_');
+      const ok = EMAIL_ENABLED && EMAILJS_PUBLIC_KEY && !EMAILJS_PUBLIC_KEY.startsWith('YOUR_') && SERVICE_ID && !SERVICE_ID.startsWith('YOUR_') && TEMPLATE_ID && !TEMPLATE_ID.startsWith('YOUR_');
+      return ok;
     }
 
     async function sendEmail(data){
@@ -421,14 +424,33 @@
       const tierInfo = mapTier(total);
       const roi = calcROI(); // include ROI snapshot if available
 
+      const industryMap = {
+        retail: "Retail / Low Sensitivity",
+        professional: "Professional Services / Moderate",
+        saas: "SaaS / Mixed",
+        finance: "Finance / High",
+        health: "Healthcare / High",
+        defense: "Defense / GovCon (CUI/ITAR/DFARS)"
+      };
+
       const summary = {
-        company, name, email,
+        // recipient address for the template's {{email}} or {{to_email}}
+        email,
+        // to_email: email, // use this instead if your template's TO uses {{to_email}}
+
+        owner_bcc: OWNER_BCC, // add {{owner_bcc}} in the template's BCC field
+
+        company, name,
         score: total,
         tier: tierInfo.tier,
         recommendations: tierInfo.reco.join('\n - '),
-        roi_estimatedLoss: roi.ok ? `$${roi.estimatedLoss.toLocaleString()}` : 'N/A',
-        roi_investment: roi.ok ? `$${roi.totalInvest.toLocaleString()}` : 'N/A',
-        roi_ratio: roi.ok ? `${roi.roi.toFixed(2)}x` : 'N/A'
+
+        roi_estimatedLoss: roi.ok ? roi.estimatedLoss.toLocaleString() : 'N/A',
+        roi_investment: roi.ok ? roi.totalInvest.toLocaleString() : 'N/A',
+        avoided_loss: roi.ok ? roi.avoided.toLocaleString() : 'N/A',
+        roi_ratio: roi.ok ? `${roi.roi.toFixed(2)}x` : 'N/A',
+        reductionPct: roi.ok ? String(roi.reductionPct) : '35',
+        industry: roi.ok ? (industryMap[roi.ind] || 'N/A') : 'N/A',
       };
 
       const emailResp = await sendEmail(summary);
