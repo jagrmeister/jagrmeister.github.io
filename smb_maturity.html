@@ -44,7 +44,8 @@
     .card p.desc { color: var(--muted); margin-top:0; }
 
     fieldset { border:1px solid var(--border); border-radius:12px; padding:16px; margin:14px 0; }
-    legend { color: var(--muted); padding: 0 6px; font-size:.95rem; }
+    legend { padding: 0 6px; font-size:.95rem; }
+    .q-legend { font-weight:700; color: var(--accent); } /* Question N styling */
     .q { margin: 8px 0 6px; font-weight: 600; }
     .options { display:flex; flex-wrap:wrap; gap:10px; margin: 6px 0 0; }
     .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:#0b1020; border:1px solid var(--border); border-radius:999px; cursor:pointer; }
@@ -52,6 +53,9 @@
 
     label.inline { display:block; margin:10px 0 6px; color: var(--muted); }
     input[type="text"], input[type="number"], input[type="email"], select { width:100%; background:#0b1020; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; outline:none; }
+
+    input[type="range"] { width:100%; }
+    .range-row { display:flex; align-items:center; justify-content:space-between; gap:12px; color: var(--muted); }
 
     .muted { color: var(--muted); }
     .hint { font-size:.85rem; color: var(--muted); margin-top:4px; }
@@ -164,6 +168,7 @@
             <option value="saas">SaaS / Mixed</option>
             <option value="finance">Finance / High</option>
             <option value="health">Healthcare / High</option>
+            <option value="defense">Defense / GovCon (CUI/ITAR/DFARS)</option>
           </select>
 
           <label class="inline" for="downtime">Estimated Downtime (days) if breached</label>
@@ -181,6 +186,16 @@
               <label class="pill"><input type="checkbox" class="ctrl" value="ir" /> Incident Response Plan</label>
               <label class="pill"><input type="checkbox" class="ctrl" value="vendor" /> Vendor Risk</label>
             </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Risk Reduction Assumption</legend>
+            <div class="range-row">
+              <label for="reduction" class="inline" style="margin:0;">Assumed impact reduction from controls</label>
+              <span id="reductionLabel">35%</span>
+            </div>
+            <input id="reduction" type="range" min="10" max="60" step="1" value="35" />
+            <div class="hint">Move the slider to see how changing control effectiveness (e.g., 20–60%) affects ROI.</div>
           </fieldset>
 
           <div class="cta">
@@ -214,8 +229,8 @@
     </footer>
   </div>
 
-  <!-- Optional EmailJS SDK (client-side email) -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script> -->
+  <!-- EmailJS SDK (client-side email) -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
   <script>
     // ===== Utility =====
@@ -255,7 +270,10 @@
       container.innerHTML = '';
       QUESTIONS.forEach((q, idx) => {
         const fs = document.createElement('fieldset');
-        const legend = document.createElement('legend'); legend.textContent = `Q${idx+1}`; fs.appendChild(legend);
+        const legend = document.createElement('legend');
+        legend.textContent = `Question ${idx+1}`; // full wording
+        legend.className = 'q-legend';
+        fs.appendChild(legend);
         const qt = document.createElement('div'); qt.className = 'q'; qt.textContent = q.t; fs.appendChild(qt);
         const opts = document.createElement('div'); opts.className = 'options';
         q.o.forEach((opt, j) => {
@@ -302,72 +320,79 @@
       ]};
     }
 
-    // ===== ROI Logic (simple illustrative model) =====
+    // ===== ROI Logic (with Defense industry + slider) =====
+    const reductionInput = document.getElementById('reduction');
+    const reductionLabel = document.getElementById('reductionLabel');
+    reductionInput.addEventListener('input', () => {
+      reductionLabel.textContent = `${reductionInput.value}%`;
+    });
+
     function calcROI(){
       const rev = parseFloat(document.getElementById('revenue').value || '0');
       const emp = parseInt(document.getElementById('employees').value || '0', 10);
       const ind = document.getElementById('industry').value;
       const down = parseFloat(document.getElementById('downtime').value || '0');
       const spendPct = parseFloat(document.getElementById('currentSpend').value || '0');
+      const reductionPct = parseFloat(reductionInput.value || '35');
 
       if(!(rev>0 && emp>0 && ind && down>=0 && spendPct>=0)){
         return { ok:false, msg:'Please complete all ROI fields.' };
       }
 
-      // Revenue per day (approx): assume 260 business days
-      const revPerDay = rev / 260;
+      const revPerDay = rev / 260; // approx business days
 
-      // Sensitivity multiplier by industry
       const mult = {
         retail: 1.1,
         professional: 1.25,
         saas: 1.35,
         finance: 1.7,
         health: 1.8,
+        defense: 2.2,
       }[ind] || 1.2;
 
-      // Baseline breach cost model (very simplified):
+      // Baseline breach cost model (illustrative)
       const downtimeCost = revPerDay * down;
       const remediationCost = emp * 150 * 16; // 16 hours @ $150 blended
       const overhead = rev * (0.002 * mult);  // 0.2% of revenue scaled by sensitivity
       const estimatedLoss = Math.round(downtimeCost + remediationCost + overhead);
 
-      // Investment estimate based on selected controls (rough SMB annualized costs)
       const selected = Array.from(document.querySelectorAll('#roi-form .ctrl:checked')).map(x=>x.value);
       const ctrlCosts = {
         mfa: 2500,
         edr: Math.max(2500, emp * 6 * 12), // $6/user/mo
         training: Math.max(1500, emp * 2 * 12), // $2/user/mo
-        ir: 4000,       // plan + tabletop
-        vendor: 3000,   // basic VRM effort/tools
+        ir: 4000,
+        vendor: 3000,
       };
       let invest = 0; selected.forEach(k=> invest += (ctrlCosts[k]||0));
 
-      const currentSpend = rev * (spendPct/100); // not used directly in ROI, but could be displayed
       const totalInvest = invest;
-
-      const avoided = Math.max(0, estimatedLoss - (estimatedLoss * 0.35)); // assume baseline controls avoid ~35% impact
+      const avoided = Math.round(estimatedLoss * (reductionPct/100));
       const roi = totalInvest>0 ? (avoided - totalInvest) / totalInvest : 0;
 
-      return { ok:true, rev, emp, ind, down, spendPct, estimatedLoss, totalInvest: Math.round(totalInvest), avoided: Math.round(avoided), roi };
+      return { ok:true, rev, emp, ind, down, spendPct, reductionPct, estimatedLoss, totalInvest: Math.round(totalInvest), avoided: Math.round(avoided), roi };
     }
 
-    // ===== Email Sending (EmailJS optional) =====
-    const EMAIL_ENABLED = false; // set to true when configured
+    // ===== Email Sending (EmailJS) =====
+    const EMAIL_ENABLED = true; // Option A enabled
     const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
     const SERVICE_ID = 'YOUR_SERVICE_ID';
     const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
 
+    function emailConfigured(){
+      return EMAIL_ENABLED && EMAILJS_PUBLIC_KEY && !EMAILJS_PUBLIC_KEY.startsWith('YOUR_') && SERVICE_ID && !SERVICE_ID.startsWith('YOUR_') && TEMPLATE_ID && !TEMPLATE_ID.startsWith('YOUR_');
+    }
+
     async function sendEmail(data){
-      if(!EMAIL_ENABLED){
+      if(!emailConfigured()){
         return { ok:false, msg:'Email service not configured. Showing results on page instead.' };
       }
       try{
-        // emailjs.init(EMAILJS_PUBLIC_KEY);
-        // await emailjs.send(SERVICE_ID, TEMPLATE_ID, data);
+        emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+        await emailjs.send(SERVICE_ID, TEMPLATE_ID, data);
         return { ok:true };
       }catch(err){
-        return { ok:false, msg: 'Email failed to send. '+ (err?.message||'') };
+        return { ok:false, msg: 'Email failed to send. '+ (err?.text || err?.message || '') };
       }
     }
 
@@ -411,7 +436,7 @@
       let html = `<div class="badge ${tierInfo.color}">Your Score: ${total} → ${tierInfo.tier}</div>`;
       html += `<div style="margin-top:8px;">Recommended next steps:<ul>` + tierInfo.reco.map(r=>`<li>${r}</li>`).join('') + `</ul></div>`;
       if(roi.ok){
-        html += `<div style="margin-top:6px;" class="muted small">ROI snapshot: Est. loss <strong>$${roi.estimatedLoss.toLocaleString()}</strong>, Baseline invest <strong>$${roi.totalInvest.toLocaleString()}</strong>, ROI <strong>${roi.roi.toFixed(2)}x</strong></div>`;
+        html += `<div style="margin-top:6px;" class="muted small">ROI snapshot: Est. loss <strong>$${roi.estimatedLoss.toLocaleString()}</strong>, Baseline invest <strong>$${roi.totalInvest.toLocaleString()}</strong>, Avoided loss (at ${roi.reductionPct}%): <strong>$${roi.avoided.toLocaleString()}</strong>, ROI <strong>${roi.roi.toFixed(2)}x</strong></div>`;
       }
       html += `<div class="note" style="margin-top:10px;">`+
               `<strong>Call to Action:</strong> Want a formal roadmap to move from <em>${tierInfo.tier}</em> up a tier? `+
@@ -443,8 +468,17 @@
         <div class=\"small\" style=\"margin-top:8px;\">
           Estimated Loss w/ Incident: <strong>$${res.estimatedLoss.toLocaleString()}</strong><br/>
           Baseline Controls Investment: <strong>$${res.totalInvest.toLocaleString()}</strong><br/>
-          Avoided Loss (illustrative): <strong>$${res.avoided.toLocaleString()}</strong><br/>
+          Avoided Loss (at ${res.reductionPct}%): <strong>$${res.avoided.toLocaleString()}</strong><br/>
           ROI: <strong>${res.roi.toFixed(2)}x</strong>
+        </div>
+        <div class=\"small muted\" style=\"margin-top:8px;\">
+          <strong>What these numbers mean:</strong>
+          <ul style=\"margin:6px 0 0 18px;\">
+            <li><em>Estimated Loss</em> = downtime cost (revenue/day × downtime) + remediation labor + industry‑scaled overhead.</li>
+            <li><em>Baseline Investment</em> = annualized costs for selected controls (MFA, EDR, training, IR plan, vendor risk).</li>
+            <li><em>Avoided Loss</em> = the portion of loss those controls are expected to reduce (slider above sets the percentage).</li>
+            <li><em>ROI</em> = (Avoided Loss − Investment) ÷ Investment.</li>
+          </ul>
         </div>
       `;
       show('roi-result', html);
@@ -452,6 +486,7 @@
 
     document.getElementById('reset-roi').addEventListener('click', () => {
       document.getElementById('roi-form').reset();
+      reductionInput.value = 35; reductionLabel.textContent = '35%';
       hide('roi-result');
     });
 
