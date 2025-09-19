@@ -8,19 +8,19 @@
 <meta content="Quick, free SMB security maturity self‑assessment and cybersecurity ROI calculator. Get your score and a tailored action plan — emailed instantly." name="description"/>
 <style>
     :root {
-      --nav: #0b1f33;          /* deep navy to match site */
-      --bg: #ffffff;           /* slate-900 */
-      --panel: #ffffff;        /* gray-900 */
-      --muted: #475569;        /* slate-400 */
-      --text: #0b1f33;         /* gray-200 */
-      --accent: #2563eb;       /* cyan-500 */
-      --accent-2: #16a34a;     /* green-500 */
+      --nav:#0B1E39;          /* deep navy to match site */
+      --bg:#0B1E39;           /* slate-900 */
+      --panel: #111827;        /* gray-900 */
+      --muted:#A3B3CC;        /* slate-400 */
+      --text:#F5F7FB;         /* gray-200 */
+      --accent:#2E8CFF;       /* cyan-500 */
+      --accent-2:#74B2FF;     /* green-500 */
       --warn: #f59e0b;         /* amber-500 */
       --danger: #ef4444;       /* red-500 */
-      --card: #ffffff;         /* deep panel */
-      --border: #e2e8f0;       /* gray-800 */
+      --card: #0b1220;         /* deep panel */
+      --border:rgba(255,255,255,.08);--radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);       /* gray-800 */
     }
-    html, body { margin:0; padding:0; background: var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
 
     /* ======= Site Header (matches screenshot) ======= */
     .site-header { background: var(--nav); border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -40,29 +40,29 @@
     .grid { display:grid; grid-template-columns: 1fr; gap: 18px; }
     @media (min-width: 980px){ .grid { grid-template-columns: 1fr 1fr; } }
 
-    .card { background: #ffffff; border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+    .card { background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.06)); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow: var(--shadow); backdrop-filter: blur(6px); }
     .card h2 { margin-top:4px; margin-bottom:8px; font-size: clamp(1.1rem, 2vw, 1.4rem); }
     .card p.desc { color: var(--muted); margin-top:0; }
 
-    fieldset { background:#ffffff; border:1px solid var(--border); border-radius:12px; padding:16px; margin:14px 0; }
+    fieldset { background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.05)); border:1px solid var(--border); border-radius:14px; padding:16px; margin:14px 0; }
     legend { color: var(--muted); padding: 0 6px; font-size:.95rem; }
     .q { margin: 8px 0 6px; font-weight: 600; }
     .options { display:flex; flex-wrap:wrap; gap:10px; margin: 6px 0 0; }
-    .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:#ffffff; color:var(--text); border:1px solid var(--border); border-radius:999px; cursor:pointer; }
+    .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:#08162b; border:1px solid var(--border); border-radius:999px; cursor:pointer; }
     .pill input { accent-color: var(--accent); }
 
     label.inline { display:block; margin:10px 0 6px; color: var(--muted); }
-    input[type="text"], input[type="number"], input[type="email"], select { width:100%; background:#ffffff; color:var(--text); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; outline:none; }
+    input[type="text"], input[type="number"], input[type="email"], select { width:100%; background:#08162b; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; outline:none; }
 
     .muted { color: var(--muted); }
     .hint { font-size:.85rem; color: var(--muted); margin-top:4px; }
 
     .cta { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:flex-start; margin-top:14px; }
-    button.primary { background: linear-gradient(90deg, #2563eb, #1d4ed8); color:#001018; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; }
+    button.primary { background: linear-gradient(90deg, var(--accent), #3b82f6); color:#001018; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; }
     button.secondary { background:transparent; border:1px solid var(--border); border-radius:12px; padding:12px 16px; color:var(--text); cursor:pointer; }
     button:disabled { opacity:.6; cursor:not-allowed; }
 
-    .result { border:1px solid var(--border); background:#ffffff; border-radius:12px; padding:14px; margin-top:12px; display:none; }
+    .result { border:1px solid var(--border); border-radius:14px; padding:14px; margin-top:12px; display:none; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.05)); }
     .badge { display:inline-block; padding:4px 10px; border-radius:999px; background:#081420; border:1px solid var(--border); font-size:.85rem;}
     .success { color: var(--accent-2); }
     .warn { color: var(--warn); }
@@ -72,7 +72,7 @@
     .small { font-size:.85rem; }
     .flex { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 
-    .note { background:#ffffff; border-left:4px solid var(--accent); background:#ffffff; padding:12px 14px; border-radius:8px; color:var(--muted); }
+    .note { background:#08162b; border-left:4px solid var(--accent); padding:12px 14px; border-radius:8px; color:var(--muted); }
   </style>
 </head>
 <body>
@@ -81,7 +81,7 @@
 <div class="bar">
 <div class="brand">
 <img alt="ABI Consulting logo" src="/assets/ABI_logo_transparent.png"/>
-<span class="name">ABI Consulting, LLC</span>
+<span class="name">Consulting, LLC</span>
 </div>
 <nav aria-label="Primary" class="nav">
 <ul>
