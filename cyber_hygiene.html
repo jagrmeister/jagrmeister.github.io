@@ -214,5 +214,89 @@
 
 <footer class="footer container">© <span id="year"></span> ABI Consulting LLC.</footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+
+<!-- Contact Modal -->
+<div id="contactBackdrop" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:2000"></div>
+<div id="contactModal" class="contact-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0b1f33;color:#fff;border-radius:18px;padding:24px;max-width:520px;width:90%;z-index:2001;box-shadow:0 10px 30px rgba(0,0,0,.35)">
+  <h3>Contact Us</h3>
+  <form id="contactForm">
+    <input id="c_name" name="name" placeholder="Your Name" required style="display:block;width:100%;margin:8px 0;padding:10px;border-radius:8px;border:1px solid #ccc"/>
+    <input id="c_company" name="company" placeholder="Company" required style="display:block;width:100%;margin:8px 0;padding:10px;border-radius:8px;border:1px solid #ccc"/>
+    <input id="c_email" name="email" placeholder="Business Email" required type="email" style="display:block;width:100%;margin:8px 0;padding:10px;border-radius:8px;border:1px solid #ccc"/>
+    <input id="c_phone" name="phone" placeholder="Phone (optional)" style="display:block;width:100%;margin:8px 0;padding:10px;border-radius:8px;border:1px solid #ccc"/>
+    <textarea id="c_msg" name="message" placeholder="Message" required style="display:block;width:100%;margin:8px 0;padding:10px;border-radius:8px;border:1px solid #ccc"></textarea>
+    <div id="contact-result" style="display:none;margin-top:12px"></div>
+    <div style="margin-top:12px;text-align:right">
+      <button type="button" id="contactCancel" style="margin-right:8px;padding:10px 18px;border-radius:8px;border:1px solid #999;background:#333;color:#fff">Cancel</button>
+      <button type="button" id="contactSend" style="padding:10px 18px;border-radius:8px;border:none;background:#2E8CFF;color:#fff">Send</button>
+    </div>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+(function(){
+  const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+  const SERVICE_ID = 'YOUR_SERVICE_ID';
+  const TEMPLATE_ID = 'template_mvy0jqc';
+  const OWNER_BCC = 'damian@abiconsulting.llc';
+
+  function showContactResult(html){
+    var el = document.getElementById('contact-result');
+    if(!el) return;
+    el.innerHTML = html;
+    el.style.display = 'block';
+  }
+
+  const modal = document.getElementById('contactModal');
+  const back = document.getElementById('contactBackdrop');
+  const closeBtns = [document.getElementById('contactCancel')];
+
+  function openModal(e){
+    if(e) e.preventDefault();
+    modal.style.display = 'block';
+    back.style.display = 'block';
+  }
+  function closeModal(){
+    modal.style.display = 'none';
+    back.style.display = 'none';
+    document.getElementById('contactForm').reset();
+  }
+  closeBtns.forEach(b=> b && b.addEventListener('click', closeModal));
+  back.addEventListener('click', closeModal);
+
+  // Turn all "Contact Us" links into modal triggers
+  document.querySelectorAll('a,button').forEach(el => {
+    if(/contact/i.test(el.textContent)){
+      el.addEventListener('click', openModal);
+    }
+  });
+
+  document.getElementById('contactSend').addEventListener('click', async () => {
+    const name = document.getElementById('c_name').value.trim();
+    const company = document.getElementById('c_company').value.trim();
+    const email = document.getElementById('c_email').value.trim();
+    const phone = document.getElementById('c_phone').value.trim();
+    const message = document.getElementById('c_msg').value.trim();
+
+    if(!name || !company || !email || !message){
+      showContactResult('<div style="color:#ff7a7a">❌ Please complete all required fields.</div>');
+      return;
+    }
+
+    const payload = { name, company, email, phone, message, owner_bcc: OWNER_BCC, page: window.location.href };
+    try {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, payload);
+      showContactResult('<div style="color:#5bd68a">✅ Thanks — your message has been received. We’ll reply within two business days.</div>');
+      document.getElementById('contactSend').disabled = true;
+    } catch(err){
+      console.error(err);
+      showContactResult('<div style="color:#ff7a7a">❌ Error sending message. Please email <a href="mailto:damian@abiconsulting.llc" style="color:#74B2FF">damian@abiconsulting.llc</a>.</div>');
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
