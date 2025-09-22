@@ -24,6 +24,7 @@
     header{padding:24px 0;border-bottom:1px solid var(--border)}
     .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
     .brand{display:flex;align-items:center;gap:12px;font-weight:800}
+    
     h1{font-size:clamp(28px,3.2vw,40px);margin:12px 0 4px}
     p.lead{color:var(--muted);margin:0 0 18px}
     .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
@@ -71,23 +72,8 @@ header.nav .container {
   justify-content: space-between;
   gap: 16px;
 }
-header.nav .brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 800;
-}
-header.nav .logo {
-  position: fixed;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg,#123e74,#1a2f58);
-  display: grid;
-  place-items: center;
-  color: #fff;
-  font-weight: 800;
-}
+
+
 /* Nav links */
 header.nav nav a,
 header.nav nav a:visited {
@@ -103,23 +89,49 @@ header.nav nav a:hover {
   
 
 /* --- Force the header logo to match homepage --- */
-header.nav .brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
+
 
 /* Kill any old badge/gradient styles applied to .logo */
-  height: 28px;
-  width: auto;
-  display: inline-block;
-  object-fit: contain;
+header.nav 
+
+
+/* === Enforce header identical to index === */
+header.nav .container{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:16px !important;
+  height:56px !important;
+}
+header.nav .brand{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+header.nav .brand .logo, header.nav img.logo{
+  position: static !important;
+  height: 22px !important;
+  width: auto !important;
+  display: inline-block !important;
+  object-fit: contain !important;
   background: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   padding: 0 !important;
   margin: 0 !important;
-}</style>
+}
+header.nav .brand span{
+  color:#ffffff !important;
+  font-weight:700 !important;
+}
+header.nav nav a{
+  margin: 0 14px !important;
+  color: #cfe1ff !important;
+  text-decoration: none !important;
+}
+header.nav nav a:hover{ color:#ffffff !important; }
+
+</style>
 </head>
 <body>
 <header class="nav">
@@ -129,7 +141,7 @@ header.nav .brand{
 <a href="index.html">Home</a>
 <a href="#about">About</a>
 <a href="#services">Services</a>
-<a href="#faq">FAQ</a><a href="#resources">Resources</a>
+<a href="#resources">Resources</a>
 <a href="#partners">Trusted Partners</a>
 <a href="/blog">Blog</a>
 <a href="#contact">Contact</a>
