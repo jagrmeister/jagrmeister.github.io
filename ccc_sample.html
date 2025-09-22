@@ -1,0 +1,242 @@
+<!-- Crash Course Checkup — Sample Report (ACME) -->
+<section id="crash-sample" aria-label="Crash Course Sample Report">
+  <style>
+    /* === Namespaced "index-style" tokens & components === */
+    #crash-sample{
+      --bg:#0B1E39;            /* site background */
+      --ink:#F5F7FB;           /* main text */
+      --muted:#A3B3CC;         /* secondary text */
+      --accent:#2E8CFF;        /* brand grad left */
+      --accent2:#74B2FF;       /* brand grad right */
+      --border:rgba(255,255,255,.08);
+      --surface1:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));
+      --radius:18px; --shadow:0 12px 34px rgba(0,0,0,.35);
+      --maxw:1100px;
+      color:var(--ink); background:transparent; padding:56px 0;
+      font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    }
+    #crash-sample .container{ width:min(100%,var(--maxw)); margin:0 auto; padding:0 20px; }
+    #crash-sample .eyebrow{ color:var(--accent2); text-transform:uppercase; letter-spacing:.14em; font-weight:800; font-size:.78rem; }
+    #crash-sample h2{ margin:6px 0 12px; font-size:clamp(24px,3.6vw,34px); line-height:1.25; }
+    #crash-sample h3{ margin:0 0 6px; font-size:18px; }
+    #crash-sample p.muted{ color:var(--muted); margin:0 0 12px; }
+    #crash-sample .card{
+      background:var(--surface1); border:1px solid var(--border);
+      border-radius:var(--radius); box-shadow:var(--shadow); padding:20px;
+    }
+    #crash-sample .grid{ display:grid; gap:16px; }
+    #crash-sample .cols-2{ grid-template-columns:1fr 1fr; }
+    #crash-sample .cols-4{ grid-template-columns:repeat(4,1fr); }
+    @media (max-width: 900px){
+      #crash-sample .cols-2,#crash-sample .cols-4{ grid-template-columns:1fr; }
+    }
+    #crash-sample .badge{
+      display:inline-block; font-size:.72rem; padding:.22rem .58rem; border-radius:999px;
+      color:var(--accent2); border:1px solid rgba(116,178,255,.32); background:rgba(116,178,255,.12); letter-spacing:.06em;
+    }
+    #crash-sample .score{
+      display:inline-flex; align-items:center; gap:10px;
+      border:1px solid var(--border); border-radius:12px; padding:8px 12px;
+      background:rgba(255,255,255,.04); font-weight:800;
+    }
+    #crash-sample .score .grade{ font-size:22px; letter-spacing:.4px; }
+    #crash-sample .kv .item{
+      border:1px solid var(--border); border-radius:12px; padding:12px;
+      background:rgba(255,255,255,.02);
+    }
+    #crash-sample .kv .label{ color:var(--muted); font-size:.9rem; margin-bottom:4px; }
+    #crash-sample .table{ width:100%; border-collapse:separate; border-spacing:0; }
+    #crash-sample .table th,#crash-sample .table td{
+      padding:10px; border:1px solid var(--border); vertical-align:top;
+    }
+    #crash-sample .table th{ background:rgba(255,255,255,.04); text-align:left; color:#e6efff; }
+    #crash-sample .table tr:nth-child(even) td{ background:rgba(255,255,255,.02); }
+    #crash-sample .sev{ font-weight:800; border-radius:6px; padding:2px 8px; display:inline-block; color:#001018; }
+    #crash-sample .sev-H{ background:#ff6b6b; }
+    #crash-sample .sev-M{ background:#ffd166; }
+    #crash-sample .sev-L{ background:#7ee2a8; }
+    #crash-sample .pill{
+      display:inline-block; padding:6px 10px; border:1px solid var(--border);
+      border-radius:999px; background:rgba(255,255,255,.05); margin:4px 6px 0 0;
+    }
+    #crash-sample .cta-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    #crash-sample .btn{
+      display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border);
+      border-radius:12px; padding:10px 14px; color:var(--ink); text-decoration:none;
+      background:rgba(255,255,255,.03);
+    }
+    #crash-sample .btn:hover{ background:rgba(255,255,255,.06); }
+    #crash-sample .btn.primary{
+      background:linear-gradient(90deg,var(--accent),var(--accent2)); color:#001018; border:none; font-weight:800;
+    }
+    #crash-sample .disclaimer{
+      margin-top:14px; font-size:12px; color:var(--muted);
+      border-top:1px dashed var(--border); padding-top:10px;
+    }
+  </style>
+<style>
+  /* --- Fix washed-out Crash Course sample section --- */
+  #crash-sample {
+    background: #0B1E39 !important;   /* solid dark background */
+    opacity: 1 !important;
+    position: relative;
+    isolation: isolate;
+    color: #EAF2FF !important;
+  }
+
+  /* Cancel inherited opacity or filters */
+  #crash-sample, #crash-sample * {
+    filter: none !important;
+    mix-blend-mode: normal !important;
+  }
+
+  /* Card styling reset */
+  #crash-sample .card {
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03)) !important;
+    border: 1px solid rgba(255,255,255,.1) !important;
+    opacity: 1 !important;
+  }
+
+  /* Force text full contrast */
+  #crash-sample h2,
+  #crash-sample h3,
+  #crash-sample p,
+  #crash-sample li,
+  #crash-sample td,
+  #crash-sample th {
+    color: #EAF2FF !important;
+  }
+
+  #crash-sample .muted {
+    color: #A3B3CC !important;
+  }
+
+  #crash-sample .table th {
+    color: #E6EFFF !important;
+  }
+</style>
+
+  <div class="container">
+    <div class="eyebrow">Crash Course Checkup</div>
+    <h2>Sample Output — ACME Manufacturing, Inc.</h2>
+    <p class="muted">This example mirrors the look & feel of your final report. Actual findings and grades vary by scope and evidence.</p>
+
+    <!-- Key Values -->
+    <div class="grid kv cols-4" style="margin:16px 0;">
+      <div class="item"><div class="label">Overall Grade</div><div class="score"><span class="grade">B-</span> (82%)</div></div>
+      <div class="item"><div class="label">Top Risk Theme 1</div>MFA exceptions (~12% of users)</div>
+      <div class="item"><div class="label">Top Risk Theme 2</div>Patch backlog on 14 workstations (&gt;30 days)</div>
+      <div class="item"><div class="label">Top Risk Theme 3</div>Stale vendor/guest access (23 accounts)</div>
+    </div>
+
+    <!-- Strengths & Gaps -->
+    <div class="grid cols-2" style="margin-bottom:16px;">
+      <div class="card">
+        <h3>Strengths</h3>
+        <ul style="margin:8px 0 0 18px;">
+          <li>SSO in place for Microsoft 365 and Slack; baseline MFA enforced.</li>
+          <li>EDR deployed to 100% of servers and 95% of workstations.</li>
+          <li>Backups configured with 7-day immutability; quarterly restore test completed.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Gaps</h3>
+        <ul style="margin:8px 0 0 18px;">
+          <li>Number-match MFA not enforced; SMS fallback still enabled.</li>
+          <li>Guest accounts not time-bound; 23 stale external users.</li>
+          <li>Patch policy breach on 14 workstations (&gt;30 days).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Plan -->
+    <div class="card" style="margin-bottom:16px;">
+      <h3>Prioritized 30-Day Action Plan</h3>
+      <ol style="margin:8px 0 0 18px;">
+        <li>Enforce number-match MFA and disable SMS fallback (tenant-wide).</li>
+        <li>Require device compliance for cloud apps; block unmanaged BYOD.</li>
+        <li>Clear patch backlog; adopt 14/30-day deadlines with a maintenance window.</li>
+        <li>Time-bound guest/vendor access; quarterly access review with owners.</li>
+        <li>Run a 30-min IR tabletop; verify the call tree and backup recovery steps.</li>
+      </ol>
+      <p class="muted" style="margin-top:8px;">Scope: identity, devices/EDR, email security, backups, admin/vendors, patching, awareness.</p>
+    </div>
+
+    <!-- Scorecard -->
+    <div class="card">
+      <h3>Scorecard by Area</h3>
+      <table class="table" style="margin-top:8px;">
+        <tr>
+          <th style="width:170px;">Area</th><th>Finding (brief)</th><th style="width:90px;">Score</th><th style="width:90px;">Risk</th><th>Notes</th>
+        </tr>
+        <tr>
+          <td>Identity &amp; Access</td>
+          <td>MFA enabled but SMS fallback present for ~12% of accounts.</td>
+          <td>B</td>
+          <td><span class="sev sev-M">Medium</span></td>
+          <td>Enable number-match; enforce for admins and vendors first.</td>
+        </tr>
+        <tr>
+          <td>Devices / EDR</td>
+          <td>EDR coverage 95% workstations; 100% servers.</td>
+          <td>B+</td>
+          <td><span class="sev sev-M">Medium</span></td>
+          <td>Close remaining 5% via automated enrollment and weekly exception report.</td>
+        </tr>
+        <tr>
+          <td>Patching</td>
+          <td>14 devices beyond 30-day patch window.</td>
+          <td>C+</td>
+          <td><span class="sev sev-H">High</span></td>
+          <td>Adopt deadlines; remediate backlog across two maintenance cycles.</td>
+        </tr>
+        <tr>
+          <td>Email Security</td>
+          <td>SPF/DMARC aligned; phishing tests quarterly.</td>
+          <td>B</td>
+          <td><span class="sev sev-M">Medium</span></td>
+          <td>Add conditional access for legacy auth; tighten new-hire training.</td>
+        </tr>
+        <tr>
+          <td>Backups</td>
+          <td>Immutable 7 days; last restore test successful.</td>
+          <td>A-</td>
+          <td><span class="sev sev-L">Low</span></td>
+          <td>Extend immutability to 14 days; document RTO/RPO for ERP.</td>
+        </tr>
+        <tr>
+          <td>Admin &amp; Vendors</td>
+          <td>3 Global Admins; no PIM/JIT; legacy break-glass account exists.</td>
+          <td>C</td>
+          <td><span class="sev sev-H">High</span></td>
+          <td>Introduce JIT elevation; restrict break-glass to hardware token in vault.</td>
+        </tr>
+        <tr>
+          <td>Awareness</td>
+          <td>Quarterly tests at 8% fail rate; new hires not covered.</td>
+          <td>B-</td>
+          <td><span class="sev sev-M">Medium</span></td>
+          <td>Onboarding micro-training; monthly micro-tests for high-risk groups.</td>
+        </tr>
+      </table>
+
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;">
+        <span class="pill">M365 Secure Score</span>
+        <span class="pill">Intune device list</span>
+        <span class="pill">Baseline policies</span>
+        <span class="pill">EDR coverage</span>
+        <span class="pill">Backup policy</span>
+      </div>
+
+      <div class="disclaimer">
+        <strong>Disclaimer:</strong> This is a representative sample for demonstration. Actual findings, grades,
+        and recommendations will vary based on full scope, evidence reviewed, and business context.
+      </div>
+
+      <div class="cta-row">
+        <a class="btn primary" href="index.html#contact">Discuss your results →</a>
+        <a class="btn" href="smb_maturity.html">Get an instant maturity score →</a>
+      </div>
+    </div>
+  </div>
+</section>
