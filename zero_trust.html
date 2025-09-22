@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Zero Trust, Made Simple — ABI Consulting, LLC</title>
+  <meta name="description" content="A plain‑English, SMB‑friendly guide to Zero Trust with quick wins, an interactive checklist, and a 30/60/90 roadmap."/>
+
+  <!-- Match index.html color system and header styling -->
+  <style>
+    :root{
+      --bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;--accent:#2E8CFF;--accent2:#74B2FF;
+      --border:rgba(255,255,255,.08);--radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);--maxw:1200px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
+    h1,h2,h3{margin:0 0 14px;line-height:1.2}
+    h1{font-size:clamp(36px,6vw,56px)}h2{font-size:clamp(24px,3.8vw,34px)}h3{font-size:clamp(18px,2.5vw,22px)}
+    p{margin:0 0 12px;color:var(--muted)}
+
+    /* === Header/Nav copied to mirror index.html === */
+    header.nav{padding:18px 0;border-bottom:1px solid var(--border)}
+    header.nav .brand{display:flex;align-items:center;gap:12px;font-weight:800}
+    header.nav .brand .logo{width:40px;height:40px;object-fit:contain;display:block;background:transparent;box-shadow:none}
+    header.nav nav a{margin-right:14px;color:#F5F7FB;opacity:.85;text-decoration:none}
+    header.nav nav a:last-child{margin-right:0}
+    header.nav nav .social-link{margin-left:22px;display:inline-flex;align-items:center;color:#dfe9ff;text-decoration:none}
+    header.nav nav .social-link:hover{color:var(--accent2)}
+
+    /* Page sections */
+    section{padding:64px 0}
+    .eyebrow{color:var(--accent2);letter-spacing:.12em;text-transform:uppercase;font-weight:700;font-size:.78rem}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+    .grid{display:grid;gap:18px}
+    @media(min-width:900px){.grid.cols-2{grid-template-columns:1fr 1fr}.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
+
+    /* Tabs */
+    .tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+    .tab{padding:8px 12px;border-radius:12px;border:1px solid var(--border);cursor:pointer;color:var(--text);background:rgba(255,255,255,.03)}
+    .tab.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#001018;border:none;font-weight:800}
+    .tabpanes>div{display:none}.tabpanes>div.active{display:block}
+
+    /* Checklist */
+    .checklist li{display:flex;gap:10px;align-items:flex-start;margin:10px 0;padding:10px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.02)}
+    .checklist input{accent-color:var(--accent);width:18px;height:18px;margin-top:3px}
+    .progress{height:10px;background:#0a1e36;border:1px solid var(--border);border-radius:999px;overflow:hidden;margin-top:8px}
+    .progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:12px;padding:10px 14px;color:var(--text);text-decoration:none}
+    .btn:hover{background:rgba(255,255,255,.04)}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#001018;border:none;font-weight:800}
+
+    /* Accordion */
+    details{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:0 14px}
+    summary{cursor:pointer;list-style:none;padding:16px 8px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+    summary::-webkit-details-marker{display:none}
+    .answer{padding:0 8px 16px;color:var(--muted)}
+    .badge{font-size:.72rem;padding:.22rem .55rem;border:1px solid rgba(116,178,255,.32);border-radius:999px;color:var(--accent2);background:rgba(116,178,255,.12);letter-spacing:.06em}
+  </style>
+</head>
+<body>
+
+<!-- === Header matches index.html === -->
+<header class="nav">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+    <div class="brand">
+      <img class="logo" src="assets/ABI_logo_transparent.png" alt="ABI Consulting logo"/>
+      <span>Consulting, LLC</span>
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="index.html#resources">Resources</a>
+      <a href="index.html#partners">Trusted Partners</a>
+      <a href="/blog">Blog</a>
+      <a href="index.html#contact">Contact</a>
+      <a class="social-link" aria-label="LinkedIn" target="_blank" href="https://www.linkedin.com/company/abi-consulting-llc">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 
+             .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 
+             14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 
+             0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 
+             0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 
+             1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.175-.431.574-.878 
+             1.244-.878.878 0 1.23.662 1.23 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 
+             0-1.845.7-2.165 1.193h.016V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+        </svg>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Hero -->
+  <section class="container" style="padding-top:72px">
+    <div class="eyebrow">Zero Trust • SMB • Security Assurance</div>
+    <h1>Zero Trust, <span style="color:var(--accent2)">made simple</span>.</h1>
+    <p>Zero Trust is airport security for your apps: verify who you are (ID + MFA), check device health (no liquids past security), and only let you through the right gate (least privilege). Below are practical steps an SMB can execute in weeks—not years.</p>
+    <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap">
+      <a class="btn primary" href="#problems">Solve common issues</a>
+      <a class="btn" href="#checklist">Start the checklist</a>
+    </div>
+  </section>
+
+  <!-- Problems & Fixes -->
+  <section id="problems" class="container">
+    <div class="card">
+      <h3 style="margin-bottom:6px">Common problems → quick fixes <span class="badge">SMB‑friendly</span></h3>
+      <p>Pick your stack. Each fix uses plain language and takes hours—not months.</p>
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-pane="m365" aria-selected="true">Microsoft 365</button>
+        <button class="tab" data-pane="google">Google Workspace</button>
+      </div>
+      <div class="tabpanes">
+        <div id="m365" class="active" role="tabpanel">
+          <ul>
+            <li><strong>“We have MFA, but not everywhere.”</strong> → Enforce tenant‑wide MFA; require <em>number‑match</em>; remove SMS fallback.</li>
+            <li><strong>Patching slips.</strong> → Enable Windows/Office Auto‑Update; 14/30‑day policy; report exceptions monthly.</li>
+            <li><strong>Too many admins.</strong> → Use PIM/JIT; keep 2–3 Global Admins; split admin accounts; approval for elevation.</li>
+            <li><strong>Vendor/guest sprawl.</strong> → Group guests; time‑bound access; Conditional Access for guests; quarterly review.</li>
+            <li><strong>BYOD risk.</strong> → Require Intune/MDM for mail and apps; block unmanaged devices; encryption & PIN.</li>
+          </ul>
+        </div>
+        <div id="google" role="tabpanel">
+          <ul>
+            <li><strong>“We have MFA, but not everywhere.”</strong> → Enforce 2‑Step Verification with Google Prompt; no SMS fallback.</li>
+            <li><strong>Patching slips.</strong> → Force Chrome/OS auto‑updates; 14/30‑day patch policy on managed devices.</li>
+            <li><strong>Too many admins.</strong> → Limit Super Admins; use granular Admin roles; separate admin accounts.</li>
+            <li><strong>Vendor/guest sprawl.</strong> → External directory groups; time‑bound sharing; DLP for Drive.</li>
+            <li><strong>BYOD risk.</strong> → Require Endpoint Management; block unknown devices; screen lock & encryption.</li>
+          </ul>
+        </div>
+      </div>
+      <p style="color:var(--muted);margin-top:8px">Tip: Treat admin access like a spare house key—track who has it and collect it regularly.</p>
+    </div>
+  </section>
+
+  <!-- Pillars -->
+  <section class="container grid cols-3">
+    <div class="card">
+      <h3>1) Strong Identity</h3>
+      <ul>
+        <li>MFA for all users</li><li>Least privilege; role-based access</li><li>Disable stale accounts automatically</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>2) Healthy Devices</h3>
+      <ul>
+        <li>Endpoint protection (EDR) + disk encryption</li><li>OS auto‑patching within 14–30 days</li><li>Block risky BYOD or require MDM</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>3) Protected Access</h3>
+      <ul>
+        <li>Conditional access (IP, device health, risk)</li><li>Segment critical apps and data</li><li>Continuous monitoring & alerting</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Checklist + Plan -->
+  <section id="checklist" class="container grid cols-2">
+    <div class="card">
+      <h3>Zero Trust starter checklist <span class="badge">Interactive</span></h3>
+      <p>Select what you already have. A quick‑win plan builds automatically.</p>
+      <div class="progress" aria-label="Progress"><span id="zprog"></span></div>
+      <ul class="checklist" id="zlist">
+        <li><input type="checkbox" data-tag="MFA"><label>Company‑wide <strong>MFA</strong> enabled</label></li>
+        <li><input type="checkbox" data-tag="SSO"><label>SSO for key apps (O365/Google, finance, HR)</label></li>
+        <li><input type="checkbox" data-tag="EDR"><label>Endpoint protection (EDR) on company devices</label></li>
+        <li><input type="checkbox" data-tag="PATCH"><label>OS & app patching within <strong>14–30 days</strong></label></li>
+        <li><input type="checkbox" data-tag="LEAST"><label>Admins limited; least‑privilege roles defined</label></li>
+        <li><input type="checkbox" data-tag="IR"><label>Basic incident response plan tested</label></li>
+        <li><input type="checkbox" data-tag="BACKUP"><label>Immutable/offline backups tested quarterly</label></li>
+        <li><input type="checkbox" data-tag="AWARE"><label>Quarterly security awareness & phishing tests</label></li>
+      </ul>
+    </div>
+    <div class="card" id="plan">
+      <h3>Your quick‑win plan</h3>
+      <ol id="planList" style="margin-left:18px">
+        <li>Turn on MFA for all accounts (including admins & vendors).</li>
+        <li>Deploy EDR and enforce disk encryption.</li>
+        <li>Patch policy: critical within 14 days; others within 30.</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+        <button class="btn" id="copyPlan" type="button">Copy plan</button>
+        <a class="btn primary" href="smb_maturity.html">Get a score & ROI →</a>
+      </div>
+      <div id="copyMsg" style="display:none;color:var(--muted);margin-top:6px">✓ Copied to clipboard</div>
+    </div>
+  </section>
+
+  <!-- Roadmap -->
+  <section class="container grid cols-3">
+    <div class="card">
+      <h3>Day 0–30</h3>
+      <ul>
+        <li>Enable MFA tenant‑wide (no SMS fallback).</li>
+        <li>Encrypt devices; deploy EDR.</li>
+        <li>Set 14/30‑day patch policy; monthly maintenance window.</li>
+        <li>Disable stale accounts; verify vendor access list.</li>
+        <li>Draft IR phone tree and run a 30‑min tabletop.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Day 30–90</h3>
+      <ul>
+        <li>Conditional Access by device health, location, risk.</li>
+        <li>SSO for top apps; clean up admin roles; separate admin accounts.</li>
+        <li>Immutable/offline backups; quarterly restore test.</li>
+        <li>Quarterly phishing tests & micro‑training.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>90+ Days</h3>
+      <ul>
+        <li>Network segmentation for finance/production systems.</li>
+        <li>Just‑in‑time admin elevation (PIM/JIT) with approval.</li>
+        <li>Data classification for 1–2 systems; DLP basics.</li>
+        <li>Continuous vuln management cadence.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Glossary -->
+  <section class="container">
+    <div class="eyebrow">Plain‑English glossary</div>
+    <h2 style="margin:6px 0 12px">Zero Trust in simple terms</h2>
+    <div class="grid">
+      <details open><summary>MFA vs. SSO — what’s the difference?<span>›</span></summary><div class="answer">MFA adds an extra proof (like an app prompt) after your password. SSO lets users log in once and reach many apps. Use both: SSO for convenience, MFA for security.</div></details>
+      <details><summary>“Least privilege” in one sentence<span>›</span></summary><div class="answer">Give each person the minimum access needed to do their job, and remove it when they don’t need it anymore.</div></details>
+      <details><summary>Conditional access<span>›</span></summary><div class="answer">Policies that check the user, device health, location, and risk before allowing access. Example: block logins from unknown countries or non‑encrypted devices.</div></details>
+      <details><summary>Network segmentation (why it matters)<span>›</span></summary><div class="answer">If an attacker gets in, segmentation limits how far they can move. Keep finance systems and production separate from everyday office networks.</div></details>
+      <details><summary>EDR (what it does)<span>›</span></summary><div class="answer">EDR is a security guard on every laptop. It watches for malicious behavior and can block or isolate an endpoint.</div></details>
+    </div>
+  </section>
+
+  <!-- Copy‑paste basics -->
+  <section class="container grid cols-2">
+    <div class="card">
+      <h3>BYOD policy starter</h3>
+      <ol style="margin-left:18px">
+        <li>Device must use PIN/biometric and full‑disk encryption.</li>
+        <li>Company mail/apps only via managed profiles (Intune/Endpoint Mgmt).</li>
+        <li>Lost/stolen devices must be reported within 24 hours.</li>
+        <li>User consents to remote wipe of company data only.</li>
+        <li>No forwarding to personal accounts; no local PST/archives.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Monthly admin review</h3>
+      <ol style="margin-left:18px">
+        <li>Remove leavers; disable stale/unused accounts.</li>
+        <li>Review global/admin roles; require JIT elevation.</li>
+        <li>Re‑certify vendors/guests; time‑bound access.</li>
+        <li>Scan risky sign‑ins; enforce MFA challenges.</li>
+        <li>Patch exceptions report; confirm EDR coverage.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="container grid cols-2">
+    <div class="card">
+      <h3>Ready for a quick checkup?</h3>
+      <p>Run our SMB Maturity & ROI tool to get a letter‑grade and an action plan.</p>
+      <a class="btn primary" href="smb_maturity.html">Start assessment →</a>
+    </div>
+    <div class="card">
+      <h3>Need a 2‑quarter roadmap?</h3>
+      <p>We’ll map this page to your tools and budget, then sequence the work.</p>
+      <a class="btn" href="index.html#contact">Contact us</a>
+    </div>
+  </section>
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:30px 0;color:var(--muted)">
+  <div class="container" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+    <div>© 2025 ABI Consulting, LLC • Tampa, FL</div>
+    <div>Cybersecurity · GRC · Security Assurance</div>
+  </div>
+</footer>
+
+<script>
+  // Tabs
+  const tabs = document.querySelectorAll('.tab');
+  const panes = document.querySelectorAll('.tabpanes > div');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    panes.forEach(p => p.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.pane).classList.add('active');
+  }));
+
+  // Checklist logic
+  const list = document.getElementById('zlist');
+  const planList = document.getElementById('planList');
+  const prog = document.getElementById('zprog');
+  const recs = {
+    MFA: 'Enable MFA everywhere, including admins and vendors. Start with Microsoft/Google and finance apps.',
+    SSO: 'Roll out SSO to core apps so offboarding removes access in one step.',
+    EDR: 'Deploy endpoint protection (EDR) to all managed devices and enforce disk encryption.',
+    PATCH: 'Adopt a patch policy: critical 14 days, others 30. Track exceptions.',
+    LEAST: 'Create least‑privilege roles; review admin rights monthly.',
+    IR: 'Document an incident response checklist; run a 30‑minute tabletop every quarter.',
+    BACKUP: 'Implement immutable/offline backups; test restores quarterly.',
+    AWARE: 'Run quarterly phishing tests and micro‑training; track participation.'
+  };
+  function updatePlan(){
+    const checked = [...list.querySelectorAll('input[type="checkbox"]:checked')].map(i=>i.dataset.tag);
+    const percent = Math.round((checked.length / list.querySelectorAll('input').length) * 100);
+    prog.style.width = percent + '%';
+    const gaps = Object.keys(recs).filter(k => !checked.includes(k));
+    planList.innerHTML = (gaps.length ? gaps : ['MFA','EDR','PATCH']).slice(0,5).map(k => `<li>${recs[k]}</li>`).join('');
+  }
+  list.addEventListener('change', updatePlan); updatePlan();
+
+  // Copy plan
+  const copyBtn = document.getElementById('copyPlan');
+  const copyMsg = document.getElementById('copyMsg');
+  copyBtn.addEventListener('click', async () => {
+    const text = [...document.querySelectorAll('#planList li')].map(li => '• ' + li.textContent.trim()).join('\\n');
+    try { await navigator.clipboard.writeText(text); copyMsg.style.display='block'; setTimeout(()=>copyMsg.style.display='none',1800); } catch(e){ alert('Copy failed'); }
+  });
+</script>
+
+</body>
+</html>
