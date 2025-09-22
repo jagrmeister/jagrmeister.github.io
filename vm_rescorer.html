@@ -23,7 +23,7 @@
     header{padding:24px 0;border-bottom:1px solid var(--border)}
     .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
     .brand{display:flex;align-items:center;gap:12px;font-weight:800}
-    .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#123e74,#1a2f58);display:grid;place-items:center}
+    header.nav .logo{height:34px;width:auto;display:inline-block;vertical-align:middle;background:none;border-radius:0;box-shadow:none}
     h1{font-size:clamp(28px,3.2vw,40px);margin:12px 0 4px}
     p.lead{color:var(--muted);margin:0 0 18px}
     .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
@@ -78,6 +78,7 @@ header.nav .brand {
   font-weight: 800;
 }
 header.nav .logo {
+  position: fixed;
   width: 34px;
   height: 34px;
   border-radius: 10px;
@@ -105,7 +106,7 @@ header.nav nav a:hover {
 <header class="nav">
   <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
     <div class="brand">
-      <div class="logo">ABI</div>
+      <img class="logo" src="assets/ABI_logo_transparent.png" alt="ABI Consulting logo"/>
       <span>Consulting, LLC</span>
     </div>
     <nav>
