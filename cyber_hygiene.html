@@ -56,7 +56,47 @@
     summary{cursor:pointer;font-weight:700}
 
     .footer{color:var(--muted);font-size:13px;text-align:center;margin:36px 0}
+    /* Standardized nav styling */
+header.nav {
+  background: #0a1d37;
+  padding: 0.8rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header.nav .brand {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #fff;
+}
+
+header.nav .brand img.logo {
+  height: 28px;
+  margin-right: 10px;
+}
+
+header.nav nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+header.nav nav a:hover {
+  color: #4da3ff;
+}
+
+header.nav .social-link img {
+  height: 18px;
+  margin-left: 1rem;
+}
+
   </style>
+
 </head>
 <body>
 <header class="nav">
@@ -189,7 +229,21 @@
 </div>
 </section>
 <!-- Notes -->
-<div class="card" id="crash-sample" style="margin-top:32px"><h2>Crash Course Checkup — Sample Report</h2><p class="lead">Want to see what a finished Tier 1 assessment looks like? Here’s a sample report we’ve prepared to demonstrate the kind of insights you’ll receive.</p><div class="actions" style="margin-top:16px"><a class="btn" href="ccc_sample.html" target="_blank">View Sample Report</a><a class="btn secondary" href="reports/ccc_sample.pdf" target="_blank">Download PDF</a></div><p class="muted" style="margin-top:12px;font-size:14px"><em>Note: This is a fictitious example for demonstration purposes. Actual reports are tailored to your environment and evidence.</em></p></div><section class="card" style="margin-top:24px">
+<div class="card" id="crash-sample" style="margin-top:32px">
+  <h2>Crash Course Checkup — Sample Report</h2>
+  <p class="lead">
+    Want to see what a finished Tier 1 assessment looks like? Here’s a sample report we’ve prepared to demonstrate the kind of insights you’ll receive.
+  </p>
+  <div class="actions" style="margin-top:16px">
+    <a class="btn" href="ccc_sample.html" target="_blank">View Sample Report</a>
+  </div>
+  <p class="muted" style="margin-top:12px;font-size:14px">
+    <em>Note: This is a fictitious example for demonstration purposes. Actual reports are tailored to your environment and evidence.</em>
+  </p>
+</div>
+
+<section class="card" style="margin-top:24px">
+
 <h3>Notes &amp; Assumptions</h3>
 <ul class="includes">
 <li>Pricing covers travel &amp; hotel for non‑local clients within the contiguous U.S.</li>
