@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vulnerability Criticality Re‑Scorer – ABI Consulting</title>
-  <meta name="theme-color" content="#0B1E39" />
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Vulnerability Criticality Re‑Scorer – ABI Consulting</title>
+<meta content="#0B1E39" name="theme-color"/>
+<style>
     :root{
       --bg:#0B1E39; --panel:#0e2446; --panel2:#0b1d37;
       --text:#F5F7FB; --muted:#A3B3CC;
@@ -23,7 +24,7 @@
     header{padding:24px 0;border-bottom:1px solid var(--border)}
     .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
     .brand{display:flex;align-items:center;gap:12px;font-weight:800}
-    header.nav .logo{height:34px;width:auto;display:inline-block;vertical-align:middle;background:none;border-radius:0;box-shadow:none}
+    .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#123e74,#1a2f58);display:grid;place-items:center}
     h1{font-size:clamp(28px,3.2vw,40px);margin:12px 0 4px}
     p.lead{color:var(--muted);margin:0 0 18px}
     .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
@@ -100,108 +101,110 @@ header.nav nav a:hover {
   text-decoration: underline;
 }
 
-  </style>
+  
+
+/* --- Force the header logo to match homepage --- */
+header.nav .brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* Kill any old badge/gradient styles applied to .logo */
+header.nav .brand .logo{
+  height: 28px;
+  width: auto;
+  display: inline-block;
+  object-fit: contain;
+  background: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+</style>
 </head>
 <body>
 <header class="nav">
-  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-    <div class="brand">
-      <img class="logo" src="assets/ABI_logo_transparent.png" alt="ABI Consulting logo"/>
-      <span>Consulting, LLC</span>
-    </div>
-    <nav>
-      <a href="index.html#">Home</a>
-      <a href="index.html#services">Services</a>
-      <a href="index.html#about">About</a>
-      <a href="index.html#resources">Resources</a>
-      <a href="index.html#partners">Trusted Partners</a>
-      <a href="blog.html">Blog</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
-  </div>
-</header>
-
-
-<main class="container">
-  <h1>Vulnerability Criticality Re‑Scorer</h1>
-  <p class="lead">From simple CVE categories to advanced context-aware rescoring—see how business impact and exploitability change priorities.</p>
-
-  <section class="cols">
-    <!-- Lite -->
-<div class="card">
-  <h2>Lite</h2>
-  <fieldset>
-    <label>CVE severity</label>
-    <select id="l_cve">
-      <option value="10">Critical</option>
-      <option value="7.5">High</option>
-      <option value="5">Medium</option>
-      <option value="2.5">Low</option>
-    </select>
-
-    <label>Asset criticality</label>
-    <!-- multipliers: High boosts, Low reduces -->
-    <select id="l_asset">
-      <option value="1.25">High</option>
-      <option value="1.00">Medium</option>
-      <option value="0.80">Low</option>
-    </select>
-
-    <label>Business impact</label>
-    <select id="l_biz">
-      <option value="1.25">High</option>
-      <option value="1.00">Medium</option>
-      <option value="0.80">Low</option>
-    </select>
-  </fieldset>
-
-  <div class="actions">
-    <button id="liteCalc">Re-score</button>
-    <button class="secondary" id="liteReset">Reset</button>
-  </div>
-  <div id="liteOut" class="result" style="display:none"></div>
+<div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+<div class="brand"><img alt="ABI Consulting logo" class="logo" src="assets/ABI_logo_transparent.png"/><span>Consulting, LLC</span></div>
+<nav>
+<a href="index.html#">Home</a>
+<a href="index.html#services">Services</a>
+<a href="index.html#about">About</a>
+<a href="index.html#resources">Resources</a>
+<a href="index.html#partners">Trusted Partners</a>
+<a href="blog.html">Blog</a>
+<a href="index.html#contact">Contact</a>
+</nav>
 </div>
-
-
-    <!-- Pro -->
-    <div class="card" id="proCard">
-      <h2>Pro</h2>
-      <div class="limit">Pro mode uses remaining: <strong id="usesLeft">5</strong></div>
-      <fieldset>
-        <label>CVSS base score (0–10)</label>
-        <input type="number" id="p_cvss" min="0" max="10" step="0.1" value="7.5">
-        <label>EPSS probability (%)</label>
-        <input type="number" id="p_epss" min="0" max="100" step="0.1" value="0">
-
-        <div class="check"><input type="checkbox" id="p_kev"> <span>On CISA KEV</span></div>
-        <div class="check"><input type="checkbox" id="p_exploited"> <span>Known exploited</span></div>
-        <div class="check"><input type="checkbox" id="p_exploitcode"> <span>Public exploit code</span></div>
-
-        <label>Attack surface</label>
-        <select id="p_surface"><option value="1.00">External / internet‑facing</option><option value="0.90">Internal</option><option value="0.80">Privileged / admin‑only</option></select>
-
-        <label>Ubiquity (# affected assets)</label>
-        <select id="p_scope"><option value="0.5">Many (10+)</option><option value="0.2">Few (2–10)</option><option value="0">One</option></select>
-
-        <label>Asset criticality</label>
-        <select id="p_asset"><option value="1.15">High</option><option value="1.00">Medium</option><option value="0.85">Low</option></select>
-
-        <label>Business impact</label>
-        <select id="p_biz"><option value="1.15">High</option><option value="1.00">Medium</option><option value="0.85">Low</option></select>
-
-        <label>Data sensitivity</label>
-        <select id="p_data"><option value="1.15">Restricted</option><option value="1.08">Confidential</option><option value="1.02">Internal</option><option value="1.00">Public</option></select>
-
-        <label>Compensating controls</label>
-        <select id="p_controls"><option value="1.00">None</option><option value="0.90">Partial</option><option value="0.80">Strong</option></select>
-      </fieldset>
-      <div class="actions"><button id="proCalc">Re‑score</button><button class="secondary" id="proReset">Reset</button></div>
-      <div id="proOut" class="result" style="display:none"></div>
-      <p class="muted" style="margin-top:8px">Want unlimited access? Contact <a href="mailto:damian@abiconsulting.llc">ABI Consulting</a>.</p>
-    </div>
-  </section>
+</header>
+<main class="container">
+<h1>Vulnerability Criticality Re‑Scorer</h1>
+<p class="lead">From simple CVE categories to advanced context-aware rescoring—see how business impact and exploitability change priorities.</p>
+<section class="cols">
+<!-- Lite -->
+<div class="card">
+<h2>Lite</h2>
+<fieldset>
+<label>CVE severity</label>
+<select id="l_cve">
+<option value="10">Critical</option>
+<option value="7.5">High</option>
+<option value="5">Medium</option>
+<option value="2.5">Low</option>
+</select>
+<label>Asset criticality</label>
+<!-- multipliers: High boosts, Low reduces -->
+<select id="l_asset">
+<option value="1.25">High</option>
+<option value="1.00">Medium</option>
+<option value="0.80">Low</option>
+</select>
+<label>Business impact</label>
+<select id="l_biz">
+<option value="1.25">High</option>
+<option value="1.00">Medium</option>
+<option value="0.80">Low</option>
+</select>
+</fieldset>
+<div class="actions">
+<button id="liteCalc">Re-score</button>
+<button class="secondary" id="liteReset">Reset</button>
+</div>
+<div class="result" id="liteOut" style="display:none"></div>
+</div>
+<!-- Pro -->
+<div class="card" id="proCard">
+<h2>Pro</h2>
+<div class="limit">Pro mode uses remaining: <strong id="usesLeft">5</strong></div>
+<fieldset>
+<label>CVSS base score (0–10)</label>
+<input id="p_cvss" max="10" min="0" step="0.1" type="number" value="7.5"/>
+<label>EPSS probability (%)</label>
+<input id="p_epss" max="100" min="0" step="0.1" type="number" value="0"/>
+<div class="check"><input id="p_kev" type="checkbox"/> <span>On CISA KEV</span></div>
+<div class="check"><input id="p_exploited" type="checkbox"/> <span>Known exploited</span></div>
+<div class="check"><input id="p_exploitcode" type="checkbox"/> <span>Public exploit code</span></div>
+<label>Attack surface</label>
+<select id="p_surface"><option value="1.00">External / internet‑facing</option><option value="0.90">Internal</option><option value="0.80">Privileged / admin‑only</option></select>
+<label>Ubiquity (# affected assets)</label>
+<select id="p_scope"><option value="0.5">Many (10+)</option><option value="0.2">Few (2–10)</option><option value="0">One</option></select>
+<label>Asset criticality</label>
+<select id="p_asset"><option value="1.15">High</option><option value="1.00">Medium</option><option value="0.85">Low</option></select>
+<label>Business impact</label>
+<select id="p_biz"><option value="1.15">High</option><option value="1.00">Medium</option><option value="0.85">Low</option></select>
+<label>Data sensitivity</label>
+<select id="p_data"><option value="1.15">Restricted</option><option value="1.08">Confidential</option><option value="1.02">Internal</option><option value="1.00">Public</option></select>
+<label>Compensating controls</label>
+<select id="p_controls"><option value="1.00">None</option><option value="0.90">Partial</option><option value="0.80">Strong</option></select>
+</fieldset>
+<div class="actions"><button id="proCalc">Re‑score</button><button class="secondary" id="proReset">Reset</button></div>
+<div class="result" id="proOut" style="display:none"></div>
+<p class="muted" style="margin-top:8px">Want unlimited access? Contact <a href="mailto:damian@abiconsulting.llc">ABI Consulting</a>.</p>
+</div>
+</section>
 </main>
-
 <script>
   function band(score){ if(score>=9) return 'Critical'; if(score>=7.5) return 'High'; if(score>=5) return 'Medium'; return 'Low'; }
   function sla(sev, external, activeSignals){
@@ -283,19 +286,18 @@ document.getElementById('liteCalc').addEventListener('click', () => {
 </script>
 <!-- Terms acceptance modal -->
 <div id="disclaimerModal" style="position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:9999;">
-  <div style="background:#0B1E39;color:#F5F7FB;max-width:600px;padding:24px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.5)">
-    <h2 style="margin-top:0">Before You Proceed</h2>
-    <p>
+<div style="background:#0B1E39;color:#F5F7FB;max-width:600px;padding:24px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.5)">
+<h2 style="margin-top:0">Before You Proceed</h2>
+<p>
       By continuing to use the <strong>Vulnerability Criticality Re-Scorer</strong>, you acknowledge that this tool is provided  
       solely as an aid and that <strong>ABI Consulting, LLC</strong> bears no responsibility or liability for any decisions,  
       damages, or outcomes resulting from its use.
     </p>
-    <button id="acceptDisclaimer" style="margin-top:12px;padding:10px 16px;border:none;border-radius:8px;background:#2E8CFF;color:#fff;font-weight:bold;cursor:pointer;">
+<button id="acceptDisclaimer" style="margin-top:12px;padding:10px 16px;border:none;border-radius:8px;background:#2E8CFF;color:#fff;font-weight:bold;cursor:pointer;">
       I Accept
     </button>
-  </div>
 </div>
-
+</div>
 <script>
   document.getElementById("acceptDisclaimer").addEventListener("click", function(){
     document.getElementById("disclaimerModal").style.display = "none";
@@ -306,6 +308,5 @@ document.getElementById('liteCalc').addEventListener('click', () => {
     document.getElementById("disclaimerModal").style.display="none";
   }
 </script>
-
 </body>
 </html>
