@@ -514,6 +514,83 @@
     <div>Cybersecurity · GRC · Security Assurance</div>
   </div>
 </footer>
+<!-- Contact overlay (modal + backdrop + toast) -->
+<div id="contactBackdrop" class="modal-backdrop"></div>
+
+<div id="contactModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="contactTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div id="contactTitle" class="modal-title">Contact ABI Consulting</div>
+      <button id="contactClose" class="modal-close" type="button" aria-label="Close">Close</button>
+    </div>
+
+    <div class="modal-body">
+      <form id="contactForm" onsubmit="return false;">
+        <div class="modal-row">
+          <div>
+            <label for="c_name">Full name*</label>
+            <input id="c_name" name="name" type="text" required />
+          </div>
+          <div>
+            <label for="c_company">Company*</label>
+            <input id="c_company" name="company" type="text" required />
+          </div>
+        </div>
+
+        <div class="modal-row">
+          <div>
+            <label for="c_email">Work email*</label>
+            <input id="c_email" name="email" type="email" placeholder="you@company.com" required />
+          </div>
+          <div>
+            <label for="c_phone">Phone</label>
+            <input id="c_phone" name="phone" type="tel" placeholder="(optional)" />
+          </div>
+        </div>
+
+        <div class="modal-row">
+          <div>
+            <label for="c_interest">Interest*</label>
+            <select id="c_interest" name="interest" required>
+              <option value="" disabled selected>Select…</option>
+              <option>Crash Course Checkup</option>
+              <option>Two Step Security Fitness</option>
+              <option>Grey Street Resilience</option>
+              <option>Seek Up Enterprise</option>
+              <option>Fractional vCISO</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="c_hear">How did you hear about us?</label>
+            <input id="c_hear" name="hear" type="text" placeholder="Google, referral, LinkedIn…" />
+          </div>
+        </div>
+
+        <div>
+          <label for="c_msg">Message*</label>
+          <textarea id="c_msg" name="message" required placeholder="A few lines about what you need…"></textarea>
+        </div>
+
+        <!-- Honeypot -->
+        <input id="c_website" name="website" type="text" tabindex="-1" aria-hidden="true"
+               autocomplete="off" style="position:absolute;left:-9999px;opacity:0"/>
+
+        <!-- Inline status from JS -->
+        <div id="contact-result" style="display:none;margin-top:10px;"></div>
+      </form>
+    </div>
+
+    <div class="actions">
+      <button id="contactCancel" class="btn-secondary" type="button">Cancel</button>
+      <button id="contactSend" class="btn-primary" type="button">Send</button>
+    </div>
+  </div>
+</div>
+
+<div id="contactToast" class="toast" role="status" aria-live="polite"></div>
+<!-- /Contact overlay -->
+
 
 <!-- Default Statcounter -->
 <script type="text/javascript">
