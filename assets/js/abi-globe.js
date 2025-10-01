@@ -1,5 +1,5 @@
-/* ABI SVG Globe v2 — orthographic projection with accurate land via local GeoJSON,
-   animated great-circle routes, drag + inertia. CSP-safe (no external libs). */
+/* ABI SVG Globe: orthographic projection with simplified continents + animated great-circle "laser" routes.
+   No libraries. CSP-safe. Colors: ABI palette. */
 
 (function(){
   const svg = document.getElementById('abiGlobe');
@@ -10,34 +10,30 @@
   const nodeG = document.getElementById('nodes');
   if(!svg || !rotG) return;
 
-  // ---- Projection (orthographic) ----
-  const CX = 250, CY = 250, R = 165;
-  let lon0 = 0, lat0 = 0;          // view center
-  let auto = 0.12;                 // deg/frame auto-rotate
+  // ----- Projection (orthographic) -----
+  const CX = 250, CY = 250, R = 165;          // sphere radius (matches circle in HTML)
+  let lon0 = 0, lat0 = 0;                      // center of projection (deg)
+  let auto = 0.12;                             // deg/frame auto-rotate
   let dragging = false, lastX = 0, vLon = 0;
 
   function deg2rad(d){ return d * Math.PI/180; }
   function rad2deg(r){ return r * 180/Math.PI; }
-  function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 
-  // forward orthographic
+  // Orthographic forward projection: lon,lat -> x,y (2D)
   function project(lon,lat){
     const lam = deg2rad(lon - lon0);
     const phi = deg2rad(lat);
     const phi0 = deg2rad(lat0);
     const cosc = Math.sin(phi0)*Math.sin(phi) + Math.cos(phi0)*Math.cos(phi)*Math.cos(lam);
-    if(cosc < 0) return null; // back side
+    if(cosc < 0) return null; // back side of globe
     const x = R * Math.cos(phi)*Math.sin(lam);
     const y = R * (Math.cos(phi0)*Math.sin(phi) - Math.sin(phi0)*Math.cos(phi)*Math.cos(lam));
     return [CX + x, CY - y];
   }
 
-  // great-circle interpolation
-  function sph2cart([lam,phi]){ return [Math.cos(phi)*Math.cos(lam), Math.cos(phi)*Math.sin(lam), Math.sin(phi)]; }
-  function dot(a,b){ return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]; }
-  function normalize(v){ const m=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/m,v[1]/m,v[2]/m]; }
-
-  function arcPath(a, b, k=80){
+  // Great-circle arc between A and B -> path string using many small segments
+  function arcPath(a, b, k=60){
+    // a=[lon,lat], b=[lon,lat]
     const aR = [deg2rad(a[0]), deg2rad(a[1])];
     const bR = [deg2rad(b[0]), deg2rad(b[1])];
     const A = sph2cart(aR), B = sph2cart(bR);
@@ -48,7 +44,11 @@
       const t = i/k;
       const s1 = Math.sin((1-t)*omega)/Math.sin(omega);
       const s2 = Math.sin(t*omega)/Math.sin(omega);
-      const P = normalize([ s1*A[0]+s2*B[0], s1*A[1]+s2*B[1], s1*A[2]+s2*B[2] ]);
+      const P = normalize([
+        s1*A[0]+s2*B[0],
+        s1*A[1]+s2*B[1],
+        s1*A[2]+s2*B[2]
+      ]);
       const lon = rad2deg(Math.atan2(P[1], P[0]));
       const lat = rad2deg(Math.asin(P[2]));
       const p = project(lon, lat);
@@ -57,8 +57,29 @@
     }
     return d;
   }
+  function sph2cart([lam,phi]){ return [Math.cos(phi)*Math.cos(lam), Math.cos(phi)*Math.sin(lam), Math.sin(phi)]; }
+  function dot(a,b){ return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]; }
+  function normalize(v){ const m=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/m,v[1]/m,v[2]/m]; }
+  function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 
-  // ---- Data: routes between hubs ----
+  // ----- Minimal land data (very simplified) -----
+  // Each polygon is an array of [lon,lat] points. Coarse but recognizable.
+  // Regions: Americas, Europe+Africa, Asia, Australia
+  const LAND = [
+    // North America (very coarse)
+    [[-168,72],[-140,70],[-125,60],[-100,49],[-95,40],[-105,32],[-117,32],[-123,49],[-135,56],[-150,60],[-160,65],[-168,72]],
+    // South America
+    [[-82,12],[-75,5],[-70,-3],[-63,-10],[-64,-20],[-60,-30],[-56,-34],[-54,-45],[-49,-48],[-45,-23],[-50,-10],[-60,-5],[-70,0],[-75,5],[-82,12]],
+    // Europe + Africa
+    [[-10,36],[0,43],[10,46],[20,45],[30,44],[40,44],[50,40],[45,35],[36,32],[27,37],[14,37],[5,36],[-5,36],[-10,36],
+     [-10,20],[-5,10],[0,5],[10,4],[20,0],[25,-10],[20,-20],[10,-25],[0,-25],[-10,-20],[-10,0],[-12,10],[-10,20]],
+    // Asia
+    [[60,55],[75,55],[90,50],[105,42],[120,40],[130,45],[140,50],[150,55],[160,60],[170,62],[170,50],[160,45],[150,40],[140,35],[130,30],[120,25],[110,20],[100,20],[90,25],[80,30],[70,40],[60,45],[60,55]],
+    // Australia
+    [[113,-22],[120,-20],[132,-18],[138,-22],[142,-28],[145,-38],[134,-35],[126,-30],[122,-26],[118,-25],[113,-22]]
+  ];
+
+  // ----- Routes (lasers) between hubs -----
   const ROUTES = [
     { from:[-74,40.7], to:[-0.1,51.5] },        // NYC -> London
     { from:[-0.1,51.5], to:[77.2,28.6] },       // London -> Delhi
@@ -68,18 +89,10 @@
     { from:[-58.4,-34.6], to:[-3.7,40.4] }      // Buenos Aires -> Madrid
   ];
 
-  // ---- Coarse fallback land (used only if GeoJSON missing) ----
-  const FALLBACK_LAND = [
-    [[-168,72],[-140,70],[-125,60],[-100,49],[-95,40],[-105,32],[-117,32],[-123,49],[-135,56],[-150,60],[-160,65],[-168,72]],
-    [[-82,12],[-75,5],[-70,-3],[-63,-10],[-64,-20],[-60,-30],[-56,-34],[-54,-45],[-49,-48],[-45,-23],[-50,-10],[-60,-5],[-70,0],[-75,5],[-82,12]],
-    [[-10,36],[0,43],[10,46],[20,45],[30,44],[40,44],[50,40],[45,35],[36,32],[27,37],[14,37],[5,36],[-5,36],[-10,36],[-10,20],[-5,10],[0,5],[10,4],[20,0],[25,-10],[20,-20],[10,-25],[0,-25],[-10,-20],[-10,0],[-12,10],[-10,20]],
-    [[60,55],[75,55],[90,50],[105,42],[120,40],[130,45],[140,50],[150,55],[160,60],[170,62],[170,50],[160,45],[150,40],[140,35],[130,30],[120,25],[110,20],[100,20],[90,25],[80,30],[70,40],[60,45],[60,55]],
-    [[113,-22],[120,-20],[132,-18],[138,-22],[142,-28],[145,-38],[134,-35],[126,-30],[122,-26],[118,-25],[113,-22]]
-  ];
-
-  // ---- Build graticule (lat/long lines) ----
+  // ----- Build graticule (lat/long lines) -----
   function buildGraticule(){
     gratG.innerHTML = '';
+    // Parallels every 15°
     for(let lat=-60; lat<=60; lat+=15){
       let d = '';
       for(let lon=-180; lon<=180; lon+=3){
@@ -87,14 +100,13 @@
         if(!p) continue;
         d += (d? ' L ' : 'M ') + p[0].toFixed(1) + ' ' + p[1].toFixed(1);
       }
-      if(d){
-        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-        path.setAttribute('d', d);
-        path.setAttribute('stroke', 'url(#gLine)');
-        path.setAttribute('fill','none');
-        gratG.appendChild(path);
-      }
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', d);
+      path.setAttribute('stroke', 'url(#gLine)');
+      path.setAttribute('fill','none');
+      gratG.appendChild(path);
     }
+    // Meridians every 15°
     for(let lon=-180; lon<=180; lon+=15){
       let d = '';
       for(let lat=-90; lat<=90; lat+=3){
@@ -102,26 +114,24 @@
         if(!p) continue;
         d += (d? ' L ' : 'M ') + p[0].toFixed(1) + ' ' + p[1].toFixed(1);
       }
-      if(d){
-        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-        path.setAttribute('d', d);
-        path.setAttribute('stroke', 'url(#gLine)');
-        path.setAttribute('fill','none');
-        gratG.appendChild(path);
-      }
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', d);
+      path.setAttribute('stroke', 'url(#gLine)');
+      path.setAttribute('fill','none');
+      gratG.appendChild(path);
     }
   }
 
-  // ---- Draw land from arrays of rings (front side only) ----
-  function drawLandRings(rings){
+  // ----- Draw land polygons -----
+  function drawLand(){
     landG.innerHTML = '';
-    rings.forEach(ring => {
+    LAND.forEach(poly => {
       let d = '';
-      for(let i=0;i<ring.length;i++){
-        const p = project(ring[i][0], ring[i][1]);
-        if(!p) continue;
+      poly.forEach((pt,i) => {
+        const p = project(pt[0], pt[1]);
+        if(!p){ return; }
         d += (i===0 ? 'M ' : ' L ') + p[0].toFixed(1) + ' ' + p[1].toFixed(1);
-      }
+      });
       if(d){
         d += ' Z';
         const path = document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -131,39 +141,11 @@
     });
   }
 
-  // ---- Convert GeoJSON (Polygon/MultiPolygon) to projected rings ----
-  function ringsFromGeoJSON(geojson){
-    const out = [];
-    const handlePoly = coords => {
-      // coords = [ [ [lon,lat],... ] , [hole] , ... ]
-      // Only exterior ring (coords[0]) for clarity; holes are omitted on an orthographic fill
-      const ext = coords[0];
-      const ring = [];
-      for(let i=0;i<ext.length;i++){
-        const lon = +ext[i][0], lat = +ext[i][1];
-        // keep only points that could be visible (rough cull helps speed)
-        const p = project(lon, lat);
-        if(!p){ ring.push([lon,lat]); continue; }
-        ring.push([lon,lat]);
-      }
-      if(ring.length>2) out.push(ring);
-    };
-    const f = (geojson.type === 'FeatureCollection') ? geojson.features : [{type:'Feature', geometry:geojson}];
-    f.forEach(feat => {
-      const g = feat.geometry;
-      if(!g) return;
-      if(g.type === 'Polygon'){ handlePoly(g.coordinates); }
-      else if(g.type === 'MultiPolygon'){
-        g.coordinates.forEach(handlePoly);
-      }
-    });
-    return out;
-  }
-
-  // ---- Draw hubs + routes with animated dash ----
+  // ----- Draw hubs and animated routes -----
   function drawRoutes(){
     routeG.innerHTML = '';
     nodeG.innerHTML = '';
+    // Nodes
     ROUTES.forEach(r => {
       [r.from, r.to].forEach(coord => {
         const p = project(coord[0], coord[1]);
@@ -176,8 +158,10 @@
         nodeG.appendChild(c);
       });
     });
+
+    // Arcs with dash animation
     ROUTES.forEach((r, idx) => {
-      const d = arcPath(r.from, r.to, 90);
+      const d = arcPath(r.from, r.to, 80);
       if(!d) return;
       const path = document.createElementNS('http://www.w3.org/2000/svg','path');
       path.setAttribute('d', d);
@@ -186,39 +170,20 @@
       path.setAttribute('fill', 'none');
       path.setAttribute('opacity', '0.85');
       path.setAttribute('stroke-linecap','round');
+
+      // animated dash to look like a traveling laser
       const len = path.getTotalLength ? path.getTotalLength() : 1200;
       path.setAttribute('stroke-dasharray', '6 ' + (len));
+      // Offset will be animated in tick()
       path.dataset.len = len;
-      path.dataset.phase = (idx * 120).toString();
+      path.dataset.phase = (idx * 120).toString(); // offset phase per arc
       routeG.appendChild(path);
     });
   }
 
-  // ---- Render pipeline ----
-  let geoRings = null;     // projected from GeoJSON each frame (using lon0/lat0)
-  let usingGeo = false;
-
-  function render(){
-    gratG.innerHTML = '';
-    buildGraticule();
-
-    if(usingGeo && geoRings){
-      // Recompute visibility by reusing raw coords per ring
-      const reprojected = geoRings.raw.map(ring => {
-        // ring is array of [lon,lat]
-        return ring.filter(pt => true); // keep all; project() handles backface skip
-      });
-      drawLandRings(reprojected);
-    } else {
-      drawLandRings(FALLBACK_LAND);
-    }
-
-    drawRoutes();
-  }
-
-  // ---- Interaction (drag + inertia) ----
-  function box(){ return svg.getBoundingClientRect(); }
-  function toDeg(dx){ return dx / (box().width || 500) * 180; }
+  // ----- Interaction -----
+  function bbox(){ return svg.getBoundingClientRect(); }
+  function toDeg(dx){ return dx / (bbox().width || 500) * 180; }
 
   function onDown(e){ dragging = true; vLon = 0; lastX = (e.touches ? e.touches[0].clientX : e.clientX); }
   function onMove(e){
@@ -230,6 +195,7 @@
     render();
   }
   function onUp(){ dragging = false; }
+
   svg.addEventListener('mousedown', onDown);
   svg.addEventListener('mousemove', onMove);
   window.addEventListener('mouseup', onUp);
@@ -237,63 +203,32 @@
   svg.addEventListener('touchmove', onMove, {passive:true});
   window.addEventListener('touchend', onUp);
 
-  // ---- Animation loop ----
+  // ----- Render -----
+  function render(){
+    gratG.innerHTML = '';
+    buildGraticule();
+    drawLand();
+    drawRoutes();
+  }
+
+  // Initial draw
+  render();
+
+  // ----- Animation loop -----
   function tick(){
     requestAnimationFrame(tick);
     if(!dragging){
+      // auto-rotate + inertia decay
       vLon *= 0.96;
       lon0 += (auto - vLon);
       render();
     }
+    // advance dash offset for each route to create moving "laser"
     Array.from(routeG.children).forEach(p => {
-      const phase = (parseFloat(p.dataset.phase)||0) + 4;
+      const phase = (parseFloat(p.dataset.phase)||0) + 4; // speed
       p.dataset.phase = phase.toString();
       p.setAttribute('stroke-dashoffset', phase.toString());
     });
   }
-
-  // ---- Load GeoJSON land (if available) ----
-  async function tryLoadGeo(){
-    try{
-      const res = await fetch('assets/data/world-geo.json', {cache:'force-cache'});
-      if(!res.ok) throw new Error('no geojson');
-      const gj = await res.json();
-      const rings = [];
-      // Flatten to array of lon/lat rings we can quickly reproject each frame
-      const polys = [];
-      const features = (gj.type === 'FeatureCollection') ? gj.features : [{type:'Feature', geometry:gj}];
-      features.forEach(feat => {
-        const g = feat.geometry;
-        if(!g) return;
-        if(g.type === 'Polygon'){
-          if(g.coordinates && g.coordinates[0]) polys.push(g.coordinates[0]);
-        } else if(g.type === 'MultiPolygon'){
-          g.coordinates.forEach(coords => { if(coords && coords[0]) polys.push(coords[0]); });
-        }
-      });
-      // Simplify long rings a bit for perf (keep every Nth point based on size)
-      const targetPts = 120; // approximate points per ring
-      polys.forEach(r => {
-        const step = Math.max(1, Math.floor(r.length / targetPts));
-        const ring = [];
-        for(let i=0;i<r.length;i+=step){
-          const ll = r[i];
-          ring.push([+ll[0], +ll[1]]);
-        }
-        rings.push(ring);
-      });
-      geoRings = { raw: rings };
-      usingGeo = true;
-    }catch(e){
-      usingGeo = false; // fallback land will be used
-    }finally{
-      render();
-      tick();
-    }
-  }
-
-  // initial draw (before geo loads)
-  render();
-  // then attempt geojson load
-  tryLoadGeo();
+  tick();
 })();
