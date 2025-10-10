@@ -1,264 +1,343 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cyber Hygiene Assessments – ABI Consulting</title>
-<meta content="#0B1E39" name="theme-color"/>
+<meta name="theme-color" content="#0B1E39"/>
+
 <style>
-    :root{
-      --bg:#0B1E39; --panel:#0e2446; --panel2:#0b1d37;
-      --text:#F5F7FB; --muted:#A3B3CC;
-      --accent:#2E8CFF; --accent2:#74B2FF; --ok:#5bd68a; --warn:#ffb454; --crit:#ff7a7a;
-      --border:rgba(255,255,255,.08); --shadow:0 16px 40px rgba(0,0,0,.35);
-      --radius:18px; --maxw:1200px;
+  /* Center last row if it contains fewer than 3 cards */
+section.grid.cols-3[aria-label="À la carte services"] {
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+section.grid.cols-3[aria-label="À la carte services"] .card {
+  flex: 1 1 320px;
+  max-width: 380px;
+}
+
+  /* ==== Theme tokens (shared with index) ==== */
+  :root{
+    --bg:#0B1E39; --text:#F5F7FB; --muted:#A3B3CC;
+    --accent:#2E8CFF; --accent2:#74B2FF;
+    --border:rgba(255,255,255,.08);
+    --radius:18px; --shadow:0 16px 40px rgba(0,0,0,.35);
+    --maxw:1200px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(116,178,255,.12), transparent),
+      radial-gradient(900px 500px at 90% 10%, rgba(46,140,255,.12), transparent),
+      var(--bg);
+    color:var(--text);
+    font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .container{
+    width:min(100%,var(--maxw));margin:0 auto;
+    padding-left:max(20px,env(safe-area-inset-left));
+    padding-right:max(20px,env(safe-area-inset-right));
+  }
+
+  /* ==== Header / Nav (matched to index.html) ==== */
+  header.nav{
+    position:sticky;top:0;z-index:1000;background:#0a1d37;
+    border-bottom:1px solid var(--border);
+  }
+  header.nav .container{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;
+  }
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800}
+  .brand .logo{width:40px;height:40px;object-fit:contain;display:block}
+  .nav-links a{margin-right:14px;color:#F5F7FB;opacity:.9}
+  .nav-links a:last-child{margin-right:0}
+  .nav-toggle{
+    display:none;background:transparent;color:#CFE3FF;border:1px solid rgba(116,178,255,.35);
+    padding:8px 12px;border-radius:10px;font-size:18px;cursor:pointer;
+  }
+  header.nav nav .social-link{
+    margin-left:22px;display:inline-flex;align-items:center;color:#dfe9ff;text-decoration:none
+  }
+  header.nav nav .social-link:hover{color:var(--accent2)}
+
+  @media (max-width:820px){
+    .nav-toggle{display:inline-flex;align-items:center}
+    .nav-links{
+      display:none;position:absolute;right:20px;top:64px;background:#0b1f33;
+      border:1px solid rgba(255,255,255,.12);border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.35);
+      padding:10px;width:min(86vw,360px)
     }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:radial-gradient(1200px 600px at 10% -10%, rgba(116,178,255,.12), transparent),
-                    radial-gradient(900px 500px at 90% 10%, rgba(46,140,255,.12), transparent),
-                    var(--bg);
-         color:var(--text);
-         font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    a{color:var(--accent)}
-    header.nav{position:sticky;top:0;z-index:1000;background:var(--bg);padding:20px 0;border-bottom:1px solid var(--border)}
-    header.nav .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-    header.nav .brand{display:flex;align-items:center;gap:12px;font-weight:800}
-    header.nav .logo{width:34px;height:34px;object-fit:contain;display:block;background:transparent;box-shadow:none;}
-    header.nav nav a{color:#dfe9ff;text-decoration:none;margin-left:22px}
-    header.nav nav a:hover{color:var(--accent2);text-decoration:underline}
+    .nav-links a{display:block;padding:10px 12px;border-radius:8px}
+    .nav-links a:hover{background:rgba(116,178,255,.10)}
+    .nav-links[data-open="true"]{display:block}
+  }
 
-    .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
-    h1{font-size:clamp(28px,3.2vw,40px);margin:24px 0 12px}
-    p.lead{color:var(--muted);margin:0 0 20px}
+  /* ==== Content styles ==== */
+  h1{font-size:clamp(28px,3.2vw,40px);margin:24px 0 12px}
+  h2{font-size:clamp(22px,2.6vw,28px);margin:28px 0 12px}
+  p.lead{color:var(--muted);margin:0 0 20px}
 
-    .grid{display:grid;gap:20px}
-    @media(min-width:900px){.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
+  .grid{display:grid;gap:20px}
+  @media(min-width:900px){.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
 
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
-    .card h3{margin:6px 0 10px}
-    .chip{display:inline-block;border-radius:999px;border:1px solid var(--border);padding:4px 10px;font-size:13px;color:#dfe9ff}
-    .price{font-size:24px;font-weight:700;margin:8px 0}
-    .includes{margin:12px 0 0;padding:0;list-style:none}
-    .includes li{margin:8px 0;color:var(--muted)}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+    border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)
+  }
+  .card h3{margin:6px 0 10px}
+  .chip{display:inline-block;border-radius:999px;border:1px solid var(--border);padding:4px 10px;font-size:13px;color:#dfe9ff}
+  .price{font-size:24px;font-weight:700;margin:8px 0}
+  .includes{margin:12px 0 0;padding:0;list-style:none}
+  .includes li{margin:8px 0;color:var(--muted)}
 
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
-    .btn{cursor:pointer;padding:12px 18px;border-radius:999px;background:var(--accent);color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.08)}
-    .btn.secondary{background:transparent;border:1px solid var(--accent2);color:#fff}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+  .btn{
+    cursor:pointer;padding:12px 18px;border-radius:999px;background:var(--accent);
+    color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.08)
+  }
+  .btn.secondary{background:transparent;border:1px solid var(--accent2);color:#fff}
 
-    .section-title{margin:32px 0 14px;display:flex;align-items:center;justify-content:space-between}
-    .section-title h2{margin:0;font-size:24px}
-    .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:13px;color:var(--muted)}
+  .section-title{margin:32px 0 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .section-title h2{margin:0}
+  .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:13px;color:#A3B3CC}
 
-    details{border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.03);padding:12px}
-    details+details{margin-top:10px}
-    summary{cursor:pointer;font-weight:700}
+  details{border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.03);padding:12px;margin-top:10px}
+  summary{cursor:pointer;font-weight:700;color:#74B2FF}
+  details .includes{margin-top:8px}
 
-    .footer{color:var(--muted);font-size:13px;text-align:center;margin:36px 0}
-    /* Standardized nav styling */
-header.nav {
-  background: #0a1d37;
-  padding: 0.8rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-header.nav .brand {
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #fff;
-}
-
-header.nav .brand img.logo {
-  height: 28px;
-  margin-right: 10px;
-}
-
-header.nav nav a {
-  color: #fff;
-  text-decoration: none;
-  margin-left: 1.5rem;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-header.nav nav a:hover {
-  color: #4da3ff;
-}
-
-header.nav .social-link img {
-  height: 18px;
-  margin-left: 1rem;
-}
-
-  </style>
-
+  .footer{color:var(--muted);font-size:13px;text-align:center;margin:36px 0}
+</style>
 </head>
+
 <body>
 <header class="nav">
-<div class="container">
-<div class="brand">
-<img alt="ABI Consulting logo" class="logo" src="assets/ABI_logo_transparent.png"/>
-<span>Consulting, LLC</span>
-</div>
-<nav>
-<a href="index.html#">Home</a>
-<a href="index.html#services">Services</a>
-<a href="cyber_hygiene.html">Cyber Hygiene</a>
-<a href="index.html#about">About</a>
-<a href="index.html#resources">Resources</a>
-<a href="index.html#partners">Trusted Partners</a>
-<a href="blog.html">Blog</a>
-<a href="index.html#contact">Contact</a>
-</nav>
-</div>
-</header>
-<main class="container">
-<h1>Cyber Hygiene Assessments</h1>
-<p class="lead">A tiered, onsite security health check for SMBs. Each package scales from a quick checkup to an executive‑level resilience program—priced to be accessible and inclusive of travel for non‑local clients. Our approach leverages proven open‑source tools interpreted by expert consultants, ensuring results are practical and vendor‑agnostic.</p>
-<!-- Packages overview cards -->
-<section class="grid cols-3" id="tiers">
-<!-- Tier 1 -->
-<div class="card">
-<span class="chip">Tier 1</span>
-<h3>Crash Course Checkup</h3>
-<p class="lead">Quick baseline with open‑source scans and a letter‑grade scorecard.</p>
-<div class="price">Starting at $3,900</div>
-<ul class="includes">
-<li>Onsite (or virtual) walkthrough + 1–2 stakeholder interviews</li>
-<li>Open‑source baseline scan (Nmap, SpiderFoot)</li>
-<li><strong>Report card with Letter Grade (A–F)</strong> + top 5 fixes</li>
-<li>Readout &amp; Q&amp;A for leadership</li>
-</ul>
-<div class="actions">
-<a class="btn" href="#contact">Book Tier 1</a>
-<a class="btn secondary" href="#crash-scope">Full scope</a>
-</div>
-</div>
-<!-- Tier 2 -->
-<div class="card">
-<span class="chip">Tier 2</span>
-<h3>Two Step Security Fitness</h3>
-<p class="lead">Expanded review, awareness mini‑training, and open‑source vulnerability scanning.</p>
-<div class="price">Starting at $8,900</div>
-<ul class="includes">
-<li>Everything in Tier 1</li>
-<li>Expanded interviews across departments</li>
-<li>Policy &amp; vendor/tool review + quick gap analysis</li>
-<li>Security awareness mini‑session (30–45 min)</li>
-<li>External vulnerability scan + risk heatmap (OpenVAS/Greenbone)</li>
-<li><strong>Expanded report</strong> + prioritized roadmap</li>
-</ul>
-<div class="actions">
-<a class="btn" href="#contact">Book Tier 2</a>
-<a class="btn secondary" href="#twostep-scope">Full scope</a>
-</div>
-</div>
-<!-- Tier 3 -->
-<div class="card">
-<span class="chip">Tier 3</span>
-<h3>Grey Street Resilience</h3>
-<p class="lead">Executive‑level depth, custom training, and optional outsourced pen test.</p>
-<div class="price">Starting at $16,900</div>
-<ul class="includes">
-<li>Everything in Tier 2</li>
-<li>Executive/Board presentation with industry benchmarks</li>
-<li>Security tool &amp; vendor recommendations mapped to need</li>
-<li>Third‑party risk snapshot (SaaS &amp; vendors)</li>
-<li>Custom awareness training with phishing demo (GoPhish)</li>
-<li><strong>Optional outsourced penetration test orchestration</strong> (ZAP, Amass, partner firms)</li>
-<li>12–18 month security roadmap with cost/impact tiers</li>
-</ul>
-<div class="actions">
-<a class="btn" href="#contact">Book Tier 3</a>
-<a class="btn secondary" href="#greystreet-scope">Full scope</a>
-</div>
-</div>
-</section>
-<!-- À la carte -->
-<div class="section-title" id="alacarte"><h2>À la carte</h2><span class="pill">Bundle discounts with Tier 3</span></div>
-<section class="grid cols-3">
-<div class="card">
-<h3>Phishing Simulation Campaign</h3>
-<p class="lead">Test staff with safe phishing emails (GoPhish) and provide a fail-rate report.</p>
-<div class="price">$2,500</div>
-</div>
-<div class="card">
-<h3>Password &amp; Access Audit</h3>
-<p class="lead">Review of MFA coverage, stale accounts, and privileged roles using open-source checks.</p>
-<div class="price">$2,000</div>
-</div>
-<div class="card">
-<h3>Cloud Security Quick Check</h3>
-<p class="lead">Lightweight AWS/Microsoft 365 review (ScoutSuite, Prowler, Secure Score).</p>
-<div class="price">$2,500</div>
-</div>
-<div class="card">
-<h3>Incident Response Playbook</h3>
-<p class="lead">Custom IR plan and workshop to prepare your team for real-world events.</p>
-<div class="price">$3,000</div>
-</div>
-<div class="card">
-<h3>Endpoint Baseline Audit</h3>
-<p class="lead">Check patch levels, EDR/AV presence, and encryption status across devices.</p>
-<div class="price">$2,000</div>
-</div>
-<div class="card">
-<h3>Vendor/SaaS Risk Snapshot</h3>
-<p class="lead">Quick OSINT-based review of top vendors’ practices and risks.</p>
-<div class="price">$2,000</div>
-</div>
-<div class="card">
-<h3>Penetration Testing (Application or Network)</h3>
-<p class="lead">Targeted penetration testing of applications or networks. Engagements start at $5,000, with scope and complexity determining the final price.</p>
-<div class="price">Starting at $5,000</div>
-</div>
-<div class="card">
-<h3>Security Awareness Training Workshop</h3>
-<p class="lead">Interactive, instructor-led session tailored to your staff, covering phishing, password hygiene, and safe remote work.</p>
-<div class="price">$3,000</div>
-</div>
-<div class="card">
-<h3>Policy &amp; Compliance Package</h3>
-<p class="lead">Editable policy templates with advisory support to align with NIST CSF, ISO 27001, or SOC 2 requirements.</p>
-<div class="price">$3,500</div>
-</div>
-</section>
-<!-- Notes -->
-<div class="card" id="crash-sample" style="margin-top:32px">
-  <h2>Crash Course Checkup — Sample Report</h2>
-  <p class="lead">
-    Want to see what a finished Tier 1 assessment looks like? Here’s a sample report we’ve prepared to demonstrate the kind of insights you’ll receive.
-  </p>
-  <div class="actions" style="margin-top:16px">
-    <a class="btn" href="ccc_sample.html" target="_blank">View Sample Report</a>
+  <div class="container">
+    <div class="brand">
+      <img class="logo" src="assets/ABI_logo_transparent.png" alt="ABI Consulting logo"/>
+      <span>Consulting, LLC</span>
+    </div>
+
+    <button id="navToggle" class="nav-toggle" aria-controls="siteNav" aria-expanded="false" aria-label="Toggle menu">☰</button>
+
+    <nav id="siteNav" class="nav-links" role="navigation">
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="index.html#resources">Resources</a>
+      <a href="index.html#partners">Trusted Partners</a>
+      <a href="index.html#contact">Contact</a>
+      <a class="social-link" aria-label="LinkedIn" href="https://www.linkedin.com/company/abi-consulting-llc" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.16-.432.224-.586.175-.431.574-.878 1.244-.878.878 0 1.23.662 1.23 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193h.16V6.169H6.651v7.225h2.4z"/>
+        </svg>
+      </a>
+    </nav>
   </div>
-  <p class="muted" style="margin-top:12px;font-size:14px">
-    <em>Note: This is a fictitious example for demonstration purposes. Actual reports are tailored to your environment and evidence.</em>
+</header>
+
+<main class="container">
+  <h1>Cyber Hygiene Assessments</h1>
+  <p class="lead">
+    A tiered, onsite security health check for SMBs. Each package scales from a quick checkup to an executive-level resilience program—priced to be accessible and inclusive of travel for non-local clients. Our approach favors safe, read-only reviews and open methods interpreted by experts, ensuring results are practical and vendor-agnostic.
   </p>
-</div>
 
-<section class="card" style="margin-top:24px">
+  <!-- Flagship tiers -->
+  <section id="tiers" class="grid cols-3">
+    <!-- Tier 1 -->
+    <div class="card">
+      <span class="chip">Tier 1</span>
+      <h3>Crash Course Checkup</h3>
+      <p class="lead">Fast hygiene snapshot with a letter-grade scorecard and top fixes.</p>
+      <div class="price">Starting at $3,900</div>
+      <ul class="includes">
+        <li>Short onsite (or virtual) walkthrough + 1–2 stakeholder interviews</li>
+        <li>Light external exposure review and account/endpoint spot-checks</li>
+        <li><strong>Report card with Letter Grade (A–F)</strong> + Top 5 actions</li>
+        <li>Executive readout &amp; Q&amp;A</li>
+      </ul>
+      <details>
+        <summary>Full scope</summary>
+        <ul class="includes">
+          <li>Kickoff + stakeholder list confirmation</li>
+          <li>Onsite/virtual walkthrough (1–2 interviews)</li>
+          <li>External exposure snapshot (read-only methods)</li>
+          <li>Sample account & endpoint spot checks</li>
+          <li>Letter-grade scorecard + Top 5 actions</li>
+          <li>Executive review session (30 min)</li>
+        </ul>
+      </details>
+      <div class="actions"><a class="btn" href="#contact">Book Tier 1</a></div>
+    </div>
 
-<h3>Notes &amp; Assumptions</h3>
-<ul class="includes">
-<li>Pricing covers travel &amp; hotel for non‑local clients within the contiguous U.S.</li>
-<li>All scans and testing use safe, open‑source tools with written authorization.</li>
-<li>Bundle discounts available; nonprofit pricing upon request.</li>
-</ul>
-</section>
-<!-- CTA -->
-<section class="card" id="contact" style="margin-top:24px;text-align:center">
-<h3>Ready to level up your security hygiene?</h3>
-<p class="lead">Please include your company size, primary platforms (O365, Google, AWS, etc.), and scheduling preferences. We’ll confirm next steps within two business days.</p>
-<div class="actions" style="justify-content:center"><a class="btn" href="mailto:damian@abiconsulting.llc">Contact Us</a></div>
-</section>
+    <!-- Tier 2 -->
+    <div class="card">
+      <span class="chip">Tier 2</span>
+      <h3>Two Step Security Fitness</h3>
+      <p class="lead">Broader review across teams with awareness, gap analysis, and a 90-day plan.</p>
+      <div class="price">Starting at $8,900</div>
+      <ul class="includes">
+        <li>Everything in Tier 1</li>
+        <li>Expanded interviews + light evidence review (policies, vendor docs, tool outputs)</li>
+        <li>Security awareness mini-session (30–45 min)</li>
+        <li>External posture check or vulnerability screen (read-only)</li>
+        <li><strong>Expanded report</strong>, risk heatmap, and prioritized 90-day roadmap</li>
+      </ul>
+      <details>
+        <summary>Full scope</summary>
+        <ul class="includes">
+          <li>All Tier 1 activities + extended stakeholder interviews</li>
+          <li>Evidence review of policies, vendor agreements, & system outputs</li>
+          <li>Awareness mini-session (30–45 min)</li>
+          <li>Safe external vulnerability screen (optional)</li>
+          <li>Consolidated report with risk heatmap & 90-day remediation plan</li>
+        </ul>
+      </details>
+      <div class="actions"><a class="btn" href="#contact">Book Tier 2</a></div>
+    </div>
+
+    <!-- Tier 3 -->
+    <div class="card">
+      <span class="chip">Tier 3</span>
+      <h3>Grey Street Resilience</h3>
+      <p class="lead">Leadership-grade assessment with program recommendations and a strategic roadmap.</p>
+      <div class="price">Starting at $16,900</div>
+      <ul class="includes">
+        <li>Everything in Tier 2</li>
+        <li>Board/Executive presentation with benchmarks</li>
+        <li>Right-sized tool & vendor recommendations mapped to objectives</li>
+        <li>Third-party/SaaS risk snapshot</li>
+        <li>Custom awareness content as needed</li>
+        <li><strong>Optional</strong> independent validation or pen test via partners</li>
+        <li>12–18 month roadmap with cost/impact tiers</li>
+      </ul>
+      <details>
+        <summary>Full scope</summary>
+        <ul class="includes">
+          <li>All Tier 2 activities + executive/board briefing (60 min)</li>
+          <li>Benchmark comparison to industry peers</li>
+          <li>Custom tool & vendor recommendations by category</li>
+          <li>Third-party/SaaS risk evaluation</li>
+          <li>Optional independent validation or pen test coordination</li>
+          <li>12–18 month roadmap with cost, impact, & timeline tiers</li>
+        </ul>
+      </details>
+      <div class="actions"><a class="btn" href="#contact">Book Tier 3</a></div>
+    </div>
+  </section>
+
+  <!-- Enterprise -->
+  <section id="enterprise" style="margin-top:28px">
+    <div class="section-title">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <h2>Seek Up Enterprise (Advanced)</h2>
+        <span class="pill">Custom — scoping session recommended</span>
+      </div>
+      <a class="btn" href="mailto:damian@abiconsulting.llc?subject=Enterprise%20Cyber%20Hygiene%20Scoping">Schedule scoping</a>
+    </div>
+    <div class="card">
+      <p class="lead">
+        For organizations with complex environments or advanced requirements, ABI Consulting conducts a dedicated scoping call to define objectives, right-size the approach, and provide a tailored proposal. This can include framework alignment (e.g., ISO 27001, SOC 2, CMMC readiness), deeper cloud/app reviews, or coordination with trusted partners for testing.
+      </p>
+    </div>
+  </section>
+
+  <!-- À la carte -->
+  <div id="alacarte" class="section-title" style="margin-top:28px">
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <h2>À la carte</h2>
+      <span class="pill">Bundle discounts with Tier 2–3</span>
+    </div>
+    <a class="btn secondary" href="mailto:damian@abiconsulting.llc?subject=A%20la%20carte%20services">Request Quote</a>
+  </div>
+
+  <section class="grid cols-3" aria-label="À la carte services">
+    <div class="card">
+      <h3>Baseline Security Review</h3>
+      <p class="lead">Quick validation of MFA, password hygiene, patching cadence, backups, and endpoint protection practices across your environment.</p>
+    </div>
+
+    <div class="card">
+      <h3>Cloud &amp; SaaS Configuration Review</h3>
+      <p class="lead">Lightweight look at Microsoft 365, Google Workspace, or AWS posture using safe, read-only configuration exports.</p>
+    </div>
+
+    <div class="card">
+      <h3>Incident Response Readiness Kit</h3>
+      <p class="lead">Practical IR checklist and communication plan with a facilitated tabletop tailored to your environment.</p>
+    </div>
+
+    <div class="card">
+      <h3>Endpoint Security Snapshot</h3>
+      <p class="lead">Sample-based validation of encryption, anti-malware coverage, and patch status across representative devices.</p>
+    </div>
+
+    <div class="card">
+      <h3>Phishing Awareness Campaign</h3>
+      <p class="lead">Safe simulation with a brief debrief and improvement tips aligned with your internal policies.</p>
+    </div>
+
+    <div class="card">
+      <h3>Security Awareness Mini-Workshop</h3>
+      <p class="lead">60-minute live or virtual session covering phishing, password hygiene, and safe remote practices.</p>
+    </div>
+
+    <div class="card">
+      <h3>Vendor &amp; Third-Party Risk Review</h3>
+      <p class="lead">Focused OSINT/questionnaire review of one or two key suppliers with a concise risk heatmap and recommendations.</p>
+    </div>
+
+    <div class="card">
+      <h3>Policy Review</h3>
+      <p class="lead">Review and refine existing policies (AUP, Password, IR, etc.) for clarity and alignment with NIST CSF/ISO 27001 principles.</p>
+    </div>
+  </section>
+
+  <!-- Notes -->
+  <section class="card" style="margin-top:24px">
+    <h3>Notes &amp; Assumptions</h3>
+    <ul class="includes">
+      <li>Pricing for flagship tiers includes reasonable travel within the contiguous U.S.; à la carte travel billed as needed.</li>
+      <li>Reviews favor safe, read-only methods with written authorization. Sensitive testing is coordinated through trusted partners.</li>
+      <li>Bundle discounts available; nonprofit pricing upon request.</li>
+    </ul>
+  </section>
+
+  <!-- CTA -->
+  <section id="contact" class="card" style="margin-top:24px;text-align:center">
+    <h3>Ready to level up your security hygiene?</h3>
+    <p class="lead">Include your company size, primary platforms (Microsoft 365, Google, AWS), and scheduling preferences. We’ll confirm next steps within two business days.</p>
+    <div class="actions" style="justify-content:center"><a class="btn" href="mailto:damian@abiconsulting.llc">Contact Us</a></div>
+  </section>
 </main>
+
 <footer class="footer container">© <span id="year"></span> ABI Consulting LLC.</footer>
-<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+
+<!-- Mobile nav toggle (same behavior as index) -->
+<script>
+(function(){
+  const btn=document.getElementById('navToggle');
+  const nav=document.getElementById('siteNav');
+  if(!btn||!nav) return;
+  btn.addEventListener('click',()=>{
+    const open=nav.getAttribute('data-open')==='true';
+    nav.setAttribute('data-open',String(!open));
+    btn.setAttribute('aria-expanded',String(!open));
+  });
+  nav.addEventListener('click',e=>{
+    if(e.target.tagName==='A'){ nav.setAttribute('data-open','false'); btn.setAttribute('aria-expanded','false'); }
+  });
+  document.addEventListener('click',e=>{
+    if(!nav.contains(e.target)&&e.target!==btn){ nav.setAttribute('data-open','false'); btn.setAttribute('aria-expanded','false'); }
+  });
+})();
+document.getElementById('year').textContent=new Date().getFullYear();
+</script>
 </body>
 </html>
