@@ -199,23 +199,26 @@
   #faq details[open] .chev{transform:rotate(90deg);}
 
   /* Visitor pin styling (glow + pulse) */
+/* --- Visitor Pin (Red Pulse Version) --- */
 .visitor .visitor-pin {
-  fill: #ffffff;
-  stroke: #74B2FF;
+  fill: #ff3b3b;
+  stroke: #ff3b3b;
   stroke-width: 1.6;
-  filter: drop-shadow(0 0 6px rgba(116,178,255,0.8));
+  filter: drop-shadow(0 0 8px rgba(255, 60, 60, 0.9));
 }
+
 .visitor .visitor-pulse {
   fill: none;
-  stroke: rgba(116,178,255,0.9);
+  stroke: rgba(255, 70, 70, 0.9);
   stroke-width: 1.2;
-  animation: abiPulse 1.8s ease-out infinite;
+  animation: redPulse 1.8s ease-out infinite;
   transform-origin: center;
 }
-@keyframes abiPulse {
-  0%   { r: 3.2;  opacity: 0.9; }
-  70%  { r: 12.5; opacity: 0.15; }
-  100% { r: 16;   opacity: 0; }
+
+@keyframes redPulse {
+  0%   { r: 3.2;  opacity: 0.9; stroke-width: 1.2; }
+  60%  { r: 14;   opacity: 0.25; stroke-width: 0.9; }
+  100% { r: 18;   opacity: 0; stroke-width: 0.6; }
 }
 
 
