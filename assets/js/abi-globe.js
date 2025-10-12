@@ -8,11 +8,9 @@
   const gratG = document.getElementById('graticule');
   const routeG= document.getElementById('routes');
   const nodeG = document.getElementById('nodes');
-  const visitorG = document.getElementById('visitor');   // NEW
   if (!svg || !rotG) return;
 
-
-// Create visitor layer if missing
+// Visitor layer (create if missing)
 let visitorG = document.getElementById('visitor');
 if (!visitorG && rotG) {
   visitorG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -20,6 +18,7 @@ if (!visitorG && rotG) {
   visitorG.setAttribute('class', 'nodes visitor');
   rotG.appendChild(visitorG);
 }
+
 
   // ---- Projection ----
   const CX = 250, CY = 250, R = 165;
@@ -207,29 +206,31 @@ if (!visitorG && rotG) {
 
     drawRoutes();
 
-    // ---- Visitor pin (NEW) ----
-    if (visitorG) {
-      visitorG.innerHTML = '';
-      if (showVisitor) {
-        const p = project(visitorLon, visitorLat);
-        if (p) {
-          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          c.setAttribute('cx', p[0].toFixed(1));
-          c.setAttribute('cy', p[1].toFixed(1));
-          c.setAttribute('r', '3.2');
-          c.setAttribute('class', 'visitor-pin');
-          visitorG.appendChild(c);
-
-          const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          ring.setAttribute('cx', p[0].toFixed(1));
-          ring.setAttribute('cy', p[1].toFixed(1));
-          ring.setAttribute('r', '3.2');
-          ring.setAttribute('class', 'visitor-pulse');
-          visitorG.appendChild(ring);
-        }
-      }
-    }
+// ---- Visitor pin (single pulsing red dot) ----
+if (visitorG) {
+  let pin = visitorG.querySelector('.visitor-pin');
+  if (!pin) {
+    pin = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    pin.setAttribute('r', '3.2');
+    pin.setAttribute('class', 'visitor-pin');
+    visitorG.appendChild(pin);
   }
+
+  if (showVisitor) {
+    const p = project(visitorLon, visitorLat);
+    if (p) {
+      pin.setAttribute('cx', p[0].toFixed(1));
+      pin.setAttribute('cy', p[1].toFixed(1));
+      pin.style.display = '';
+    } else {
+      // behind the globe → hide (keep element so animation continues next frame)
+      pin.style.display = 'none';
+    }
+  } else {
+    pin.style.display = 'none';
+  }
+}
+
 
   // Interaction
   function box(){ return svg.getBoundingClientRect(); }
