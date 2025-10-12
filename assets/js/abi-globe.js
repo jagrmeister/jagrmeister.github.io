@@ -8,10 +8,11 @@
   const gratG = document.getElementById('graticule');
   const routeG= document.getElementById('routes');
   const nodeG = document.getElementById('nodes');
+  const visitorG = document.getElementById('visitor');   // NEW
   if (!svg || !rotG) return;
 
 
-// Visitor layer (create if missing)
+// Create visitor layer if missing
 let visitorG = document.getElementById('visitor');
 if (!visitorG && rotG) {
   visitorG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -19,7 +20,6 @@ if (!visitorG && rotG) {
   visitorG.setAttribute('class', 'nodes visitor');
   rotG.appendChild(visitorG);
 }
-
 
   // ---- Projection ----
   const CX = 250, CY = 250, R = 165;
@@ -39,30 +39,9 @@ if (!visitorG && rotG) {
   const RESUME_DELAY = 1600;
   const MAX_SPEED = 2.4;
 
-// ---- Visitor pin (single pulsing red dot) ----
-if (visitorG) {
-  let pin = visitorG.querySelector('.visitor-pin');
-  if (!pin) {
-    pin = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    pin.setAttribute('r', '3.2');
-    pin.setAttribute('class', 'visitor-pin');
-    visitorG.appendChild(pin);
-  }
-
-  if (showVisitor) {
-    const p = project(visitorLon, visitorLat);
-    if (p) {
-      pin.setAttribute('cx', p[0].toFixed(1));
-      pin.setAttribute('cy', p[1].toFixed(1));
-      pin.style.display = '';
-    } else {
-      pin.style.display = 'none';
-    }
-  } else {
-    pin.style.display = 'none';
-  }
-}
-
+  // Visitor pin state (NEW)
+  let showVisitor = false;
+  let visitorLon = 0, visitorLat = 0;
 
   // Utils
   const deg2rad = d => d * Math.PI / 180;
