@@ -11,6 +11,16 @@
   const visitorG = document.getElementById('visitor');   // NEW
   if (!svg || !rotG) return;
 
+
+// Create visitor layer if missing
+let visitorG = document.getElementById('visitor');
+if (!visitorG && rotG) {
+  visitorG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  visitorG.setAttribute('id', 'visitor');
+  visitorG.setAttribute('class', 'nodes visitor');
+  rotG.appendChild(visitorG);
+}
+
   // ---- Projection ----
   const CX = 250, CY = 250, R = 165;
 
