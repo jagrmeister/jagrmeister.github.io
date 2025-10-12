@@ -1,6 +1,5 @@
-/* ABI SVG Globe v3 — orthographic projection with accurate land via local GeoJSON,
-   animated great-circle routes, free 360° drag (yaw + pitch), inertia, and autorotate.
-   No external libraries. CSP-safe. */
+/* ABI SVG Globe v3.1 — orthographic projection, routes, free 360° drag, inertia,
+   autorotate, + visitor pin API (setVisitorLocation/clearVisitorLocation). */
 
 (function () {
   const svg   = document.getElementById('abiGlobe');
@@ -9,63 +8,64 @@
   const gratG = document.getElementById('graticule');
   const routeG= document.getElementById('routes');
   const nodeG = document.getElementById('nodes');
+  const visitorG = document.getElementById('visitor');   // NEW
   if (!svg || !rotG) return;
 
-  // ---- Projection (orthographic) ----
+  // ---- Projection ----
   const CX = 250, CY = 250, R = 165;
 
-  // View center (in degrees)
-  let lon0 = 0;   // yaw: east/west
-  let lat0 = 0;   // pitch: north/south
+  // View center (deg)
+  let lon0 = 0, lat0 = 0;
 
   // Motion state
   let dragging = false;
   let lastX = 0, lastY = 0;
-  let vLon = 0, vLat = 0;             // inertial velocities (deg/frame-ish)
+  let vLon = 0, vLat = 0;
 
   // Autorotate + timing
-  let auto = 0.12;                    // base autorotate yaw (deg/frame at ~60fps)
+  let auto = 0.12;
   let lastT = performance.now();
-  let idleUntil = 0;                  // ms timestamp when autorotate may resume
-  const RESUME_DELAY = 1600;          // ms after releasing drag
-  const MAX_SPEED = 2.4;              // clamp for fling speed (deg/frame)
+  let idleUntil = 0;
+  const RESUME_DELAY = 1600;
+  const MAX_SPEED = 2.4;
 
-  // Utility
-  function deg2rad(d) { return d * Math.PI / 180; }
-  function rad2deg(r) { return r * 180 / Math.PI; }
-  function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+  // Visitor pin state (NEW)
+  let showVisitor = false;
+  let visitorLon = 0, visitorLat = 0;
 
-  // Forward orthographic projection (front hemisphere only)
+  // Utils
+  const deg2rad = d => d * Math.PI / 180;
+  const rad2deg = r => r * 180 / Math.PI;
+  const clamp = (x,a,b) => Math.max(a, Math.min(b, x));
+
   function project(lon, lat) {
     const lam = deg2rad(lon - lon0);
     const phi = deg2rad(lat);
     const phi0 = deg2rad(lat0);
-
-    const cosc = Math.sin(phi0) * Math.sin(phi) + Math.cos(phi0) * Math.cos(phi) * Math.cos(lam);
+    const cosc = Math.sin(phi0)*Math.sin(phi) + Math.cos(phi0)*Math.cos(phi)*Math.cos(lam);
     if (cosc < 0) return null; // back side
-
     const x = R * Math.cos(phi) * Math.sin(lam);
-    const y = R * (Math.cos(phi0) * Math.sin(phi) - Math.sin(phi0) * Math.cos(phi) * Math.cos(lam));
+    const y = R * (Math.cos(phi0)*Math.sin(phi) - Math.sin(phi0)*Math.cos(phi)*Math.cos(lam));
     return [CX + x, CY - y];
   }
 
-  // Great-circle interpolation helpers
-  function sph2cart([lam, phi]) { return [Math.cos(phi) * Math.cos(lam), Math.cos(phi) * Math.sin(lam), Math.sin(phi)]; }
-  function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
-  function normalize(v) { const m = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / m, v[1] / m, v[2] / m]; }
+  // Great-circle helpers
+  const sph2cart = ([lam,phi]) => [Math.cos(phi)*Math.cos(lam), Math.cos(phi)*Math.sin(lam), Math.sin(phi)];
+  const dot = (a,b)=> a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+  const normalize = v => { const m=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/m,v[1]/m,v[2]/m]; };
 
   function arcPath(a, b, k = 80) {
     const aR = [deg2rad(a[0]), deg2rad(a[1])];
     const bR = [deg2rad(b[0]), deg2rad(b[1])];
     const A = sph2cart(aR), B = sph2cart(bR);
-    const omega = Math.acos(clamp(dot(A, B), -1, 1));
-    if (omega === 0) return '';
+    const omega = Math.acos(clamp(dot(A,B), -1, 1));
+    if (!isFinite(omega) || omega === 0) return '';
     let d = '';
     for (let i = 0; i <= k; i++) {
       const t = i / k;
-      const s1 = Math.sin((1 - t) * omega) / Math.sin(omega);
-      const s2 = Math.sin(t * omega) / Math.sin(omega);
-      const P = normalize([s1 * A[0] + s2 * B[0], s1 * A[1] + s2 * B[1], s1 * A[2] + s2 * B[2]]);
+      const s1 = Math.sin((1-t)*omega) / Math.sin(omega);
+      const s2 = Math.sin(t*omega) / Math.sin(omega);
+      const P = normalize([s1*A[0]+s2*B[0], s1*A[1]+s2*B[1], s1*A[2]+s2*B[2]]);
       const lon = rad2deg(Math.atan2(P[1], P[0]));
       const lat = rad2deg(Math.asin(P[2]));
       const p = project(lon, lat);
@@ -75,17 +75,17 @@
     return d;
   }
 
-  // ---- Sample routes/hubs ----
+  // Demo routes
   const ROUTES = [
-    { from: [-74, 40.7], to: [-0.1, 51.5] },       // NYC -> London
-    { from: [-0.1, 51.5], to: [77.2, 28.6] },      // London -> Delhi
-    { from: [139.7, 35.7], to: [-122.3, 37.8] },   // Tokyo -> SF
-    { from: [2.35, 48.85], to: [151.2, -33.9] },   // Paris -> Sydney
-    { from: [13.4, 52.5], to: [37.6, 55.7] },      // Berlin -> Moscow
-    { from: [-58.4, -34.6], to: [-3.7, 40.4] }     // Buenos Aires -> Madrid
+    { from: [-74, 40.7], to: [-0.1, 51.5] },
+    { from: [-0.1, 51.5], to: [77.2, 28.6] },
+    { from: [139.7, 35.7], to: [-122.3, 37.8] },
+    { from: [2.35, 48.85], to: [151.2, -33.9] },
+    { from: [13.4, 52.5], to: [37.6, 55.7] },
+    { from: [-58.4, -34.6], to: [-3.7, 40.4] }
   ];
 
-  // ---- Coarse fallback land (only used if GeoJSON not available) ----
+  // Fallback land rings (simplified)
   const FALLBACK_LAND = [
     [[-168,72],[-140,70],[-125,60],[-100,49],[-95,40],[-105,32],[-117,32],[-123,49],[-135,56],[-150,60],[-160,65],[-168,72]],
     [[-82,12],[-75,5],[-70,-3],[-63,-10],[-64,-20],[-60,-30],[-56,-34],[-54,-45],[-49,-48],[-45,-23],[-50,-10],[-60,-5],[-70,0],[-75,5],[-82,12]],
@@ -94,7 +94,7 @@
     [[113,-22],[120,-20],[132,-18],[138,-22],[142,-28],[145,-38],[134,-35],[126,-30],[122,-26],[118,-25],[113,-22]]
   ];
 
-  // ---- Graticule (lat/long lines) ----
+  // Graticule
   function buildGraticule() {
     gratG.innerHTML = '';
     for (let lat = -60; lat <= 60; lat += 15) {
@@ -129,7 +129,7 @@
     }
   }
 
-  // ---- Land drawing (front side only) ----
+  // Land drawing
   function drawLandRings(rings) {
     landG.innerHTML = '';
     rings.forEach(ring => {
@@ -148,31 +148,7 @@
     });
   }
 
-  // ---- GeoJSON -> rings (exterior rings only) ----
-  function ringsFromGeoJSON(geojson) {
-    const out = [];
-    const handlePoly = coords => {
-      const ext = coords[0];
-      const ring = [];
-      for (let i = 0; i < ext.length; i++) {
-        const lon = +ext[i][0], lat = +ext[i][1];
-        ring.push([lon, lat]);
-      }
-      if (ring.length > 2) out.push(ring);
-    };
-    const f = (geojson.type === 'FeatureCollection')
-      ? geojson.features
-      : [{ type: 'Feature', geometry: geojson }];
-    f.forEach(feat => {
-      const g = feat.geometry;
-      if (!g) return;
-      if (g.type === 'Polygon') handlePoly(g.coordinates);
-      else if (g.type === 'MultiPolygon') g.coordinates.forEach(handlePoly);
-    });
-    return out;
-  }
-
-  // ---- Routes + hubs ----
+  // Routes + hubs
   function drawRoutes() {
     routeG.innerHTML = '';
     nodeG.innerHTML = '';
@@ -210,58 +186,72 @@
     });
   }
 
-  // ---- Render ----
-  let geoRings = null;   // { raw: [ [ [lon,lat], ... ], ... ] }
-  let usingGeo = false;
+  let geoRings = null, usingGeo = false;
 
   function render() {
     gratG.innerHTML = '';
     buildGraticule();
 
-    if (usingGeo && geoRings) {
-      // Reproject raw rings; back-side points are skipped by project()
-      drawLandRings(geoRings.raw);
-    } else {
-      drawLandRings(FALLBACK_LAND);
-    }
+    if (usingGeo && geoRings) drawLandRings(geoRings.raw);
+    else drawLandRings(FALLBACK_LAND);
 
     drawRoutes();
+
+    // ---- Visitor pin (NEW) ----
+    if (visitorG) {
+      visitorG.innerHTML = '';
+      if (showVisitor) {
+        const p = project(visitorLon, visitorLat);
+        if (p) {
+          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          c.setAttribute('cx', p[0].toFixed(1));
+          c.setAttribute('cy', p[1].toFixed(1));
+          c.setAttribute('r', '3.2');
+          c.setAttribute('class', 'visitor-pin');
+          visitorG.appendChild(c);
+
+          const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          ring.setAttribute('cx', p[0].toFixed(1));
+          ring.setAttribute('cy', p[1].toFixed(1));
+          ring.setAttribute('r', '3.2');
+          ring.setAttribute('class', 'visitor-pulse');
+          visitorG.appendChild(ring);
+        }
+      }
+    }
   }
 
-  // ---- Interaction (free 2D trackball-style) ----
-  function box() { return svg.getBoundingClientRect(); }
-  function kScale() { return 180 / (box().width || 500); } // deg per pixel baseline
+  // Interaction
+  function box(){ return svg.getBoundingClientRect(); }
+  function kScale(){ return 180 / (box().width || 500); }
 
-  function onDown(e) {
+  function onDown(e){
     dragging = true;
     svg.style.cursor = 'grabbing';
     const t = e.touches ? e.touches[0] : e;
     lastX = t.clientX; lastY = t.clientY;
     vLon = vLat = 0;
+    idleUntil = performance.now() + RESUME_DELAY;
   }
-
-  function onMove(e) {
-    if (!dragging) return;
+  function onMove(e){
+    if(!dragging) return;
     const t = e.touches ? e.touches[0] : e;
     const dx = t.clientX - lastX;
     const dy = t.clientY - lastY;
     lastX = t.clientX; lastY = t.clientY;
 
-    // Sensitivity scaled by cos(latitude) so it feels stable near the poles
     const k = (kScale() * Math.max(0.25, Math.cos(deg2rad(lat0)))) || 0.25;
+    lon0 -= dx * k;
+    lat0 += dy * k;
+    lat0 = clamp(lat0, -90, 90);
 
-    lon0 -= dx * k;          // yaw
-    lat0 += dy * k;          // pitch
-    lat0 = clamp(lat0, -90, 90); // clamp to poles; remove to allow full flips
-
-    vLon = -dx * k;          // set inertial velocities for coast
+    vLon = -dx * k;
     vLat =  dy * k;
 
     idleUntil = performance.now() + RESUME_DELAY;
     render();
   }
-
-  function onUp() {
+  function onUp(){
     dragging = false;
     svg.style.cursor = 'grab';
     idleUntil = performance.now() + RESUME_DELAY;
@@ -275,19 +265,16 @@
   window.addEventListener('touchend', onUp);
   svg.style.cursor = 'grab';
 
-  // ---- Animation loop (time-based damping + autorotate resume) ----
-  function tick() {
+  // Animation loop
+  function tick(){
     requestAnimationFrame(tick);
-
     const now = performance.now();
-    const dt = Math.max(0, now - lastT); // ms
-    lastT = now;
+    const dt = Math.max(0, now - lastT); lastT = now;
 
-    // Exponential decay that’s framerate-independent
     const decay = Math.exp(-dt * 0.0045);
     const clampSpeed = v => clamp(v, -MAX_SPEED, MAX_SPEED);
 
-    if (!dragging) {
+    if(!dragging){
       vLon = clampSpeed(vLon) * decay;
       vLat = clampSpeed(vLat) * decay;
 
@@ -295,66 +282,56 @@
       lat0 += vLat;
       lat0 = clamp(lat0, -90, 90);
 
-      // Gentle autorotate once idle
-      if (now > idleUntil) {
-        lon0 += auto * (dt / 16.67); // normalize to ~60fps units
+      if(now > idleUntil){
+        lon0 += auto * (dt / 16.67);
       }
-
       render();
     }
 
     // Route dash animation
     Array.from(routeG.children).forEach(p => {
-      const phase = (parseFloat(p.dataset.phase) || 0) + 4;
+      const phase = (parseFloat(p.dataset.phase)||0) + 4;
       p.dataset.phase = phase.toString();
       p.setAttribute('stroke-dashoffset', phase.toString());
     });
   }
 
-  // ---- GeoJSON land (optional, improves coastline fidelity) ----
+  // Try to load GeoJSON land (optional)
   async function tryLoadGeo() {
     try {
       const res = await fetch('assets/data/world-geo.json', { cache: 'force-cache' });
       if (!res.ok) throw new Error('no geojson');
       const gj = await res.json();
-
-      // Flatten to array of exterior rings, lightly simplified for perf
-      const rings = [];
       const polys = [];
-      const features = (gj.type === 'FeatureCollection') ? gj.features : [{ type: 'Feature', geometry: gj }];
-
+      const features = (gj.type === 'FeatureCollection') ? gj.features : [{ type:'Feature', geometry: gj }];
       features.forEach(feat => {
-        const g = feat.geometry;
-        if (!g) return;
-        if (g.type === 'Polygon') {
-          if (g.coordinates && g.coordinates[0]) polys.push(g.coordinates[0]);
-        } else if (g.type === 'MultiPolygon') {
-          g.coordinates.forEach(coords => { if (coords && coords[0]) polys.push(coords[0]); });
-        }
+        const g = feat.geometry; if (!g) return;
+        if (g.type === 'Polygon') { if (g.coordinates && g.coordinates[0]) polys.push(g.coordinates[0]); }
+        else if (g.type === 'MultiPolygon') { g.coordinates.forEach(coords => { if (coords && coords[0]) polys.push(coords[0]); }); }
       });
-
-      const targetPts = 120; // approx points per ring
+      const rings = [];
+      const targetPts = 120;
       polys.forEach(r => {
         const step = Math.max(1, Math.floor(r.length / targetPts));
         const ring = [];
         for (let i = 0; i < r.length; i += step) {
-          const ll = r[i];
-          ring.push([+ll[0], +ll[1]]);
+          const ll = r[i]; ring.push([+ll[0], +ll[1]]);
         }
         rings.push(ring);
       });
-
-      geoRings = { raw: rings };
-      usingGeo = true;
+      geoRings = { raw: rings }; usingGeo = true;
     } catch (_) {
-      usingGeo = false; // fallback
+      usingGeo = false;
     } finally {
-      render();
-      tick();
+      render(); tick();
     }
   }
 
-  // Initial draw while geo loads
-  render();
-  tryLoadGeo();
+  render(); tryLoadGeo();
+
+  // ---- Public API for visitor pin (NEW) ----
+  window.abiGlobe = {
+    setVisitorLocation(lon, lat){ visitorLon = lon; visitorLat = lat; showVisitor = true; render(); },
+    clearVisitorLocation(){ showVisitor = false; render(); }
+  };
 })();
