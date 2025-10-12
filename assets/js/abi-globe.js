@@ -8,11 +8,10 @@
   const gratG = document.getElementById('graticule');
   const routeG= document.getElementById('routes');
   const nodeG = document.getElementById('nodes');
-  const visitorG = document.getElementById('visitor');   // NEW
   if (!svg || !rotG) return;
 
 
-// Create visitor layer if missing
+// Visitor layer (create if missing)
 let visitorG = document.getElementById('visitor');
 if (!visitorG && rotG) {
   visitorG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -20,6 +19,7 @@ if (!visitorG && rotG) {
   visitorG.setAttribute('class', 'nodes visitor');
   rotG.appendChild(visitorG);
 }
+
 
   // ---- Projection ----
   const CX = 250, CY = 250, R = 165;
