@@ -202,32 +202,18 @@
 /* --- Visitor Pin (Red Pulse Version) --- */
 .visitor .visitor-pin {
   fill: #ff3b3b;
-  stroke: #ff3b3b;
-  stroke-width: 1.6;
-  filter: drop-shadow(0 0 8px rgba(255, 60, 60, 0.9));
-}
-
-.visitor .visitor-pulse {
-  fill: none;
-  stroke: rgba(255, 70, 70, 0.9);
-  stroke-width: 1.2;
-  animation: redPulse 1.8s ease-out infinite;
+  stroke: none;
   transform-origin: center;
+  transform-box: fill-box;        /* makes transform work in all browsers */
+  animation: redPulse 1.8s ease-in-out infinite;
 }
 
 @keyframes redPulse {
-  0%   { r: 3.2;  opacity: 0.9; stroke-width: 1.2; }
-  60%  { r: 14;   opacity: 0.25; stroke-width: 0.9; }
-  100% { r: 18;   opacity: 0; stroke-width: 0.6; }
+  0%   { transform: scale(1);   opacity: 1; }
+  50%  { transform: scale(1.8); opacity: 0.4; }
+  100% { transform: scale(1);   opacity: 1; }
 }
 
-.fade-in {
-  animation: dykFade .5s ease-out;
-}
-@keyframes dykFade {
-  from { opacity: 0; transform: translateY(3px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
 
 
 </style>
