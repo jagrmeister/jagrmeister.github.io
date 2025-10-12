@@ -221,6 +221,14 @@
   100% { r: 18;   opacity: 0; stroke-width: 0.6; }
 }
 
+.fade-in {
+  animation: dykFade .5s ease-out;
+}
+@keyframes dykFade {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 
 </style>
 </head>
@@ -309,6 +317,7 @@
   <p id="visitor-welcome" class="lead">Initializing secure session…</p>
   <small id="visitor-meta" style="color:#A3B3CC;display:block;margin-top:4px"></small>
 </section>
+
 
 
 
@@ -692,7 +701,7 @@ var sc_project=13164293; var sc_invisible=1; var sc_security="16067087";
   const metaEl = document.getElementById('visitor-meta');
   if(!msgEl) return;
 
-  // --- Helpers (safe client info) ---
+  // --- Safe browser/environment helpers ---
   function getBrowser(){
     const ua = navigator.userAgent;
     if (/Edg\//.test(ua)) return "Microsoft Edge";
@@ -712,28 +721,21 @@ var sc_project=13164293; var sc_invisible=1; var sc_security="16067087";
     if (/Linux/.test(ua)) return "Linux";
     return "your device";
   }
-  function getDeviceType(){
-    const ua = navigator.userAgent;
-    if (/iPad|Tablet|Nexus 7|Nexus 10/.test(ua)) return "a tablet";
-    if (/Mobi|Android/.test(ua)) return "a phone";
-    return "a computer";
-  }
   function getConnection(){
     const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     if(!c || !c.effectiveType) return "a secure connection";
-    const map = { "slow-2g":"a very slow connection", "2g":"a 2G-class connection", "3g":"a 3G-class connection", "4g":"a fast connection" };
+    const map = { "slow-2g":"a very slow connection", "2g":"a 2G connection", "3g":"a 3G connection", "4g":"a fast connection" };
     return map[c.effectiveType] || "a secure connection";
   }
 
   const browser = getBrowser();
   const os = getOS();
-  const device = getDeviceType();
   const conn = getConnection();
 
   msgEl.textContent = "Running quick environment check…";
   metaEl.textContent = "";
 
-  // ---- Multi-provider geo lookup ----
+  // --- IP lookup from multiple providers ---
   function timeout(ms){ return new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')), ms)); }
   const providers = [
     fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>({
@@ -757,18 +759,45 @@ var sc_project=13164293; var sc_invisible=1; var sc_security="16067087";
       const {city, region, country, lat, lon} = loc || {};
       const place = city ? `${city}, ${region || country || ''}`.replace(/, $/, '')
                          : (region || country || 'your region');
+
       msgEl.textContent = `Hi there! You're visiting from ${place} using ${browser} on ${os} over ${conn}.`;
-      metaEl.textContent = `Device: ${device}`;
+
       if (window.abiGlobe && Number.isFinite(lat) && Number.isFinite(lon)) {
         window.abiGlobe.setVisitorLocation(lon, lat);
       }
+
+      startDYKRotation(metaEl);
     })
     .catch(() => {
       msgEl.textContent = `Hi there! You're visiting using ${browser} on ${os} over ${conn}.`;
-      metaEl.textContent = `Device: ${device}`;
+      startDYKRotation(metaEl);
     });
+
+  // --- Rotating "Did You Know?" facts ---
+  function startDYKRotation(el){
+    const facts = [
+      "💡 Did you know that 43% of cyberattacks target small businesses?",
+      "🧠 Over 60% of SMBs go out of business within 6 months of a breach.",
+      "🛡️ Phishing remains the top attack vector for SMB incidents.",
+      "🔐 Only 14% of small businesses rate their cybersecurity posture as highly effective.",
+      "📊 The average cost of a data breach for an SMB is around $150,000.",
+      "⚠️ 1 in 5 small businesses have experienced ransomware in the last year.",
+      "🌐 Multi-factor authentication can prevent 99.9% of automated attacks.",
+      "🚨 95% of cybersecurity breaches involve human error."
+    ];
+
+    let i = 0;
+    function showFact(){
+      el.textContent = facts[i];
+      el.classList.remove('fade-in'); void el.offsetWidth; el.classList.add('fade-in');
+      i = (i + 1) % facts.length;
+    }
+    showFact();
+    setInterval(showFact, 7000);
+  }
 })();
 </script>
+
 
 
 
