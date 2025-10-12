@@ -218,15 +218,6 @@
   100% { r: 16;   opacity: 0; }
 }
 
-/* Console-style look */
-.console{
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-  background: rgba(15,32,61,.45);
-  border: 1px solid rgba(116,178,255,.18);
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(46,140,255,0.12);
-}
-#visitor-welcome::before{ content: "> "; color:#74B2FF; font-weight:700; }
 
 </style>
 </head>
@@ -691,14 +682,14 @@ var sc_project=13164293; var sc_invisible=1; var sc_security="16067087";
   <!-- your globe and other scripts -->
   <script src="abi-globe.js"></script>
 
-  <!-- Visitor location + pin -->
+<!-- Visitor info + pin placement -->
 <script>
 (function(){
   const msgEl  = document.getElementById('visitor-welcome');
   const metaEl = document.getElementById('visitor-meta');
   if(!msgEl) return;
 
-  // --- helpers (safe browser/OS/connection detection) ---
+  // --- Helpers (safe client info) ---
   function getBrowser(){
     const ua = navigator.userAgent;
     if (/Edg\//.test(ua)) return "Microsoft Edge";
@@ -736,40 +727,46 @@ var sc_project=13164293; var sc_invisible=1; var sc_security="16067087";
   const device = getDeviceType();
   const conn = getConnection();
 
-  // Start with a friendly scanning line
   msgEl.textContent = "Running quick environment check…";
+  metaEl.textContent = "";
 
-  // --- IP-based location (privacy-friendly, no storage) ---
-  fetch('https://ipapi.co/json/')
-    .then(r => r.json())
-    .then(data => {
-      const city = data?.city || "";
-      const region = data?.region || "";
-      const country = data?.country_name || "";
-      const lat = Number(data?.latitude);
-      const lon = Number(data?.longitude);
+  // ---- Multi-provider geo lookup ----
+  function timeout(ms){ return new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')), ms)); }
+  const providers = [
+    fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>({
+      city: d.city, region: d.region, country: d.country_name, lat: +d.latitude, lon: +d.longitude
+    })),
+    fetch('https://ipinfo.io/json', {cache:'no-store'}).then(r=>r.json()).then(d=>{
+      let lat, lon;
+      if (d.loc && d.loc.includes(',')) [lat, lon] = d.loc.split(',').map(Number);
+      return { city: d.city, region: d.region, country: d.country, lat, lon };
+    }),
+    fetch('https://ipwho.is/').then(r=>r.json()).then(d=>({
+      city: d.city, region: d.region, country: d.country, lat: +d.latitude, lon: +d.longitude
+    })),
+    fetch('https://geolocation-db.com/json/').then(r=>r.json()).then(d=>({
+      city: d.city, region: d.state, country: d.country_name, lat: +d.latitude, lon: +d.longitude
+    })),
+  ];
 
-      // Build plain-English location
-      let place = country;
-      if (region) place = `${region}, ${country}`;
-      if (city)   place = `${city}, ${region || country}`;
-
-      // Message
+  Promise.any(providers.map(p => Promise.race([p, timeout(2500)])))
+    .then(loc => {
+      const {city, region, country, lat, lon} = loc || {};
+      const place = city ? `${city}, ${region || country || ''}`.replace(/, $/, '')
+                         : (region || country || 'your region');
       msgEl.textContent = `Hi there! You're visiting from ${place} using ${browser} on ${os} over ${conn}.`;
-      metaEl.textContent = `Device: ${device}${Number.isFinite(data?.asn) ? "" : ""}`;
-
-      // Drop a pin on the globe if available
+      metaEl.textContent = `Device: ${device}`;
       if (window.abiGlobe && Number.isFinite(lat) && Number.isFinite(lon)) {
         window.abiGlobe.setVisitorLocation(lon, lat);
       }
     })
     .catch(() => {
-      // Graceful fallback (no location available)
       msgEl.textContent = `Hi there! You're visiting using ${browser} on ${os} over ${conn}.`;
       metaEl.textContent = `Device: ${device}`;
     });
 })();
 </script>
+
 
 
 </body>
