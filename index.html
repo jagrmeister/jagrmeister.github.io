@@ -197,6 +197,27 @@
   #faq .answer{padding:0 8px 16px 8px; color:var(--muted);}
   #faq .chev{transform:rotate(0deg); transition:transform .15s ease;}
   #faq details[open] .chev{transform:rotate(90deg);}
+
+  /* Visitor pin styling (glow + pulse) */
+.visitor .visitor-pin {
+  fill: #ffffff;
+  stroke: #74B2FF;
+  stroke-width: 1.6;
+  filter: drop-shadow(0 0 6px rgba(116,178,255,0.8));
+}
+.visitor .visitor-pulse {
+  fill: none;
+  stroke: rgba(116,178,255,0.9);
+  stroke-width: 1.2;
+  animation: abiPulse 1.8s ease-out infinite;
+  transform-origin: center;
+}
+@keyframes abiPulse {
+  0%   { r: 3.2;  opacity: 0.9; }
+  70%  { r: 12.5; opacity: 0.15; }
+  100% { r: 16;   opacity: 0; }
+}
+
 </style>
 </head>
 <body>
@@ -272,12 +293,19 @@
             <g id="land" fill="#0f2b4d" stroke="#2a4f7f" stroke-opacity=".55" stroke-width="0.8"></g>
             <g id="routes" stroke="#9fbeff" stroke-width="1.6" fill="none" opacity="0.9"></g>
             <g id="nodes" fill="#CFE3FF"></g>
+            <g id="visitor" class="nodes visitor"></g>
           </g>
         </svg>
       </div>
     </div>
   </div>
 </section>
+
+<!-- Visitor welcome card (place right below the globe section) -->
+<section id="visitor-location" class="card" style="text-align:center;margin-top:20px">
+  <p class="lead" id="visitor-welcome">Analyzing secure connection…</p>
+</section>
+
 
 <!-- ===== Services ===== -->
 <section id="services">
@@ -649,5 +677,39 @@ var sc_project=13164293; var sc_invisible=1; var sc_security="16067087";
 
 <!-- ===== Globe logic ===== -->
 <script src="assets/js/abi-globe.js" defer></script>
+  <!-- your globe and other scripts -->
+  <script src="abi-globe.js"></script>
+
+  <!-- Visitor location + pin -->
+  <script>
+  (function(){
+    const el = document.getElementById('visitor-welcome');
+    if(!el) return;
+
+    fetch('https://ipapi.co/json/')
+      .then(r => r.json())
+      .then(data => {
+        const city = data.city;
+        const region = data.region;
+        const country = data.country_name;
+        const lat = Number(data.latitude);
+        const lon = Number(data.longitude);
+
+        const where = city || region || country || 'your region';
+        el.textContent = `👋 Welcome from ${where} — connection secured.`;
+
+        if (window.abiGlobe && isFinite(lat) && isFinite(lon)) {
+          window.abiGlobe.setVisitorLocation(lon, lat);
+        }
+      })
+      .catch(()=>{
+        el.textContent = '👋 Welcome — connection active.';
+      });
+  })();
+  </script>
+
+</body>
+</html>
+
 </body>
 </html>
