@@ -218,6 +218,16 @@
   100% { r: 16;   opacity: 0; }
 }
 
+/* Console-style look */
+.console{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+  background: rgba(15,32,61,.45);
+  border: 1px solid rgba(116,178,255,.18);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(46,140,255,0.12);
+}
+#visitor-welcome::before{ content: "> "; color:#74B2FF; font-weight:700; }
+
 </style>
 </head>
 <body>
@@ -301,10 +311,11 @@
   </div>
 </section>
 
-<!-- Visitor welcome card (place right below the globe section) -->
-<section id="visitor-location" class="card" style="text-align:center;margin-top:20px">
-  <p class="lead" id="visitor-welcome">Analyzing secure connection…</p>
+<section id="visitor-location" class="card console" style="text-align:center;margin-top:20px">
+  <p id="visitor-welcome" class="lead">Initializing secure session…</p>
+  <small id="visitor-meta" style="color:#A3B3CC;display:block;margin-top:4px"></small>
 </section>
+
 
 
 <!-- ===== Services ===== -->
@@ -681,32 +692,85 @@ var sc_project=13164293; var sc_invisible=1; var sc_security="16067087";
   <script src="abi-globe.js"></script>
 
   <!-- Visitor location + pin -->
-  <script>
-  (function(){
-    const el = document.getElementById('visitor-welcome');
-    if(!el) return;
+<script>
+(function(){
+  const msgEl  = document.getElementById('visitor-welcome');
+  const metaEl = document.getElementById('visitor-meta');
+  if(!msgEl) return;
 
-    fetch('https://ipapi.co/json/')
-      .then(r => r.json())
-      .then(data => {
-        const city = data.city;
-        const region = data.region;
-        const country = data.country_name;
-        const lat = Number(data.latitude);
-        const lon = Number(data.longitude);
+  // --- helpers (safe browser/OS/connection detection) ---
+  function getBrowser(){
+    const ua = navigator.userAgent;
+    if (/Edg\//.test(ua)) return "Microsoft Edge";
+    if (/OPR\//.test(ua)) return "Opera";
+    if (/Brave\//.test(ua)) return "Brave";
+    if (/Chrome\//.test(ua) && !/Edg\//.test(ua) && !/OPR\//.test(ua)) return "Chrome";
+    if (/Safari\//.test(ua) && !/Chrome\//.test(ua)) return "Safari";
+    if (/Firefox\//.test(ua)) return "Firefox";
+    return "your browser";
+  }
+  function getOS(){
+    const ua = navigator.userAgent;
+    if (/Windows NT/.test(ua)) return "Windows";
+    if (/Mac OS X/.test(ua)) return "macOS";
+    if (/iPhone|iPad|iPod/.test(ua)) return "iOS";
+    if (/Android/.test(ua)) return "Android";
+    if (/Linux/.test(ua)) return "Linux";
+    return "your device";
+  }
+  function getDeviceType(){
+    const ua = navigator.userAgent;
+    if (/iPad|Tablet|Nexus 7|Nexus 10/.test(ua)) return "a tablet";
+    if (/Mobi|Android/.test(ua)) return "a phone";
+    return "a computer";
+  }
+  function getConnection(){
+    const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if(!c || !c.effectiveType) return "a secure connection";
+    const map = { "slow-2g":"a very slow connection", "2g":"a 2G-class connection", "3g":"a 3G-class connection", "4g":"a fast connection" };
+    return map[c.effectiveType] || "a secure connection";
+  }
 
-        const where = city || region || country || 'your region';
-        el.textContent = `👋 Welcome from ${where} — connection secured.`;
+  const browser = getBrowser();
+  const os = getOS();
+  const device = getDeviceType();
+  const conn = getConnection();
 
-        if (window.abiGlobe && isFinite(lat) && isFinite(lon)) {
-          window.abiGlobe.setVisitorLocation(lon, lat);
-        }
-      })
-      .catch(()=>{
-        el.textContent = '👋 Welcome — connection active.';
-      });
-  })();
-  </script>
+  // Start with a friendly scanning line
+  msgEl.textContent = "Running quick environment check…";
+
+  // --- IP-based location (privacy-friendly, no storage) ---
+  fetch('https://ipapi.co/json/')
+    .then(r => r.json())
+    .then(data => {
+      const city = data?.city || "";
+      const region = data?.region || "";
+      const country = data?.country_name || "";
+      const lat = Number(data?.latitude);
+      const lon = Number(data?.longitude);
+
+      // Build plain-English location
+      let place = country;
+      if (region) place = `${region}, ${country}`;
+      if (city)   place = `${city}, ${region || country}`;
+
+      // Message
+      msgEl.textContent = `Hi there! You're visiting from ${place} using ${browser} on ${os} over ${conn}.`;
+      metaEl.textContent = `Device: ${device}${Number.isFinite(data?.asn) ? "" : ""}`;
+
+      // Drop a pin on the globe if available
+      if (window.abiGlobe && Number.isFinite(lat) && Number.isFinite(lon)) {
+        window.abiGlobe.setVisitorLocation(lon, lat);
+      }
+    })
+    .catch(() => {
+      // Graceful fallback (no location available)
+      msgEl.textContent = `Hi there! You're visiting using ${browser} on ${os} over ${conn}.`;
+      metaEl.textContent = `Device: ${device}`;
+    });
+})();
+</script>
+
 
 </body>
 </html>
