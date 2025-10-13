@@ -1,58 +1,76 @@
-/* ABI SVG Globe v3.1 — orthographic projection, routes, free 360° drag, inertia,
-   autorotate, + visitor pin API (setVisitorLocation/clearVisitorLocation). */
+/* ABI SVG Globe v3.2
+   - Orthographic projection (no external libs)
+   - Autorotate + inertial drag (360° in any direction)
+   - Land (fallback rings + optional GeoJSON load)
+   - Graticule + demo routes
+   - Visitor pin API (single pulsing red dot): window.abiGlobe.setVisitorLocation(lon, lat)
+
+   Expected SVG groups in your HTML:
+     <svg id="abiGlobe" ...>
+       <g id="rotator">
+         <g id="graticule"></g>
+         <g id="land"></g>
+         <g id="routes"></g>
+         <g id="nodes"></g>
+         <!-- <g id="visitor"></g>  (created here if missing) -->
+       </g>
+     </svg>
+*/
 
 (function () {
+  // ---- DOM refs ----
   const svg   = document.getElementById('abiGlobe');
   const rotG  = document.getElementById('rotator');
   const landG = document.getElementById('land');
   const gratG = document.getElementById('graticule');
   const routeG= document.getElementById('routes');
   const nodeG = document.getElementById('nodes');
-  if (!svg || !rotG) return;
+  if (!svg || !rotG || !landG || !gratG || !routeG || !nodeG) return;
 
-// Visitor layer (create if missing)
-let visitorG = document.getElementById('visitor');
-if (!visitorG && rotG) {
-  visitorG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  visitorG.setAttribute('id', 'visitor');
-  visitorG.setAttribute('class', 'nodes visitor');
-  rotG.appendChild(visitorG);
-}
-
+  // Visitor layer (create if missing) — SINGLE declaration (important!)
+  let visitorG = document.getElementById('visitor');
+  if (!visitorG) {
+    visitorG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    visitorG.setAttribute('id', 'visitor');
+    visitorG.setAttribute('class', 'nodes visitor');
+    rotG.appendChild(visitorG);
+  }
 
   // ---- Projection ----
-  const CX = 250, CY = 250, R = 165;
+  const CX = 250, CY = 250, R = 165; // tune to your SVG size/viewBox
+  let lon0 = 0, lat0 = 0;            // view center (deg)
 
-  // View center (deg)
-  let lon0 = 0, lat0 = 0;
-
-  // Motion state
+  // ---- Motion state ----
   let dragging = false;
   let lastX = 0, lastY = 0;
   let vLon = 0, vLat = 0;
 
-  // Autorotate + timing
-  let auto = 0.12;
+  // ---- Autorotate ----
+  let auto = 0.12;                   // deg per frame @ ~60fps
   let lastT = performance.now();
   let idleUntil = 0;
   const RESUME_DELAY = 1600;
   const MAX_SPEED = 2.4;
 
-  // Visitor pin state (NEW)
+  // ---- Visitor pin state ----
   let showVisitor = false;
   let visitorLon = 0, visitorLat = 0;
 
-  // Utils
+  // ---- Utils ----
   const deg2rad = d => d * Math.PI / 180;
   const rad2deg = r => r * 180 / Math.PI;
-  const clamp = (x,a,b) => Math.max(a, Math.min(b, x));
+  const clamp   = (x,a,b) => Math.max(a, Math.min(b, x));
 
   function project(lon, lat) {
+    // Spherical orthographic centered at (lon0, lat0)
     const lam = deg2rad(lon - lon0);
     const phi = deg2rad(lat);
     const phi0 = deg2rad(lat0);
+
+    // Back-face culling
     const cosc = Math.sin(phi0)*Math.sin(phi) + Math.cos(phi0)*Math.cos(phi)*Math.cos(lam);
-    if (cosc < 0) return null; // back side
+    if (cosc < 0) return null;
+
     const x = R * Math.cos(phi) * Math.sin(lam);
     const y = R * (Math.cos(phi0)*Math.sin(phi) - Math.sin(phi0)*Math.cos(phi)*Math.cos(lam));
     return [CX + x, CY - y];
@@ -94,7 +112,7 @@ if (!visitorG && rotG) {
     { from: [-58.4, -34.6], to: [-3.7, 40.4] }
   ];
 
-  // Fallback land rings (simplified)
+  // Fallback land rings (coarse, light)
   const FALLBACK_LAND = [
     [[-168,72],[-140,70],[-125,60],[-100,49],[-95,40],[-105,32],[-117,32],[-123,49],[-135,56],[-150,60],[-160,65],[-168,72]],
     [[-82,12],[-75,5],[-70,-3],[-63,-10],[-64,-20],[-60,-30],[-56,-34],[-54,-45],[-49,-48],[-45,-23],[-50,-10],[-60,-5],[-70,0],[-75,5],[-82,12]],
@@ -103,14 +121,14 @@ if (!visitorG && rotG) {
     [[113,-22],[120,-20],[132,-18],[138,-22],[142,-28],[145,-38],[134,-35],[126,-30],[122,-26],[118,-25],[113,-22]]
   ];
 
-  // Graticule
+  // ---- Drawers ----
   function buildGraticule() {
     gratG.innerHTML = '';
+    // Parallels
     for (let lat = -60; lat <= 60; lat += 15) {
       let d = '';
       for (let lon = -180; lon <= 180; lon += 3) {
-        const p = project(lon, lat);
-        if (!p) continue;
+        const p = project(lon, lat); if (!p) continue;
         d += (d ? ' L ' : 'M ') + p[0].toFixed(1) + ' ' + p[1].toFixed(1);
       }
       if (d) {
@@ -121,11 +139,11 @@ if (!visitorG && rotG) {
         gratG.appendChild(path);
       }
     }
+    // Meridians
     for (let lon = -180; lon <= 180; lon += 15) {
       let d = '';
       for (let lat = -90; lat <= 90; lat += 3) {
-        const p = project(lon, lat);
-        if (!p) continue;
+        const p = project(lon, lat); if (!p) continue;
         d += (d ? ' L ' : 'M ') + p[0].toFixed(1) + ' ' + p[1].toFixed(1);
       }
       if (d) {
@@ -138,7 +156,6 @@ if (!visitorG && rotG) {
     }
   }
 
-  // Land drawing
   function drawLandRings(rings) {
     landG.innerHTML = '';
     rings.forEach(ring => {
@@ -157,12 +174,11 @@ if (!visitorG && rotG) {
     });
   }
 
-  // Routes + hubs
   function drawRoutes() {
     routeG.innerHTML = '';
     nodeG.innerHTML = '';
 
-    // hubs
+    // Hubs
     ROUTES.forEach(r => {
       [r.from, r.to].forEach(coord => {
         const p = project(coord[0], coord[1]);
@@ -170,13 +186,13 @@ if (!visitorG && rotG) {
         const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         c.setAttribute('cx', p[0].toFixed(1));
         c.setAttribute('cy', p[1].toFixed(1));
-        c.setAttribute('r', '2.4');
+        c.setAttribute('r', '2.2');
         c.setAttribute('opacity', '.95');
         nodeG.appendChild(c);
       });
     });
 
-    // arcs
+    // Arcs
     ROUTES.forEach((r, idx) => {
       const d = arcPath(r.from, r.to, 90);
       if (!d) return;
@@ -195,44 +211,43 @@ if (!visitorG && rotG) {
     });
   }
 
+  // ---- Render (one pass) ----
   let geoRings = null, usingGeo = false;
 
   function render() {
-    gratG.innerHTML = '';
+    // Grids + land + routes
     buildGraticule();
-
     if (usingGeo && geoRings) drawLandRings(geoRings.raw);
     else drawLandRings(FALLBACK_LAND);
-
     drawRoutes();
 
-// ---- Visitor pin (single pulsing red dot) ----
-if (visitorG) {
-  let pin = visitorG.querySelector('.visitor-pin');
-  if (!pin) {
-    pin = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    pin.setAttribute('r', '3.2');
-    pin.setAttribute('class', 'visitor-pin');
-    visitorG.appendChild(pin);
-  }
+    // Visitor pin (single persistent red dot)
+    if (visitorG) {
+      let pin = visitorG.querySelector('.visitor-pin');
+      if (!pin) {
+        pin = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        pin.setAttribute('r', '3.2');
+        pin.setAttribute('class', 'visitor-pin'); // styled via CSS
+        visitorG.appendChild(pin);
+      }
 
-  if (showVisitor) {
-    const p = project(visitorLon, visitorLat);
-    if (p) {
-      pin.setAttribute('cx', p[0].toFixed(1));
-      pin.setAttribute('cy', p[1].toFixed(1));
-      pin.style.display = '';
-    } else {
-      // behind the globe → hide (keep element so animation continues next frame)
-      pin.style.display = 'none';
+      if (showVisitor) {
+        const p = project(visitorLon, visitorLat);
+        if (p) {
+          pin.setAttribute('cx', p[0].toFixed(1));
+          pin.setAttribute('cy', p[1].toFixed(1));
+          pin.style.display = '';
+        } else {
+          // on the far side — hide but keep element so animation keeps running
+          pin.style.display = 'none';
+        }
+      } else {
+        pin.style.display = 'none';
+      }
     }
-  } else {
-    pin.style.display = 'none';
   }
-}
 
-
-  // Interaction
+  // ---- Interaction ----
   function box(){ return svg.getBoundingClientRect(); }
   function kScale(){ return 180 / (box().width || 500); }
 
@@ -276,12 +291,13 @@ if (visitorG) {
   window.addEventListener('touchend', onUp);
   svg.style.cursor = 'grab';
 
-  // Animation loop
+  // ---- Animation loop ----
   function tick(){
     requestAnimationFrame(tick);
     const now = performance.now();
     const dt = Math.max(0, now - lastT); lastT = now;
 
+    // Inertia with gentle decay
     const decay = Math.exp(-dt * 0.0045);
     const clampSpeed = v => clamp(v, -MAX_SPEED, MAX_SPEED);
 
@@ -293,6 +309,7 @@ if (visitorG) {
       lat0 += vLat;
       lat0 = clamp(lat0, -90, 90);
 
+      // Autorotate resumes after idle
       if(now > idleUntil){
         lon0 += auto * (dt / 16.67);
       }
@@ -307,7 +324,7 @@ if (visitorG) {
     });
   }
 
-  // Try to load GeoJSON land (optional)
+  // ---- Optional: load geojson land (if available) ----
   async function tryLoadGeo() {
     try {
       const res = await fetch('assets/data/world-geo.json', { cache: 'force-cache' });
@@ -338,9 +355,11 @@ if (visitorG) {
     }
   }
 
-  render(); tryLoadGeo();
+  // First paint
+  render();
+  tryLoadGeo();
 
-  // ---- Public API for visitor pin (NEW) ----
+  // ---- Public API for visitor pin ----
   window.abiGlobe = {
     setVisitorLocation(lon, lat){ visitorLon = lon; visitorLat = lat; showVisitor = true; render(); },
     clearVisitorLocation(){ showVisitor = false; render(); }
