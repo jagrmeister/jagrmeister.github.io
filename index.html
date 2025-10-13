@@ -679,6 +679,100 @@ var sc_project=13164293; var sc_invisible=1; var sc_security="16067087";
   <!-- your globe and other scripts -->
 <script src="/assets/js/abi-globe.js"></script>
 
+<script>
+(function(){
+  const msgEl  = document.getElementById('visitor-welcome');
+  const metaEl = document.getElementById('visitor-meta');
+  if(!msgEl) return;
+
+  // Safe client info
+  function getBrowser(){
+    const ua = navigator.userAgent;
+    if (/Edg\//.test(ua)) return "Microsoft Edge";
+    if (/OPR\//.test(ua)) return "Opera";
+    if (/Brave\//.test(ua)) return "Brave";
+    if (/Chrome\//.test(ua) && !/Edg\//.test(ua) && !/OPR\//.test(ua)) return "Chrome";
+    if (/Safari\//.test(ua) && !/Chrome\//.test(ua)) return "Safari";
+    if (/Firefox\//.test(ua)) return "Firefox";
+    return "your browser";
+  }
+  function getOS(){
+    const ua = navigator.userAgent;
+    if (/Windows NT/.test(ua)) return "Windows";
+    if (/Mac OS X/.test(ua)) return "macOS";
+    if (/iPhone|iPad|iPod/.test(ua)) return "iOS";
+    if (/Android/.test(ua)) return "Android";
+    if (/Linux/.test(ua)) return "Linux";
+    return "your device";
+  }
+  function getConnection(){
+    const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if(!c || !c.effectiveType) return "a secure connection";
+    const map = { "slow-2g":"a very slow connection", "2g":"a 2G connection", "3g":"a 3G connection", "4g":"a fast connection" };
+    return map[c.effectiveType] || "a secure connection";
+  }
+
+  const browser = getBrowser();
+  const os = getOS();
+  const conn = getConnection();
+
+  msgEl.textContent = "Running quick environment check…";
+  metaEl.textContent = "";
+
+  // Helper
+  function timeout(ms){ return new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')), ms)); }
+
+  // Prefer providers with reliable CORS first
+  const providers = [
+    // ipwho.is (good CORS)
+    fetch('https://ipwho.is/').then(r=>r.json()).then(d=>({
+      city: d.city, region: d.region, country: d.country, lat: +d.latitude, lon: +d.longitude
+    })),
+    // geojs.io (good CORS)
+    fetch('https://get.geojs.io/v1/ip/geo.json').then(r=>r.json()).then(d=>({
+      city: d.city, region: d.region, country: d.country, lat: +d.latitude, lon: +d.longitude
+    })),
+    // geolocation-db (OK CORS)
+    fetch('https://geolocation-db.com/json/').then(r=>r.json()).then(d=>({
+      city: d.city, region: d.state, country: d.country_name, lat: +d.latitude, lon: +d.longitude
+    })),
+    // ipinfo (rate-limited, but often OK)
+    fetch('https://ipinfo.io/json', {cache:'no-store'}).then(r=>r.json()).then(d=>{
+      let lat, lon; if (d.loc && d.loc.includes(',')) [lat, lon] = d.loc.split(',').map(Number);
+      return { city: d.city, region: d.region, country: d.country, lat, lon };
+    }),
+    // ipapi as last resort (sometimes blocks CORS)
+    fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>({
+      city: d.city, region: d.region, country: d.country_name, lat: +d.latitude, lon: +d.longitude
+    }))
+  ];
+
+  // Try the first one that answers within 2.5s
+  Promise.any(providers.map(p => Promise.race([p, timeout(2500)])))
+    .then(loc => {
+      const {city, region, country, lat, lon} = loc || {};
+      const place = city ? `${city}, ${region || country || ''}`.replace(/, $/, '')
+                         : (region || country || 'your region');
+
+      msgEl.textContent = `Hi there! You're visiting from ${place} using ${browser} on ${os} over ${conn}.`;
+      metaEl.textContent = "💡 Did you know that 43% of cyberattacks target small businesses?"; // your DYK rotator can still run here
+
+      // Pin on globe (safe call)
+      try {
+        if (window.abiGlobe && Number.isFinite(lat) && Number.isFinite(lon)) {
+          window.abiGlobe.setVisitorLocation(lon, lat);
+        }
+      } catch (_) {}
+    })
+    .catch(() => {
+      // All providers blocked/failed
+      msgEl.textContent = `Hi there! You're visiting using ${browser} on ${os} over ${conn}.`;
+      // keep your DYK rotator call here too
+    });
+})();
+</script>
+
+
 
 <!-- Visitor info + pin placement -->
 <script>
