@@ -3,131 +3,180 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NIST Frameworks & References – ABI Consulting</title>
-  <meta name="description" content="Matrix of NIST frameworks relevant to cybersecurity, AI, privacy, supply chain, and compliance." />
+  <title>Frameworks & References – ABI Consulting</title>
+  <meta name="description" content="Cybersecurity, risk, and compliance frameworks guiding ABI Consulting’s methodology — including NIST, ISO, SOC2, CMMC, and COBIT." />
   <meta name="theme-color" content="#0B1E39" />
   <link rel="icon" href="assets/favicon.ico" />
+
   <style>
     :root{
-      --bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;--accent:#2E8CFF;--accent2:#74B2FF;
-      --border:rgba(255,255,255,.08);--radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);--maxw:1200px;
+      --bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;
+      --accent:#2E8CFF;--accent2:#74B2FF;--accent-warm:#FF7A00;
+      --border:rgba(255,255,255,.08);--radius:18px;
+      --shadow:0 10px 30px rgba(0,0,0,.35);--maxw:1200px;
     }
-    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    a{color:var(--accent);text-decoration:none}
+
+    body{
+      margin:0;background:var(--bg);color:var(--text);
+      font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;
+    }
+    a{color:var(--accent2);text-decoration:none}
     a:hover{text-decoration:underline}
     .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
-    header,footer{padding:24px 0;border-bottom:1px solid var(--border)}
-    h1{font-size:clamp(28px,3vw,40px);margin:20px 0}
-    p.lead{color:var(--muted);margin:0 0 20px}
 
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0}
-    .brand{display:flex;align-items:center;gap:12px;font-weight:800}
-    .brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#123e74,#1a2f58);display:grid;place-items:center;color:#fff;font-weight:900}
-    .nav a{margin-right:14px;color:#F5F7FB;opacity:.85}
-    .nav a:last-child{margin-right:0}
+    header{padding:22px 0;border-bottom:1px solid var(--border)}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+    .brand img{width:38px;height:38px;object-fit:contain}
+    .brand span{font-weight:700}
+    nav a{margin-right:14px;color:#F5F7FB;opacity:.85}
+    nav a:last-child{margin-right:0}
 
-    table{width:100%;border-collapse:separate;border-spacing:0;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:20px}
+    h1{font-size:clamp(28px,3.5vw,40px);margin:30px 0 10px}
+    p.lead{color:var(--muted);margin:0 0 24px;max-width:80ch}
+
+    /* Framework table */
+    table{
+      width:100%;border-collapse:separate;border-spacing:0;
+      background:rgba(255,255,255,.02);border:1px solid var(--border);
+      border-radius:14px;overflow:hidden;margin-top:20px;
+      transition:all .3s ease;
+    }
     th,td{padding:14px;vertical-align:top;text-align:left}
-    th{font-size:13px;color:var(--muted);background:#0b1220}
+    th{
+      font-size:13px;color:var(--muted);background:#0b1220;
+      text-transform:uppercase;letter-spacing:.05em;
+    }
     tr+tr td{border-top:1px solid var(--border)}
     a.table-link{color:var(--accent2)}
     .small{font-size:12px;color:var(--muted)}
-    .tag{display:inline-block;font-size:11px;color:#cbd5e1;background:#0b1624;border:1px solid var(--border);padding:2px 8px;border-radius:999px;margin:2px 6px 0 0}
+    .tag{
+      display:inline-block;font-size:11px;color:#cbd5e1;background:#0b1624;
+      border:1px solid var(--border);padding:2px 8px;border-radius:999px;margin:2px 6px 0 0;
+    }
 
-    footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);margin-top:40px}
+    /* Hover highlight effect */
+    tbody tr{
+      transition:background .25s ease, box-shadow .25s ease;
+    }
+    tbody tr:hover{
+      background:rgba(255,122,0,0.05);
+      box-shadow:0 0 0 1px rgba(255,122,0,0.3) inset;
+    }
+
+    footer{
+      border-top:1px solid var(--border);
+      padding:30px 0;color:var(--muted);
+      margin-top:40px;text-align:center;
+    }
   </style>
 </head>
+
 <body>
-  <header class="nav">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-      <div class="brand"><div class="logo">ABI</div><span>ABI Consulting, LLC</span></div>
+  <header>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+      <div class="brand">
+        <img src="assets/ABI_logo_transparent.png" alt="ABI Consulting logo" />
+        <span>Consulting, LLC</span>
+      </div>
       <nav>
         <a href="index.html">Home</a>
         <a href="index.html#services">Services</a>
-        <a href="index.html#about">About</a>
         <a href="index.html#resources">Resources</a>
-        <a href="/blog/">Blog</a>
+        <a href="mission-values.html">Mission & Values</a>
         <a href="index.html#contact">Contact</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
-    <h1>NIST Frameworks & Reference Library</h1>
-    <p class="lead">Quick matrix of NIST frameworks and cornerstone publications relevant to ABI Consulting’s cybersecurity, AI, privacy, risk, identity, supply chain, OT/ICS, and software security work.</p>
+    <h1>Frameworks & Reference Library</h1>
+    <p class="lead">
+      Core cybersecurity, risk, and compliance frameworks that inform ABI Consulting’s methodology — spanning governance, risk management, and control implementation across regulated and commercial environments.
+    </p>
 
     <table>
       <thead>
         <tr>
-          <th style="width:22%">Framework / Publication</th>
-          <th style="width:33%">What it is / Aimed at</th>
-          <th style="width:30%">Typical verticals</th>
-          <th style="width:15%">Official page</th>
+          <th>Framework / Standard</th>
+          <th>Purpose / Focus</th>
+          <th>Primary Use Cases</th>
+          <th>Reference</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>Cybersecurity Framework (CSF) 2.0</strong><div class="small">Framework for managing cyber risk</div></td>
-          <td>Outcome-focused framework to improve and communicate cybersecurity risk management.</td>
-          <td><span class="tag">Critical Infrastructure</span><span class="tag">SMB</span><span class="tag">Finance</span><span class="tag">Healthcare</span></td>
-          <td><a class="table-link" href="https://www.nist.gov/cyberframework" target="_blank">nist.gov/cyberframework</a></td>
+          <td><strong>ISO/IEC 27001:2022</strong><div class="small">Information Security Management System</div></td>
+          <td>Defines best practices for establishing, maintaining, and continually improving an ISMS.</td>
+          <td><span class="tag">Corporate</span><span class="tag">Defense</span><span class="tag">Finance</span></td>
+          <td><a class="table-link" href="https://www.iso.org/standard/82875.html" target="_blank">ISO.org</a></td>
         </tr>
         <tr>
-          <td><strong>AI Risk Management Framework (AI RMF)</strong><div class="small">Trustworthy AI</div></td>
-          <td>Framework to identify, assess, and manage risks from AI systems.</td>
-          <td><span class="tag">Tech</span><span class="tag">Finance</span><span class="tag">Healthcare</span></td>
-          <td><a class="table-link" href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank">AI RMF</a></td>
+          <td><strong>SOC 2 Type II</strong><div class="small">Trust Services Criteria</div></td>
+          <td>Auditing standard ensuring controls for security, availability, confidentiality, processing integrity, and privacy.</td>
+          <td><span class="tag">SaaS</span><span class="tag">Cloud</span></td>
+          <td><a class="table-link" href="https://www.aicpa.org/soc4so" target="_blank">AICPA.org</a></td>
         </tr>
         <tr>
-          <td><strong>Privacy Framework</strong></td>
-          <td>Framework to manage privacy risk alongside cybersecurity risk.</td>
-          <td><span class="tag">Consumer Data</span><span class="tag">Health</span><span class="tag">Finance</span></td>
-          <td><a class="table-link" href="https://www.nist.gov/privacy-framework" target="_blank">Privacy Framework</a></td>
+          <td><strong>NIST SP 800-30</strong><div class="small">Guide for Conducting Risk Assessments</div></td>
+          <td>Provides structured methodology to identify, analyze, and determine risk likelihood and impact.</td>
+          <td><span class="tag">Risk Management</span><span class="tag">Federal</span></td>
+          <td><a class="table-link" href="https://csrc.nist.gov/publications/detail/sp/800-30/rev-1/final" target="_blank">SP 800-30</a></td>
         </tr>
         <tr>
-          <td><strong>Risk Management Framework (RMF)</strong></td>
-          <td>7-step process linking system risk with controls and authorization.</td>
-          <td><span class="tag">Federal</span><span class="tag">Defense</span></td>
-          <td><a class="table-link" href="https://csrc.nist.gov/pubs/sp/800/37/r2/final" target="_blank">SP 800-37r2</a></td>
+          <td><strong>CMMC 2.0</strong><div class="small">Cybersecurity Maturity Model Certification</div></td>
+          <td>Aligns defense contractors with protection standards for Controlled Unclassified Information (CUI).</td>
+          <td><span class="tag">Defense</span><span class="tag">SMB</span></td>
+          <td><a class="table-link" href="https://dodcio.defense.gov/CMMC/" target="_blank">DoD CIO</a></td>
         </tr>
         <tr>
-          <td><strong>Security & Privacy Controls</strong></td>
-          <td>Catalog of security and privacy controls (SP 800-53).</td>
-          <td><span class="tag">Federal</span><span class="tag">Enterprises</span></td>
-          <td><a class="table-link" href="https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final" target="_blank">SP 800-53</a></td>
+          <td><strong>COBIT 2019</strong><div class="small">Governance & Management Framework</div></td>
+          <td>Enterprise framework for IT governance and risk alignment with business goals.</td>
+          <td><span class="tag">Enterprise</span><span class="tag">IT Governance</span></td>
+          <td><a class="table-link" href="https://www.isaca.org/resources/cobit" target="_blank">ISACA.org</a></td>
+        </tr>
+        <tr>
+          <td><strong>CIS Critical Security Controls v8</strong><div class="small">Prioritized cyber hygiene baseline</div></td>
+          <td>Provides 18 essential controls to reduce the most prevalent cyber threats.</td>
+          <td><span class="tag">SMB</span><span class="tag">Enterprise</span></td>
+          <td><a class="table-link" href="https://www.cisecurity.org/controls" target="_blank">CIS Controls</a></td>
+        </tr>
+        <tr>
+          <td><strong>ISO/IEC 27005</strong><div class="small">Information Security Risk Management</div></td>
+          <td>Guidance for managing risks within the context of ISO 27001.</td>
+          <td><span class="tag">Governance</span><span class="tag">Risk</span></td>
+          <td><a class="table-link" href="https://www.iso.org/standard/75281.html" target="_blank">ISO.org</a></td>
+        </tr>
+        <tr>
+          <td><strong>NIST Cybersecurity Framework (CSF) 2.0</strong></td>
+          <td>Outcome-based framework to improve and communicate cybersecurity risk management.</td>
+          <td><span class="tag">Critical Infrastructure</span><span class="tag">SMB</span></td>
+          <td><a class="table-link" href="https://www.nist.gov/cyberframework" target="_blank">NIST CSF</a></td>
         </tr>
         <tr>
           <td><strong>SP 800-171</strong></td>
-          <td>Safeguards for Controlled Unclassified Information.</td>
+          <td>Safeguards for Controlled Unclassified Information (CUI).</td>
           <td><span class="tag">Defense</span><span class="tag">Contractors</span></td>
           <td><a class="table-link" href="https://csrc.nist.gov/pubs/sp/800/171/r3/final" target="_blank">SP 800-171</a></td>
         </tr>
         <tr>
-          <td><strong>Zero Trust Architecture</strong></td>
-          <td>Concepts and models for zero trust security (SP 800-207).</td>
+          <td><strong>SP 800-53 Rev.5</strong></td>
+          <td>Catalog of security and privacy controls for information systems.</td>
+          <td><span class="tag">Federal</span><span class="tag">Enterprises</span></td>
+          <td><a class="table-link" href="https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final" target="_blank">SP 800-53</a></td>
+        </tr>
+        <tr>
+          <td><strong>Zero Trust Architecture (SP 800-207)</strong></td>
+          <td>Concepts and models for modern, perimeterless security.</td>
           <td><span class="tag">All sectors</span></td>
           <td><a class="table-link" href="https://csrc.nist.gov/pubs/sp/800/207/final" target="_blank">SP 800-207</a></td>
-        </tr>
-        <tr>
-          <td><strong>Secure Software Development Framework</strong></td>
-          <td>Guidance for secure software practices (SP 800-218).</td>
-          <td><span class="tag">Software</span><span class="tag">SaaS</span></td>
-          <td><a class="table-link" href="https://csrc.nist.gov/pubs/sp/800/218/final" target="_blank">SP 800-218</a></td>
-        </tr>
-        <tr>
-          <td><strong>OT/ICS Security</strong></td>
-          <td>Guidance for industrial control system security (SP 800-82).</td>
-          <td><span class="tag">Manufacturing</span><span class="tag">Energy</span></td>
-          <td><a class="table-link" href="https://csrc.nist.gov/pubs/sp/800/82/r3/final" target="_blank">SP 800-82</a></td>
         </tr>
       </tbody>
     </table>
   </main>
 
   <footer>
-    <div class="container" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-      <div>© 2025 ABI Consulting, LLC • Tampa, FL</div>
-      <div>Cybersecurity · GRC · IT Consulting</div>
+    <div class="container">
+      © 2025 ABI Consulting, LLC • Tampa, FL &nbsp; | &nbsp; Cybersecurity · GRC · Risk Management
     </div>
   </footer>
 </body>
