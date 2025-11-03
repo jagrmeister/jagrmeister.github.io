@@ -8,56 +8,59 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;--accent:#2E8CFF;--accent2:#74B2FF;--border:rgba(255,255,255,.08);--radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);--maxw:1200px;} 
-  html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}     
-  .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px} 
-  header.nav{padding:18px 0;border-bottom:1px solid var(--border)} 
-  .hero{padding:56px 0 36px 0} 
-  .eyebrow{letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);font-weight:700;font-size:.78rem;opacity:.95} 
-  h1{margin:.25rem 0 0 0;font-size:2.1rem;line-height:1.18;color:#ffffff} 
-  .sub{color:#cbd5e1;max-width:900px}
-  /* layout */
-  .grid{display:grid;grid-template-columns: 1.1fr .9fr;gap:18px;margin:24px 0 28px} 
-  .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);} 
-  .card .hd{padding:14px 16px;border-bottom:1px solid var(--border);font-weight:700;color:#e2e8f0} 
-  .card .bd{padding:14px 16px;color:#cbd5e1} 
+  :root{--bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;--accent:#2E8CFF;--accent2:#74B2FF;--border:rgba(255,255,255,.08);--radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);--maxw:1200px;}
+  html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
+  header.nav{padding:18px 0;border-bottom:1px solid var(--border)}
+  .hero-band{padding:56px 0 28px;background:linear-gradient(180deg, rgba(255,255,255,.02) 0%, rgba(255,255,255,.0) 100%);border-bottom:1px solid var(--border)}
+  .hero-eyebrow{letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);font-weight:700;font-size:.78rem;opacity:.95}
+  .hero-title{margin:.35rem 0 4px 0;font-size:2.8rem;line-height:1.1;color:#ffffff;font-weight:800}
+  .hero-title .accent{color:var(--accent2)}
+  .hero-sub{color:var(--muted);max-width:980px}
+  @media (max-width:900px){.hero-title{font-size:2.2rem}}
+
+  .grid{display:grid;grid-template-columns: 1.1fr .9fr;gap:18px;margin:24px 0 28px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+  .card .hd{padding:14px 16px;border-bottom:1px solid var(--border);font-weight:700;color:#e2e8f0}
+  .card .bd{padding:14px 16px;color:#cbd5e1}
   .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
   .lbl{font-weight:600;font-size:.95rem;margin-bottom:6px}
   .help{color:var(--muted);font-size:.85rem}
-  select, input[type="text"], textarea{width:100%;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#0b1529;color:#e6edf6;font-size:.95rem} 
-  .chk{display:flex;gap:10px;flex-wrap:wrap}
-  .chk label{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.12);padding:8px 10px;border-radius:10px;cursor:pointer;background:#0b1529;color:#dbeafe} 
+
+  /* Inputs */
+  select, input[type="text"]{width:100%;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#0b1529;color:#e6edf6;font-size:.95rem}
+  .chips,.chk{display:flex;gap:10px;flex-wrap:wrap}
+  .chip,.chk label{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.12);padding:8px 12px;border-radius:10px;cursor:pointer;background:#0b1529;color:#dbeafe}
+  .chip input{display:none}
+  .chip.active{border-color:#3aa0ff;background:rgba(116,178,255,.12);color:#dbeafe}
   .act{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-  .btn{appearance:none;border:1px solid rgba(255,255,255,.14);background:#0b1529;border-radius:10px;padding:10px 12px;cursor:pointer;font-weight:600;color:#e6edf6;transition:all .15s ease} 
-  .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#001b3a;border-color:transparent;box-shadow:0 8px 18px rgba(34,211,238,.25)} 
+  .btn{appearance:none;border:1px solid rgba(255,255,255,.14);background:#0b1529;border-radius:10px;padding:10px 12px;cursor:pointer;font-weight:600;color:#e6edf6;transition:all .15s ease}
+  .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#001b3a;border-color:transparent;box-shadow:0 8px 18px rgba(34,211,238,.25)}
   .btn.ghost{background:#0b1529}
+
   /* Output */
   .badges{display:flex;flex-wrap:wrap;gap:8px}
   .badge{border:1px solid rgba(255,255,255,.14);background:#0b1529;border-radius:999px;padding:6px 10px;font-size:.85rem;color:#a5b4fc}
   .sect{margin:10px 0 0}
   .sect h3{margin:10px 0 6px 0;font-size:1.02rem}
   .sect ul{margin:0 0 8px 16px;}
-  .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--line);font-size:.78rem;background:#f8fafc;margin-left:6px}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.14);font-size:.78rem;background:#0b1529;margin-left:6px}
+
   .stepper{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
   .step{position:relative;border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:12px 14px;background:#0b1529;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 4px 10px rgba(2,6,23,.25);min-height:104px}
-.step .num{position:absolute;top:10px;left:10px;width:26px;height:26px;border-radius:999px;background:linear-gradient(135deg,var(--abi-orange),#ff9f40);color:#0b1220;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;box-shadow:0 2px 6px rgba(255,159,64,.35)}
-.step .txt{padding-left:40px;color:#d1d5db;line-height:1.35}
-.step .txt b{color:#ffd7b3}
-  .step b{color:var(--abi-orange)}
-  footer{padding:22px 0;color:#93c5fd;background:transparent;text-align:center;border-top:1px solid var(--border)} 
-  /* Responsive */
+  .step .num{position:absolute;top:10px;left:10px;width:26px;height:26px;border-radius:999px;background:linear-gradient(135deg,#ff6a00,#ff9f40);color:#0b1220;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;box-shadow:0 2px 6px rgba(255,159,64,.35)}
+  .step .txt{padding-left:40px;color:#d1d5db;line-height:1.35}
+  .step .txt b{color:#ffd7b3}
+
+  /* Tooltips for data sensitivity */
+  .chk label[data-tip]{position:relative}
+  .chk label[data-tip]::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:min(320px,80vw);background:#0b1529;border:1px solid rgba(255,255,255,.14);color:#e6edf6;padding:8px 10px;border-radius:10px;box-shadow:0 6px 16px rgba(2,6,23,.45);opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .15s ease, transform .15s ease;z-index:50;line-height:1.35}
+  .chk label[data-tip]::before{content:"";position:absolute;left:12px;bottom:100%;border:6px solid transparent;border-top-color:rgba(255,255,255,.14);transform:translateY(2px)}
+  .chk label[data-tip]:hover::after{opacity:1;transform:translateY(0)}
+
+  footer{padding:22px 0;color:#93c5fd;background:transparent;text-align:center;border-top:1px solid var(--border)}
   @media(max-width:980px){.grid{grid-template-columns:1fr}.row,.row3{grid-template-columns:1fr}.stepper{grid-template-columns:1fr}}
-.chk label[data-tip]{position:relative}
-.chk label[data-tip]::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:min(320px,80vw);background:#0b1529;border:1px solid rgba(255,255,255,.14);color:#e6edf6;padding:8px 10px;border-radius:10px;box-shadow:0 6px 16px rgba(2,6,23,.45);opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .15s ease, transform .15s ease;z-index:50;line-height:1.35}
-.chk label[data-tip]::before{content:"";position:absolute;left:12px;bottom:100%;border:6px solid transparent;border-top-color:rgba(255,255,255,.14);transform:translateY(2px)}
-.chk label[data-tip]:hover::after{opacity:1;transform:translateY(0)}
-.hero-band{padding:56px 0 28px;background:linear-gradient(180deg, rgba(255,255,255,.02) 0%, rgba(255,255,255,.0) 100%);border-bottom:1px solid var(--border)}
-.hero-eyebrow{letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);font-weight:700;font-size:.78rem;opacity:.95}
-.hero-title{margin:.35rem 0 4px 0;font-size:2.8rem;line-height:1.1;color:#ffffff;font-weight:800}
-.hero-title .accent{color:var(--accent2)}
-.hero-sub{color:var(--muted);max-width:980px}
-@media (max-width:900px){.hero-title{font-size:2.2rem}}
 </style>
 </head>
 <body>
@@ -79,13 +82,14 @@
     </nav>
   </div>
 </header>
+
 <section class="hero-band">
   <div class="container">
     <div class="hero-eyebrow">GOV CONTRACTS • SMB • SECURITY ASSURANCE</div>
     <h1 class="hero-title">Gov compliance, <span class="accent">made simple.</span></h1>
-    <p class="hero-sub">A quick way to understand which rules apply to your deal—FAR 52.204‑21 for FCI, DFARS 252.204‑7012/‑7019/‑7020/‑7021 and CMMC 2.0 for CUI, plus FedRAMP expectations when cloud is in scope. Answer a few prompts and get a clear action plan.</p>
+    <p class="hero-sub">Understand what applies: FAR 52.204-21 for FCI; DFARS 252.204-7012/-7019/-7020/-7021 and CMMC 2.0 for CUI; FedRAMP when cloud is in scope; RMF/800-53 when operating systems for agencies.</p>
   </div>
-</section> 
+</section>
 
 <main class="container">
   <div class="grid">
@@ -93,6 +97,17 @@
     <section class="card" id="inputs">
       <div class="hd">Tell us about the engagement</div>
       <div class="bd">
+
+        <!-- TOP-LEVEL SCOPE (decision tree) -->
+        <div class="lbl">What best describes your engagement? (pick one or more)</div>
+        <div class="chips" id="scope">
+          <label class="chip" data-key="scope_software"><input type="checkbox"> Sell software / SaaS to the Government</label>
+          <label class="chip" data-key="scope_operate"><input type="checkbox"> Operate/host a system on behalf of an agency (ATO)</label>
+          <label class="chip" data-key="scope_services"><input type="checkbox"> Services / consulting only</label>
+        </div>
+        <div class="help">These choices reveal the rest of the questions that matter for your case.</div>
+        <hr style="border:0;border-top:1px solid rgba(255,255,255,.08);margin:12px 0"/>
+
         <div class="row3">
           <div>
             <div class="lbl">Agency / Customer</div>
@@ -116,11 +131,11 @@
           <div>
             <div class="lbl">Data sensitivity</div>
             <div class="chk" id="data">
-              <label data-tip="Federal Contract Information not intended for public release; provided by or generated for the Government under a contract. Triggers FAR 52.204-21 (15 basic safeguards) and maps to CMMC Level 1."><input type="checkbox" value="FCI" checked/> FCI</label>
-              <label data-tip="Controlled Unclassified Information per EO 13556/NARA CUI Registry. Requires implementation of NIST SP 800-171 (110 controls), DFARS 252.204-7012/7019/7020/7021, and corresponds to CMMC Level 2."><input type="checkbox" value="CUI"/> CUI</label>
-              <label data-tip="International Traffic in Arms Regulations (ITAR): defense articles/technical data; U.S. Person access only; export/licensing restrictions and strict cloud/hosting constraints."><input type="checkbox" value="ITAR"/> ITAR</label>
-              <label data-tip="Export Administration Regulations (EAR): dual‑use items/technology; deemed export rules may apply to non‑U.S. persons and foreign hosting/support."><input type="checkbox" value="EAR"/> EAR</label>
-              <label data-tip="Sectoral data sets that add obligations beyond FAR/DFARS: PHI (HIPAA), PII (privacy), and PCI DSS for payment card data."><input type="checkbox" value="PHI"/> PHI/PII/PCI</label>
+              <label data-tip="Federal Contract Information; triggers FAR 52.204-21 (15 controls) and maps to CMMC L1."><input type="checkbox" value="FCI" checked/> FCI</label>
+              <label data-tip="Controlled Unclassified Information; requires NIST SP 800-171 (110), DFARS -7012/-7019/-7020/-7021, maps to CMMC L2."><input type="checkbox" value="CUI"/> CUI</label>
+              <label data-tip="ITAR technical data; U.S. Person only; export/licensing constraints."><input type="checkbox" value="ITAR"/> ITAR</label>
+              <label data-tip="EAR dual-use items/technology; deemed export rules."><input type="checkbox" value="EAR"/> EAR</label>
+              <label data-tip="Sectoral overlays: HIPAA (PHI), PII/privacy, PCI DSS."><input type="checkbox" value="PHI"/> PHI/PII/PCI</label>
             </div>
           </div>
         </div>
@@ -130,7 +145,7 @@
             <div class="lbl">Hosting / Processing</div>
             <div class="chk" id="hosting">
               <label><input type="checkbox" value="Cloud"/> Cloud (CSP)</label>
-              <label><input type="checkbox" value="OnPrem"/> On‑prem / Private enclave</label>
+              <label><input type="checkbox" value="OnPrem"/> On-prem / Private enclave</label>
               <label><input type="checkbox" value="External"/> Outside US / Foreign affiliate</label>
             </div>
           </div>
@@ -138,15 +153,57 @@
             <div class="lbl">Program criticality</div>
             <select id="criticality">
               <option value="Std" selected>Standard</option>
-              <option value="Prioritized">Prioritized / High‑criticality</option>
+              <option value="Prioritized">Prioritized / High-criticality</option>
             </select>
-            <div class="help">Used to decide C3PAO vs self‑assessment under CMMC L2.</div>
+            <div class="help">Used to decide C3PAO vs self-assessment under CMMC L2.</div>
+          </div>
+        </div>
+
+        <!-- Shown when any Cloud is selected -->
+        <div id="authPathWrap" style="display:none;margin-top:10px">
+          <div class="lbl">Cloud authorization path (if Cloud)</div>
+          <div class="chk" id="authpath">
+            <label><input type="checkbox" value="FedRAMP"/> FedRAMP Moderate</label>
+            <label><input type="checkbox" value="StateRAMP"/> StateRAMP</label>
+            <label><input type="checkbox" value="DoDIL4"/> DoD Cloud SRG IL4/IL5</label>
+          </div>
+        </div>
+
+        <!-- Shown when scope = software -->
+        <div id="softwareWrap" style="display:none;margin-top:10px">
+          <div class="lbl">Software supplier requirements</div>
+          <div class="help">Covers NIST SSDF (SP 800-218), SBOM, provenance, signed releases.</div>
+        </div>
+
+        <!-- Shown when scope = operate/ATO -->
+        <div id="rmfWrap" style="display:none;margin-top:10px">
+          <div class="lbl">RMF / ATO context</div>
+          <div class="help">Expect NIST RMF (SP 800-37) and a NIST SP 800-53 baseline (usually Moderate), plus continuous monitoring.</div>
+        </div>
+
+        <!-- Special regimes -->
+        <div style="margin-top:10px">
+          <div class="lbl">Special data regimes</div>
+          <div class="chk" id="specials">
+            <label><input type="checkbox" value="CJIS"/> CJIS</label>
+            <label><input type="checkbox" value="IRS1075"/> IRS 1075 (FTI)</label>
+            <label><input type="checkbox" value="FERPA"/> FERPA</label>
+            <label><input type="checkbox" value="HIPAA"/> HIPAA/HITECH</label>
+            <label><input type="checkbox" value="PCI"/> PCI DSS</label>
+          </div>
+        </div>
+
+        <!-- C-SCRM depth -->
+        <div style="margin-top:10px">
+          <div class="lbl">Supply-chain depth</div>
+          <div class="chk" id="cscrm">
+            <label><input type="checkbox" value="Intense"/> We integrate many third-party components/subs</label>
           </div>
         </div>
 
         <div class="row" style="margin-top:6px">
           <div>
-            <div class="lbl">Third‑party involvement</div>
+            <div class="lbl">Third-party involvement</div>
             <div class="chk" id="subs">
               <label><input type="checkbox" value="Subs"/> Subcontractors</label>
               <label><input type="checkbox" value="SaaS"/> SaaS / external processors</label>
@@ -178,7 +235,7 @@
           <ul id="mustList"></ul>
         </div>
         <div class="sect" id="likely" style="display:none">
-          <h3>Likely / Contract‑specific <span class="pill">Confirm with KO</span></h3>
+          <h3>Likely / Contract-specific <span class="pill">Confirm with KO</span></h3>
           <ul id="likelyList"></ul>
         </div>
         <div class="sect" id="recommended" style="display:none">
@@ -188,142 +245,226 @@
 
         <div class="sect">
           <h3>Execution plan</h3>
-          <div class="stepper" id="plan">
-            <!-- steps injected -->
-          </div>
+          <div class="stepper" id="plan"></div>
         </div>
       </div>
     </section>
   </div>
 
-  <!-- Optional: quick explainer -->
   <section class="card">
     <div class="hd">What this covers</div>
     <div class="bd">
       <ul>
-        <li><b>FAR 52.204‑21</b> (FCI basic safeguarding) and mapping to <b>CMMC 2.0 Level 1</b>.</li>
-        <li><b>DFARS 252.204‑7012/‑7019/‑7020/‑7021</b> (for CUI) and alignment to <b>CMMC Level 2</b>; <b>Level 3</b> noted for select programs.</li>
-        <li><b>FedRAMP Moderate</b> expectation when <b>CUI</b> is stored/processed by a cloud service provider.</li>
-        <li><b>ITAR/EAR</b> data handling constraints (U.S. Person, export controls, cloud restrictions).</li>
-        <li><b>DHS</b> overlays (DHS 4300A/B), <b>FISMA/NIST RMF</b> for systems operated on behalf of an agency.</li>
-        <li>Third‑party/flow‑down obligations and continuous monitoring basics.</li>
+        <li><b>FAR 52.204-21</b> (FCI basic safeguarding) → <b>CMMC L1</b>.</li>
+        <li><b>DFARS 252.204-7012/-7019/-7020/-7021</b> for CUI → <b>CMMC L2</b>; L3 noted for select DoD programs.</li>
+        <li><b>FedRAMP Moderate</b> (or accepted equivalent) when CUI is in a CSP; options for <b>StateRAMP</b> and <b>DoD SRG IL4/IL5</b>.</li>
+        <li><b>FISMA/RMF (800-37) + 800-53</b> baselines when operating systems on behalf of an agency (ATO path).</li>
+        <li><b>NIST SSDF (800-218), SBOM, provenance</b> for software suppliers.</li>
+        <li><b>NIST 800-161 r1</b> C-SCRM and flow-downs; overlays such as <b>CJIS, IRS 1075, FERPA, HIPAA, PCI</b>.</li>
       </ul>
     </div>
   </section>
-  <!-- Accuracy & review note -->
+
   <section class="card" style="margin-top:18px;">
     <div class="hd">Accuracy & review</div>
     <div class="bd">
       <ul>
-        <li>This navigator reflects widely published requirements: <b>FAR 52.204‑21</b>, <b>DFARS 252.204‑7012/‑7019/‑7020/‑7021</b>, <b>CMMC 2.0</b> guidance tied to <b>NIST SP 800‑171</b>, and <b>FedRAMP Moderate</b> expectations for CUI in cloud.</li>
-        <li>Contracts control: solicitations, KO direction, and agency overlays (e.g., <b>DHS 4300A/B</b>, <b>FISMA/RMF</b>) may tighten or relax obligations.</li>
-        <li><b>Last reviewed:</b> 2025‑11‑03. Regulations evolve; re‑validate for each award/option year.</li>
+        <li>Built on widely published requirements (FAR 52.204-21; DFARS 252.204-7012/-7019/-7020/-7021; CMMC 2.0 ↔ NIST 800-171; FedRAMP Moderate; FISMA/RMF + 800-53 for ATOs).</li>
+        <li>Contracts control: solicitation/KO + agency overlays (DHS 4300A/B, CJIS, IRS 1075, etc.).</li>
+        <li><b>Last reviewed:</b> 2025-11-03. Re-validate per award/option year.</li>
       </ul>
-      <div class="help">Need an authoritative read‑through? ABI can review your clauses, confirm scope (FCI vs CUI), and produce an SSP/POA&amp;M and flow‑down package.</div>
+      <div class="help">Need an authoritative read-through? ABI can review clauses, confirm scope (FCI vs CUI), and build your SSP/POA&M and flow-down package.</div>
     </div>
   </section>
 </main>
 
 <footer>
-  <div class="container">© ABI Consulting — This navigator summarizes widely published requirements; your contract controls. Contact us for an authoritative review.</div>
+  <div class="container">© ABI Consulting — Summary tool; your contract controls. Contact us for an authoritative review.</div>
 </footer>
 
 <script>
 (function(){
   const $ = (s)=>document.querySelector(s);
   const $$ = (s)=>Array.from(document.querySelectorAll(s));
+
+  // Toggle chips
+  $$('#scope .chip').forEach(ch=>{
+    ch.addEventListener('click', e=>{
+      ch.classList.toggle('active');
+      ch.querySelector('input').checked = ch.classList.contains('active');
+      showHide();
+    });
+  });
+
+  // Show/hide dependent sections
+  function showHide(){
+    const cloud = $$('#hosting input:checked').map(i=>i.value).includes('Cloud');
+    const scope = getScope();
+    $('#authPathWrap').style.display = cloud ? '' : 'none';
+    $('#softwareWrap').style.display = scope.software ? '' : 'none';
+    $('#rmfWrap').style.display = scope.operate ? '' : 'none';
+  }
+  $$('#hosting input').forEach(i=>i.addEventListener('change', showHide));
+
+  function getScope(){
+    return {
+      software: $('#scope .chip[data-key="scope_software"] input').checked,
+      operate:  $('#scope .chip[data-key="scope_operate"] input').checked,
+      services: $('#scope .chip[data-key="scope_services"] input').checked
+    };
+  }
+
   const tagsEl = $('#tags');
   const must = $('#must'), mustList = $('#mustList');
   const likely = $('#likely'), likelyList = $('#likelyList');
   const rec = $('#recommended'), recList = $('#recList');
   const plan = $('#plan');
 
-  function pill(t){ const span=document.createElement('span'); span.className='badge'; span.textContent=t; tagsEl.appendChild(span);}  
-  function add(liEl, txt){ const li=document.createElement('li'); li.innerHTML=txt; liEl.appendChild(li);}  
+  function pill(t){ const span=document.createElement('span'); span.className='badge'; span.textContent=t; tagsEl.appendChild(span);}
+  function add(liEl, txt){ const li=document.createElement('li'); li.innerHTML=txt; liEl.appendChild(li);}
   function clearAll(){ tagsEl.innerHTML=''; mustList.innerHTML=''; likelyList.innerHTML=''; recList.innerHTML=''; plan.innerHTML=''; [must,likely,rec].forEach(e=>e.style.display='none'); }
 
   function evaluate(){
     clearAll();
-    const agency = $('#agency').value; 
+    const agency = $('#agency').value;
     const role = $('#role').value;
     const data = $$('#data input:checked').map(i=>i.value);
     const hosting = $$('#hosting input:checked').map(i=>i.value);
     const criticality = $('#criticality').value;
     const subs = $$('#subs input:checked').length>0;
-
-    // tags
-    pill(agency); pill(role);
-    data.forEach(d=>pill(d)); hosting.forEach(h=>pill(h)); if(criticality==='Prioritized') pill('Prioritized'); if(subs) pill('Flow‑down');
-
-    const needs = { must:[], likely:[], rec:[], steps:[] };
-
-    const has = (v)=>data.includes(v);
     const cloud = hosting.includes('Cloud');
 
-    // Core logic
+    const authpath = $$('#authpath input:checked').map(i=>i.value);
+    const specials = $$('#specials input:checked').map(i=>i.value);
+    const cscrm = $$('#cscrm input:checked').length>0;
+    const scope = getScope();
+
+    // tags
+    [agency, role].forEach(pill);
+    data.forEach(pill); hosting.forEach(pill);
+    if(criticality==='Prioritized') pill('Prioritized');
+    if(subs) pill('Flow-down');
+    if(scope.software) pill('Software supplier');
+    if(scope.operate) pill('Operate/ATO');
+    if(scope.services) pill('Services');
+    authpath.forEach(pill);
+    specials.forEach(pill);
+
+    const needs = { must:[], likely:[], rec:[], steps:[] };
+    const has = (v)=>data.includes(v);
+
+    /* Core */
     if(has('FCI') && !has('CUI')){
-      needs.must.push('Implement <b>FAR 52.204‑21</b> (15 controls) — maps to <b>CMMC 2.0 Level 1</b> (annual self‑assessment).');
+      needs.must.push('Implement <b>FAR 52.204-21</b> (15 controls) — maps to <b>CMMC L1</b> (annual self-assessment).');
     }
     if(has('CUI')){
-      needs.must.push('Include <b>DFARS 252.204‑7012</b> (NIST SP 800‑171 + 72‑hr incident reporting).');
-      needs.must.push('Maintain <b>SPRS score</b> per <b>DFARS 252.204‑7019/‑7020</b> with objective evidence.');
-      needs.must.push('Meet <b>CMMC 2.0 Level 2</b> (110 controls from NIST SP 800‑171).');
+      needs.must.push('Include <b>DFARS 252.204-7012</b> (NIST SP 800-171 + 72-hr reporting).');
+      needs.must.push('Maintain <b>SPRS score</b> per <b>DFARS 252.204-7019/-7020</b> with objective evidence.');
+      needs.must.push('Meet <b>CMMC 2.0 L2</b> (110 controls from NIST SP 800-171).');
       if(criticality==='Prioritized') needs.must.push('Plan for <b>C3PAO assessment</b> (prioritized program).');
-      else needs.likely.push('Expect <b>self‑assessment</b> for CMMC L2 unless solicitation mandates C3PAO.');
-      if(cloud) needs.must.push('Require <b>FedRAMP Moderate</b> (or equivalent) for any CSP storing/processing CUI.');
+      else needs.likely.push('Expect <b>self-assessment</b> for CMMC L2 unless solicitation mandates C3PAO.');
+      if(cloud) needs.must.push('Require <b>FedRAMP Moderate</b> (or accepted equivalent) for any CSP storing/processing CUI.');
     }
     if(agency==='DoD'){
-      // CMMC Level 3 mention
-      needs.likely.push('<b>CMMC 2.0 Level 3</b> may apply to selected high‑criticality programs (subset of NIST SP 800‑172; Gov assessment).');
+      needs.likely.push('<b>CMMC L3</b> may apply to select high-criticality programs (subset of NIST SP 800-172; Gov assessment).');
     }
     if(agency==='DHS'){
-      needs.must.push('Align with <b>DHS 4300A/B</b> and <b>FISMA/NIST RMF</b> when operating systems on behalf of DHS.');
+      needs.must.push('Align with <b>DHS 4300A/B</b> and <b>FISMA/RMF</b> when operating systems on behalf of DHS.');
     }
     if(agency==='Civilian'){
-      needs.likely.push('<b>FISMA/NIST RMF (800‑37/53)</b> may apply if you operate an information system <i>on behalf of</i> the agency (Agency ATO).');
-      needs.rec.push('For commercial services to civilian agencies, consider <b>SOC 2</b> and/or <b>ISO/IEC 27001</b> for assurance.');
+      needs.likely.push('<b>FISMA/RMF (800-37/53)</b> if you operate a system <i>on behalf of</i> the agency (ATO).');
+      needs.rec.push('For commercial services, consider <b>SOC 2</b> and/or <b>ISO/IEC 27001</b> for assurance.');
     }
+
+    /* Export controls */
     if(has('ITAR') || has('EAR')){
-      needs.must.push('Implement <b>export control</b> constraints (ITAR/EAR): U.S. Person access, controlled storage/processing, and <b>no unauthorized foreign access</b>.');
-      if(cloud) needs.likely.push('Verify CSP <b>export‑control posture</b> and data residency; use <b>GovCloud/sovereign</b> where required.');
+      needs.must.push('Apply <b>export controls</b> (ITAR/EAR): U.S. Person access, controlled storage/processing, and no unauthorized foreign access.');
+      if(cloud) needs.likely.push('Verify CSP <b>export-control posture</b> and residency; use <b>GovCloud/sovereign</b> where required.');
     }
+
+    /* Flow-down / vendor */
     if(subs){
-      needs.must.push('<b>Flow‑down</b> applicable FAR/DFARS clauses to subs; collect <b>SPRS scores</b> and <b>800‑171 evidence</b> where CUI flows.');
-      needs.likely.push('Set right‑to‑audit, 72‑hr incident notification, log retention, and data return/disposal terms.');
-    }
-    if(has('PHI')){
-      needs.likely.push('If healthcare data is in scope, include <b>HIPAA/HITECH</b> BAAs and safeguard requirements.');
+      needs.must.push('<b>Flow-down</b> applicable FAR/DFARS clauses to subs; collect <b>SPRS scores</b> and <b>800-171 evidence</b> where CUI flows.');
+      needs.likely.push('Set right-to-audit, 72-hr incident notification, log retention, and data return/disposal terms.');
     }
 
-    // Recommended hygiene
-    needs.rec.push('Map policies → procedures → tickets/artifacts by control; maintain an <b>evidence register</b> (audit‑ready).');
-    needs.rec.push('Establish a <b>CUI enclave</b> to limit assessment scope; enforce <b>MFA, logging, EDR, vulnerability SLAs</b>.');
+    /* Special regimes */
+    if(specials.includes('CJIS')) needs.must.push('Comply with the <b>CJIS Security Policy</b> (criminal justice information); execute CJIS addenda.');
+    if(specials.includes('IRS1075')) needs.must.push('Meet <b>IRS Pub 1075</b> for Federal Tax Information (FTI).');
+    if(specials.includes('FERPA')) needs.must.push('Ensure controls supporting <b>FERPA</b> for education records.');
+    if(specials.includes('HIPAA')) needs.must.push('If PHI is in scope, execute <b>HIPAA/HITECH</b> BAAs and safeguards.');
+    if(specials.includes('PCI')) needs.must.push('If cardholder data present, meet <b>PCI DSS</b> obligations (SAQ/ROC as applicable).');
 
-    // Steps
-    needs.steps = [
-      '<b>Classify data</b> (FCI vs CUI; ITAR/EAR) and document system boundaries.',
-      'Perform <b>NIST SP 800‑171 gap assessment</b>; compute your <b>SPRS score</b> and draft <b>SSP</b>/<b>POA&M</b>.',
-      (cloud && has('CUI') ? 'Confirm <b>FedRAMP Moderate</b> authorization (or accepted equivalent) for any CSP in scope.' : 'Confirm hosting boundary; ensure logs are centralized and retained.'),
-      (criticality==='Prioritized' && has('CUI') ? 'Schedule a <b>C3PAO readiness review</b> for CMMC L2.' : 'Prepare for L2 <b>self‑assessment</b> with signed affirmation.'),
-      (subs ? 'Execute <b>flow‑downs</b>; collect vendor <b>SPRS scores</b> and evidence; set incident reporting terms.' : 'Validate supply chain posture even if no subs (SaaS included).'),
-      'Run a <b>table‑top incident drill</b>; verify 72‑hour reporting workflow and points of contact.',
-      'Assemble an <b>evidence binder</b> (tickets, screenshots, configs) mapped to each 800‑171 control.'
-    ];
+    /* Cloud auth path refinements */
+    if(cloud){
+      if(authpath.includes('StateRAMP')) needs.likely.push('Pursue <b>StateRAMP</b> authorization for state/local workloads.');
+      if(authpath.includes('DoDIL4')) needs.likely.push('Confirm <b>DoD Cloud SRG IL4/IL5</b> enclave and sponsorship.');
+    }
+
+    /* RMF / ATO path */
+    if(getScope().operate){
+      needs.must.push('Follow <b>NIST RMF (SP 800-37)</b>; tailor a <b>NIST SP 800-53</b> baseline (usually Moderate), and prepare <b>ATO</b> package (SSP, SAR, POA&M).');
+      needs.rec.push('Stand up <b>continuous monitoring</b>: vuln mgmt, logging, configuration scanning, POA&M tracking.');
+    }
+
+    /* Software supplier path */
+    if(getScope().software){
+      needs.must.push('Implement <b>NIST SSDF (SP 800-218)</b> practices and provide a <b>supplier attestation</b>.');
+      needs.must.push('Generate and exchange <b>SBOM</b>; establish release <b>provenance/signing</b>.');
+    }
+
+    /* C-SCRM */
+    if(cscrm){
+      needs.must.push('Adopt <b>NIST SP 800-161 r1</b> C-SCRM: vendor tiering, SBOM exchange, KEV/patch SLAs in contracts.');
+    }
+
+    /* General hygiene */
+    needs.rec.push('Maintain an <b>evidence register</b> (tickets, screenshots, configs) mapped to controls.');
+    needs.rec.push('Use a <b>CUI enclave</b> to limit assessment scope; enforce MFA, logging, EDR, patch SLAs.');
+
+    /* Steps */
+    const steps = [];
+    steps.push('<b>Classify data</b> (FCI vs CUI; ITAR/EAR) and document system boundaries.');
+    steps.push('Perform <b>NIST SP 800-171 gap assessment</b>; compute <b>SPRS score</b>; draft <b>SSP/POA&M</b>.');
+    if(cloud && has('CUI')) steps.push('Confirm <b>FedRAMP Moderate</b> (or equivalent) for CSPs; consider StateRAMP / DoD SRG as needed.');
+    steps.push(criticality==='Prioritized' && has('CUI') ? 'Schedule a <b>C3PAO readiness review</b> for CMMC L2.' : 'Prepare for L2 <b>self-assessment</b> with signed affirmation.');
+    if(subs) steps.push('Execute <b>flow-downs</b>; collect vendor <b>SPRS scores</b> and evidence; set incident terms.');
+    steps.push('Run a <b>table-top incident drill</b>; verify 72-hour reporting workflow and POCs.');
+    steps.push('Assemble an <b>evidence binder</b> mapped to each 800-171 control.');
+
+    if(getScope().operate){
+      steps.unshift('Plan <b>RMF Steps 1–2</b> (categorize, select); tailor <b>800-53 Moderate</b> baseline.');
+      steps.push('Complete <b>ATO package</b> (SSP, SAR, POA&M) and launch <b>continuous monitoring</b>.');
+    }
+    if(getScope().software){
+      steps.unshift('Adopt <b>SSDF controls</b> in your SDLC; define security gates & artifact capture.');
+      steps.push('Publish <b>SBOM</b> and <b>signed releases</b>; provide <b>supplier attestation</b>.');
+    }
+    if(cscrm){
+      steps.push('Implement <b>C-SCRM</b>: vendor tiering, SBOM exchange, KEV/patch SLAs.');
+    }
 
     // Render
     if(needs.must.length){ must.style.display=''; needs.must.forEach(x=>add(mustList,x)); }
     if(needs.likely.length){ likely.style.display=''; needs.likely.forEach(x=>add(likelyList,x)); }
     if(needs.rec.length){ rec.style.display=''; needs.rec.forEach(x=>add(recList,x)); }
+    steps.forEach((s,i)=>{ const d=document.createElement('div'); d.className='step'; d.innerHTML=`<div class="num">${i+1}</div><div class="txt">${s}</div>`; plan.appendChild(d); });
 
-    needs.steps.forEach((s,i)=>{ const d=document.createElement('div'); d.className='step'; d.innerHTML=`<div class="num">${i+1}</div><div class="txt">${s}</div>`; plan.appendChild(d); });
-
-    return needs; // for copy/export
+    return {needs, steps};
   }
 
   $('#run').addEventListener('click', evaluate);
-  $('#clear').addEventListener('click', ()=>{$$('input[type="checkbox"]').forEach(i=>i.checked=false); $('#agency').value='DoD'; $('#role').value='Prime'; $('#criticality').value='Std'; $('#notes').value=''; clearAll();});
+  $('#clear').addEventListener('click', ()=>{
+    $$('input[type="checkbox"]').forEach(i=>i.checked=false);
+    $$('#scope .chip').forEach(ch=>ch.classList.remove('active'));
+    $('#agency').value='DoD'; $('#role').value='Prime'; $('#criticality').value='Std'; $('#notes').value='';
+    clearAll(); showHide();
+  });
   $('#print').addEventListener('click', ()=>window.print());
-  $('#copy').addEventListener('click', ()=>{ const needs=evaluate(); const text = document.querySelector('#output').innerText.trim(); navigator.clipboard.writeText(text); alert('Summary copied to clipboard.'); });
+  $('#copy').addEventListener('click', ()=>{ const text = document.querySelector('#output').innerText.trim(); navigator.clipboard.writeText(text); alert('Summary copied to clipboard.'); });
+
+  // init
+  showHide();
 })();
 </script>
 </body>
