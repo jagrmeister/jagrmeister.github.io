@@ -48,14 +48,18 @@
     border-radius:10px;background:#0b1529;color:#e6edf6;font-size:.95rem
   }
   .chips,.chk{display:flex;gap:10px;flex-wrap:wrap}
-  .chip,.chk label{
-    display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.12);
-    padding:8px 12px;border-radius:10px;cursor:pointer;background:#0b1529;color:#dbeafe;user-select:none
+
+  /* Chip buttons */
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1px solid rgba(255,255,255,.12);
+    padding:8px 12px;border-radius:10px;cursor:pointer;
+    background:#0b1529;color:#dbeafe;user-select:none;
+    font:600 .95rem/1 Inter; letter-spacing:.01em;
   }
-  .chip input{display:none}
-  .chip.active,
   .chip[aria-pressed="true"]{
-    border-color:#3aa0ff;background:rgba(116,178,255,.12);color:#dbeafe
+    border-color:#3aa0ff;background:rgba(116,178,255,.12);color:#dbeafe;
+    box-shadow:0 0 0 2px rgba(116,178,255,.08) inset;
   }
   .chip:focus-visible{outline:2px solid #74B2FF;outline-offset:2px}
 
@@ -135,9 +139,9 @@
         <!-- TOP-LEVEL SCOPE (decision tree) -->
         <div class="lbl">What best describes your engagement? (pick one or more)</div>
         <div class="chips" id="scope">
-          <label class="chip" data-key="scope_software" aria-pressed="false"><input type="checkbox"> Sell software / SaaS to the Government</label>
-          <label class="chip" data-key="scope_operate" aria-pressed="false"><input type="checkbox"> Operate/host a system on behalf of an agency (ATO)</label>
-          <label class="chip" data-key="scope_services" aria-pressed="false"><input type="checkbox"> Services / consulting only</label>
+          <button type="button" class="chip" data-key="scope_software" aria-pressed="false">Sell software / SaaS to the Government</button>
+          <button type="button" class="chip" data-key="scope_operate" aria-pressed="false">Operate/host a system on behalf of an agency (ATO)</button>
+          <button type="button" class="chip" data-key="scope_services" aria-pressed="false">Services / consulting only</button>
         </div>
         <div class="help">These choices reveal the rest of the questions that matter for your case.</div>
         <hr style="border:0;border-top:1px solid rgba(255,255,255,.08);margin:12px 0"/>
@@ -321,15 +325,13 @@
   const $ = (s)=>document.querySelector(s);
   const $$ = (s)=>Array.from(document.querySelectorAll(s));
 
-  /* ---------- Robust chip handling (event delegation) ---------- */
+  /* ---------- Chip buttons (event delegation) ---------- */
   const scopeWrap = document.getElementById('scope');
   scopeWrap.addEventListener('click', (e) => {
     const chip = e.target.closest('.chip');
     if (!chip || !scopeWrap.contains(chip)) return;
-    const isActive = chip.classList.toggle('active');
-    chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-    const input = chip.querySelector('input[type="checkbox"]');
-    if (input) input.checked = isActive;
+    const active = chip.getAttribute('aria-pressed') === 'true' ? 'false' : 'true';
+    chip.setAttribute('aria-pressed', active);
     showHide();
   });
 
@@ -338,9 +340,9 @@
 
   function getScope(){
     return {
-      software: !!document.querySelector('#scope .chip[data-key="scope_software"].active'),
-      operate:  !!document.querySelector('#scope .chip[data-key="scope_operate"].active'),
-      services: !!document.querySelector('#scope .chip[data-key="scope_services"].active')
+      software: !!document.querySelector('#scope .chip[data-key="scope_software"][aria-pressed="true"]'),
+      operate:  !!document.querySelector('#scope .chip[data-key="scope_operate"][aria-pressed="true"]'),
+      services: !!document.querySelector('#scope .chip[data-key="scope_services"][aria-pressed="true"]')
     };
   }
 
@@ -498,10 +500,10 @@
   // Buttons
   document.getElementById('run').addEventListener('click', evaluate);
   document.getElementById('clear').addEventListener('click', ()=>{
-    // reset all checkboxes and chips
-    $$('input[type="checkbox"]').forEach(i=>i.checked=false);
-    $$('#scope .chip').forEach(ch=>{ch.classList.remove('active'); ch.setAttribute('aria-pressed','false');});
-    // resets
+    // reset chip buttons
+    document.querySelectorAll('#scope .chip').forEach(ch=>ch.setAttribute('aria-pressed','false'));
+    // reset checkboxes/selects
+    document.querySelectorAll('input[type="checkbox"]').forEach(i=>i.checked=false);
     document.getElementById('agency').value='DoD';
     document.getElementById('role').value='Prime';
     document.getElementById('criticality').value='Std';
