@@ -6,12 +6,25 @@
 <title>ABI Consulting | Government Contracts Compliance Navigator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;--accent:#2E8CFF;--accent2:#74B2FF;--border:rgba(255,255,255,.08);--radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);--maxw:1200px;}
-  html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  :root{
+    --bg:#0B1E39;--text:#F5F7FB;--muted:#A3B3CC;
+    --accent:#2E8CFF;--accent2:#74B2FF;
+    --border:rgba(255,255,255,.08);
+    --radius:18px;--shadow:0 10px 30px rgba(0,0,0,.35);
+    --maxw:1200px;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
   .container{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px}
+
+  /* NAV */
   header.nav{padding:18px 0;border-bottom:1px solid var(--border)}
+  header.nav .brand{display:flex;align-items:center;gap:12px;font-weight:800}
+  header.nav nav a{margin-right:14px;color:#F5F7FB;opacity:.85;text-decoration:none}
+  header.nav nav a:last-child{margin-right:0}
+
+  /* HERO */
   .hero-band{padding:56px 0 28px;background:linear-gradient(180deg, rgba(255,255,255,.02) 0%, rgba(255,255,255,.0) 100%);border-bottom:1px solid var(--border)}
   .hero-eyebrow{letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);font-weight:700;font-size:.78rem;opacity:.95}
   .hero-title{margin:.35rem 0 4px 0;font-size:2.8rem;line-height:1.1;color:#ffffff;font-weight:800}
@@ -19,8 +32,9 @@
   .hero-sub{color:var(--muted);max-width:980px}
   @media (max-width:900px){.hero-title{font-size:2.2rem}}
 
+  /* LAYOUT */
   .grid{display:grid;grid-template-columns: 1.1fr .9fr;gap:18px;margin:24px 0 28px}
-  .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
   .card .hd{padding:14px 16px;border-bottom:1px solid var(--border);font-weight:700;color:#e2e8f0}
   .card .bd{padding:14px 16px;color:#cbd5e1}
   .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -28,23 +42,34 @@
   .lbl{font-weight:600;font-size:.95rem;margin-bottom:6px}
   .help{color:var(--muted);font-size:.85rem}
 
-  /* Inputs */
-  select, input[type="text"]{width:100%;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#0b1529;color:#e6edf6;font-size:.95rem}
+  /* INPUTS */
+  select, input[type="text"]{
+    width:100%;padding:10px 12px;border:1px solid rgba(255,255,255,.12);
+    border-radius:10px;background:#0b1529;color:#e6edf6;font-size:.95rem
+  }
   .chips,.chk{display:flex;gap:10px;flex-wrap:wrap}
-  .chip,.chk label{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.12);padding:8px 12px;border-radius:10px;cursor:pointer;background:#0b1529;color:#dbeafe}
+  .chip,.chk label{
+    display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.12);
+    padding:8px 12px;border-radius:10px;cursor:pointer;background:#0b1529;color:#dbeafe;user-select:none
+  }
   .chip input{display:none}
-  .chip.active{border-color:#3aa0ff;background:rgba(116,178,255,.12);color:#dbeafe}
+  .chip.active,
+  .chip[aria-pressed="true"]{
+    border-color:#3aa0ff;background:rgba(116,178,255,.12);color:#dbeafe
+  }
+  .chip:focus-visible{outline:2px solid #74B2FF;outline-offset:2px}
+
   .act{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
   .btn{appearance:none;border:1px solid rgba(255,255,255,.14);background:#0b1529;border-radius:10px;padding:10px 12px;cursor:pointer;font-weight:600;color:#e6edf6;transition:all .15s ease}
   .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#001b3a;border-color:transparent;box-shadow:0 8px 18px rgba(34,211,238,.25)}
   .btn.ghost{background:#0b1529}
 
-  /* Output */
+  /* OUTPUT */
   .badges{display:flex;flex-wrap:wrap;gap:8px}
   .badge{border:1px solid rgba(255,255,255,.14);background:#0b1529;border-radius:999px;padding:6px 10px;font-size:.85rem;color:#a5b4fc}
   .sect{margin:10px 0 0}
   .sect h3{margin:10px 0 6px 0;font-size:1.02rem}
-  .sect ul{margin:0 0 8px 16px;}
+  .sect ul{margin:0 0 8px 16px}
   .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.14);font-size:.78rem;background:#0b1529;margin-left:6px}
 
   .stepper{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
@@ -55,30 +80,39 @@
 
   /* Tooltips for data sensitivity */
   .chk label[data-tip]{position:relative}
-  .chk label[data-tip]::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:min(320px,80vw);background:#0b1529;border:1px solid rgba(255,255,255,.14);color:#e6edf6;padding:8px 10px;border-radius:10px;box-shadow:0 6px 16px rgba(2,6,23,.45);opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .15s ease, transform .15s ease;z-index:50;line-height:1.35}
+  .chk label[data-tip]::after{
+    content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:min(320px,80vw);
+    background:#0b1529;border:1px solid rgba(255,255,255,.14);color:#e6edf6;padding:8px 10px;border-radius:10px;
+    box-shadow:0 6px 16px rgba(2,6,23,.45);opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .15s ease, transform .15s ease;z-index:50;line-height:1.35
+  }
   .chk label[data-tip]::before{content:"";position:absolute;left:12px;bottom:100%;border:6px solid transparent;border-top-color:rgba(255,255,255,.14);transform:translateY(2px)}
   .chk label[data-tip]:hover::after{opacity:1;transform:translateY(0)}
 
   footer{padding:22px 0;color:#93c5fd;background:transparent;text-align:center;border-top:1px solid var(--border)}
-  @media(max-width:980px){.grid{grid-template-columns:1fr}.row,.row3{grid-template-columns:1fr}.stepper{grid-template-columns:1fr}}
+
+  @media(max-width:980px){
+    .grid{grid-template-columns:1fr}
+    .row,.row3{grid-template-columns:1fr}
+    .stepper{grid-template-columns:1fr}
+  }
 </style>
 </head>
 <body>
 <header class="nav">
   <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-    <div class="brand" style="display:flex;align-items:center;gap:12px;font-weight:800;">
+    <div class="brand">
       <img class="logo" src="assets/ABI_logo_transparent.png" alt="ABI Consulting logo" style="width:40px;height:40px;object-fit:contain;display:block;background:transparent;box-shadow:none"/>
       <span>Consulting, LLC</span>
     </div>
     <nav>
-      <a href="index.html" style="margin-right:14px;color:#F5F7FB;opacity:.85;text-decoration:none">Home</a>
-      <a href="index.html#about" style="margin-right:14px;color:#F5F7FB;opacity:.85;text-decoration:none">About</a>
-      <a href="index.html#services" style="margin-right:14px;color:#F5F7FB;opacity:.85;text-decoration:none">Services</a>
-      <a href="index.html#faq" style="margin-right:14px;color:#F5F7FB;opacity:.85;text-decoration:none">FAQ</a>
-      <a href="index.html#resources" style="margin-right:14px;color:#F5F7FB;opacity:.85;text-decoration:none">Resources</a>
-      <a href="index.html#partners" style="margin-right:14px;color:#F5F7FB;opacity:.85;text-decoration:none">Trusted Partners</a>
-      <a href="/blog" style="margin-right:14px;color:#F5F7FB;opacity:.85;text-decoration:none">Blog</a>
-      <a href="index.html#contact" style="margin-right:0;color:#F5F7FB;opacity:.85;text-decoration:none">Contact</a>
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="index.html#resources">Resources</a>
+      <a href="index.html#partners">Trusted Partners</a>
+      <a href="/blog">Blog</a>
+      <a href="index.html#contact">Contact</a>
     </nav>
   </div>
 </header>
@@ -87,7 +121,7 @@
   <div class="container">
     <div class="hero-eyebrow">GOV CONTRACTS • SMB • SECURITY ASSURANCE</div>
     <h1 class="hero-title">Gov compliance, <span class="accent">made simple.</span></h1>
-    <p class="hero-sub">Understand what applies: FAR 52.204-21 for FCI; DFARS 252.204-7012/-7019/-7020/-7021 and CMMC 2.0 for CUI; FedRAMP when cloud is in scope; RMF/800-53 when operating systems for agencies.</p>
+    <p class="hero-sub">Understand what applies: FAR 52.204-21 for FCI; DFARS 252.204-7012/-7019/-7020/-7021 and CMMC 2.0 for CUI; FedRAMP when cloud is in scope; and RMF/800-53 when you operate systems for agencies.</p>
   </div>
 </section>
 
@@ -101,9 +135,9 @@
         <!-- TOP-LEVEL SCOPE (decision tree) -->
         <div class="lbl">What best describes your engagement? (pick one or more)</div>
         <div class="chips" id="scope">
-          <label class="chip" data-key="scope_software"><input type="checkbox"> Sell software / SaaS to the Government</label>
-          <label class="chip" data-key="scope_operate"><input type="checkbox"> Operate/host a system on behalf of an agency (ATO)</label>
-          <label class="chip" data-key="scope_services"><input type="checkbox"> Services / consulting only</label>
+          <label class="chip" data-key="scope_software" aria-pressed="false"><input type="checkbox"> Sell software / SaaS to the Government</label>
+          <label class="chip" data-key="scope_operate" aria-pressed="false"><input type="checkbox"> Operate/host a system on behalf of an agency (ATO)</label>
+          <label class="chip" data-key="scope_services" aria-pressed="false"><input type="checkbox"> Services / consulting only</label>
         </div>
         <div class="help">These choices reveal the rest of the questions that matter for your case.</div>
         <hr style="border:0;border-top:1px solid rgba(255,255,255,.08);margin:12px 0"/>
@@ -256,8 +290,8 @@
     <div class="bd">
       <ul>
         <li><b>FAR 52.204-21</b> (FCI basic safeguarding) → <b>CMMC L1</b>.</li>
-        <li><b>DFARS 252.204-7012/-7019/-7020/-7021</b> for CUI → <b>CMMC L2</b>; L3 noted for select DoD programs.</li>
-        <li><b>FedRAMP Moderate</b> (or accepted equivalent) when CUI is in a CSP; options for <b>StateRAMP</b> and <b>DoD SRG IL4/IL5</b>.</li>
+        <li><b>DFARS 252.204-7012/-7019/-7020/-7021</b> for CUI → <b>CMMC L2</b>; L3 for select DoD programs.</li>
+        <li><b>FedRAMP Moderate</b> when CUI is in a CSP; options for <b>StateRAMP</b> and <b>DoD SRG IL4/IL5</b>.</li>
         <li><b>FISMA/RMF (800-37) + 800-53</b> baselines when operating systems on behalf of an agency (ATO path).</li>
         <li><b>NIST SSDF (800-218), SBOM, provenance</b> for software suppliers.</li>
         <li><b>NIST 800-161 r1</b> C-SCRM and flow-downs; overlays such as <b>CJIS, IRS 1075, FERPA, HIPAA, PCI</b>.</li>
@@ -287,33 +321,38 @@
   const $ = (s)=>document.querySelector(s);
   const $$ = (s)=>Array.from(document.querySelectorAll(s));
 
-  // Toggle chips
-  $$('#scope .chip').forEach(ch=>{
-    ch.addEventListener('click', e=>{
-      ch.classList.toggle('active');
-      ch.querySelector('input').checked = ch.classList.contains('active');
-      showHide();
-    });
+  /* ---------- Robust chip handling (event delegation) ---------- */
+  const scopeWrap = document.getElementById('scope');
+  scopeWrap.addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if (!chip || !scopeWrap.contains(chip)) return;
+    const isActive = chip.classList.toggle('active');
+    chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    const input = chip.querySelector('input[type="checkbox"]');
+    if (input) input.checked = isActive;
+    showHide();
   });
 
-  // Show/hide dependent sections
-  function showHide(){
-    const cloud = $$('#hosting input:checked').map(i=>i.value).includes('Cloud');
-    const scope = getScope();
-    $('#authPathWrap').style.display = cloud ? '' : 'none';
-    $('#softwareWrap').style.display = scope.software ? '' : 'none';
-    $('#rmfWrap').style.display = scope.operate ? '' : 'none';
-  }
-  $$('#hosting input').forEach(i=>i.addEventListener('change', showHide));
+  /* Cloud host toggles control FedRAMP/StateRAMP/SRG row */
+  $$('#hosting input').forEach(i => i.addEventListener('change', showHide));
 
   function getScope(){
     return {
-      software: $('#scope .chip[data-key="scope_software"] input').checked,
-      operate:  $('#scope .chip[data-key="scope_operate"] input').checked,
-      services: $('#scope .chip[data-key="scope_services"] input').checked
+      software: !!document.querySelector('#scope .chip[data-key="scope_software"].active'),
+      operate:  !!document.querySelector('#scope .chip[data-key="scope_operate"].active'),
+      services: !!document.querySelector('#scope .chip[data-key="scope_services"].active')
     };
   }
 
+  function showHide(){
+    const cloud = $$('#hosting input:checked').some(i => i.value === 'Cloud');
+    const scope = getScope();
+    document.getElementById('authPathWrap').style.display = cloud ? '' : 'none';
+    document.getElementById('softwareWrap').style.display = scope.software ? '' : 'none';
+    document.getElementById('rmfWrap').style.display = scope.operate ? '' : 'none';
+  }
+
+  // ---------- Output helpers ----------
   const tagsEl = $('#tags');
   const must = $('#must'), mustList = $('#mustList');
   const likely = $('#likely'), likelyList = $('#likelyList');
@@ -322,7 +361,10 @@
 
   function pill(t){ const span=document.createElement('span'); span.className='badge'; span.textContent=t; tagsEl.appendChild(span);}
   function add(liEl, txt){ const li=document.createElement('li'); li.innerHTML=txt; liEl.appendChild(li);}
-  function clearAll(){ tagsEl.innerHTML=''; mustList.innerHTML=''; likelyList.innerHTML=''; recList.innerHTML=''; plan.innerHTML=''; [must,likely,rec].forEach(e=>e.style.display='none'); }
+  function clearAll(){
+    tagsEl.innerHTML=''; mustList.innerHTML=''; likelyList.innerHTML=''; recList.innerHTML=''; plan.innerHTML='';
+    [must,likely,rec].forEach(e=>e.style.display='none');
+  }
 
   function evaluate(){
     clearAll();
@@ -453,15 +495,24 @@
     return {needs, steps};
   }
 
-  $('#run').addEventListener('click', evaluate);
-  $('#clear').addEventListener('click', ()=>{
+  // Buttons
+  document.getElementById('run').addEventListener('click', evaluate);
+  document.getElementById('clear').addEventListener('click', ()=>{
+    // reset all checkboxes and chips
     $$('input[type="checkbox"]').forEach(i=>i.checked=false);
-    $$('#scope .chip').forEach(ch=>ch.classList.remove('active'));
-    $('#agency').value='DoD'; $('#role').value='Prime'; $('#criticality').value='Std'; $('#notes').value='';
+    $$('#scope .chip').forEach(ch=>{ch.classList.remove('active'); ch.setAttribute('aria-pressed','false');});
+    // resets
+    document.getElementById('agency').value='DoD';
+    document.getElementById('role').value='Prime';
+    document.getElementById('criticality').value='Std';
+    document.getElementById('notes').value='';
     clearAll(); showHide();
   });
-  $('#print').addEventListener('click', ()=>window.print());
-  $('#copy').addEventListener('click', ()=>{ const text = document.querySelector('#output').innerText.trim(); navigator.clipboard.writeText(text); alert('Summary copied to clipboard.'); });
+  document.getElementById('print').addEventListener('click', ()=>window.print());
+  document.getElementById('copy').addEventListener('click', ()=>{
+    const text = document.querySelector('#output').innerText.trim();
+    navigator.clipboard.writeText(text).then(()=>alert('Summary copied to clipboard.'));
+  });
 
   // init
   showHide();
